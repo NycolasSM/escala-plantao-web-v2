@@ -1,0 +1,194 @@
+
+html,
+body {
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  font-family: sans-serif;
+}
+
+a {
+  color: inherit !important;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+table {
+  border: 1px solid rgb(230, 230, 230);
+  border-radius: 10px;
+  padding: 10px;
+
+  color: rgb(43, 43, 43) !important;
+}
+
+tbody {
+  border-bottom: 1px solid lightgray;
+}
+
+th {
+  border-bottom: 1px solid lightgray;
+  border-right: 1px solid lightgray;
+  padding: 2px 4px;
+}
+
+tfoot {
+  color: gray;
+}
+
+tfoot th {
+  font-weight: normal;
+}
+
+.react-datepicker-wrapper {
+  width: 190px !important;
+}
+
+.react-datepicker__input-container {
+  height: 100% !important;
+}
+
+.react-datepicker__input-container > input {
+  height: 100% !important;
+}
+
+.p-multiselect-item-group {
+  margin: 0;
+  padding: 0.1rem 1rem !important;
+  color: #343a40;
+  background: #ffffff;
+  font-weight: 700;
+}
+
+.p-multiselect-panel .p-multiselect-header .p-multiselect-filter-container *.p-inputtext {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 1rem;
+  color: #495057;
+  background: #ffffff;
+  padding: 0.2rem 0.5rem !important;
+  border: 1px solid #ced4da;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 6px;
+  width: 109% !important;
+  margin-left: -20px;
+}
+
+.p-inputwrapper-filled.p-multiselect.p-multiselect-chip .p-multiselect-label {
+  padding: 0.25rem 0.3rem !important;
+}
+
+.p-multiselect.p-multiselect-chip .p-multiselect-token {
+  padding: 0.2rem 0.5rem !important;
+  margin-right: 0.2rem !important;
+  background: #dee2e6;
+  color: #495057;
+  border-radius: 16px;
+}
+
+.p-multiselect-panel .p-multiselect-items {
+  padding: 0.4rem 0 !important;
+}
+
+
+
+.p-multiselect-panel .p-multiselect-header {
+  padding: 0.3rem 0.5rem !important;
+  border-bottom: 1px solid #dee2e6;
+  color: #343a40;
+  background: #f8f9fa;
+  margin: 0;
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
+}
+
+.p-multiselect-panel .p-multiselect-header * .p-checkbox-box {
+  padding: 0 !important;
+  border-bottom: 1px solid #dee2e6;
+  color: #343a40;
+  background: #f8f9fa;
+  margin: 0;
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
+  display: none;
+}
+
+.p-multiselect-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 250px;
+}
+
+.p-datepicker .p-datepicker-header {
+  padding: 0.2rem !important;
+  color: #495057;
+  font-weight: 600;
+  margin: 0;
+  border-bottom: 1px solid red;
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
+}
+
+.p-multiselect-panel .p-multiselect-items .p-multiselect-item {
+  display: flex !important;
+  align-items: center !important;
+  margin: 0;
+  padding: 0.4rem 1.25rem !important;
+  border: 0 none;
+  color: #495057;
+  background: transparent;
+  transition: box-shadow 0.2s;
+  border-radius: 0;
+}
+
+.p-multiselect-panel .p-multiselect-items .p-multiselect-item {
+  margin: 0;
+  padding: 0.75rem 1.25rem;
+  border: 0 none;
+  color: #495057;
+  background: transparent;
+  transition: box-shadow 0.2s;
+  border-radius: 0;
+}
+
+.p-checkbox .p-checkbox-box {
+  border: 2px solid #ced4da;
+  background: #ffffff;
+  width: 19px !important;
+  height: 19px !important;
+  color: #495057;
+  border-radius: 6px;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.p-multiselect-item {
+  font-size: 13px !important;
+}
+
+.p-datepicker table td {
+  padding: 0.2rem !important;
+}
+
+.p-datepicker .p-datepicker-buttonbar {
+  padding: 0.1rem 0 !important;
+  border-top: 1px solid #dee2e6;
+}
+
+.p-datepicker table th {
+  padding: 0.3rem !important;
+}
+
+.p-datepicker .p-datepicker-buttonbar .p-button {
+  height: 40px !important;
+}
+
+.p-dropdown-panel .p-dropdown-items {
+  padding: 0.75rem 0;
+  height: 120px;
+}
