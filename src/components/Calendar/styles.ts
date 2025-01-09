@@ -5,21 +5,20 @@ export const CalendarContainer = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding: 5px 6px;
+  padding: 5px 6px 10px 6px;
 `;
 
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 5px;
   flex: 1;
+  gap: 4px;
 `;
 
 export const SectionTitle = styled.h2`
   font-size: 14px;
   font-weight: 500;
   margin: 0;
-  padding-left: 8px;
   padding-bottom: 10px;
 `;
 
@@ -222,7 +221,7 @@ export const HolidaysNameList = styled.ul`
   list-style: none;
   display: flex;
   flex-direction: column;
-  padding-left: 10px;
+  padding-left: 15px;
   margin: 0;
 
   white span {
@@ -230,7 +229,7 @@ export const HolidaysNameList = styled.ul`
   }
 
   li {
-    font-size: 0.9rem;
+    font-size: 13px;
     margin-bottom: 0.2rem;
   }
 

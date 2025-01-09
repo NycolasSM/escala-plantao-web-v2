@@ -32,7 +32,6 @@ export const BoxContainer = styled.div`
   padding: 20px;
   border-radius: 6px;
   margin-bottom: 16px;
-  overflow: hidden;
 `;
 
 export const SectionTitle = styled.h2`

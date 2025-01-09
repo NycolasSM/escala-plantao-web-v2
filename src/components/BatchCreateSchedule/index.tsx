@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import Select from "react-select";
+import Select, { SingleValue, MultiValue } from "react-select";
 import { useSchedules } from "@/context/ScheduleContext";
+import { Container, Row, Button } from "./styles";
 
 const customStyles = {
   control: (provided: any) => ({
@@ -46,16 +47,18 @@ const customStyles = {
   }),
 };
 
+type OptionType = { value: string; label: string };
+
 const BatchCreateSchedule = () => {
   const { addSchedules } = useSchedules();
-  const [selectedDays, setSelectedDays] = useState([]);
-  const [selectedParticipants, setSelectedParticipants] = useState([]);
-  const [selectedStartTime, setSelectedStartTime] = useState(null);
-  const [selectedEndTime, setSelectedEndTime] = useState(null);
-  const [selectedFromTime, setSelectedFromTime] = useState(null);
-  const [selectedToTime, setSelectedToTime] = useState(null);
+  const [selectedDays, setSelectedDays] = useState<MultiValue<OptionType>>([]);
+  const [selectedParticipants, setSelectedParticipants] = useState<MultiValue<OptionType>>([]);
+  const [selectedStartTime, setSelectedStartTime] = useState<SingleValue<OptionType>>(null);
+  const [selectedEndTime, setSelectedEndTime] = useState<SingleValue<OptionType>>(null);
+  const [selectedFromTime, setSelectedFromTime] = useState<SingleValue<OptionType>>(null);
+  const [selectedToTime, setSelectedToTime] = useState<SingleValue<OptionType>>(null);
 
-  const daysOptions = [
+  const daysOptions: OptionType[] = [
     { value: "1 - SAB", label: "1 - SAB" },
     { value: "2 - DOM", label: "2 - DOM" },
     { value: "3 - TER", label: "3 - TER" },
@@ -65,14 +68,14 @@ const BatchCreateSchedule = () => {
     { value: "7 - SAB", label: "7 - SAB" },
   ];
 
-  const participantsOptions = [
+  const participantsOptions: OptionType[] = [
     { value: "ALEXANDRE RIBEIRO", label: "ALEXANDRE RIBEIRO" },
     { value: "JOÃO SILVA", label: "JOÃO SILVA" },
     { value: "CARLOS PEREIRA", label: "CARLOS PEREIRA" },
     { value: "ANA COSTA", label: "ANA COSTA" },
   ];
 
-  const timeOptions = Array.from({ length: 48 }, (_, i) => {
+  const timeOptions: OptionType[] = Array.from({ length: 48 }, (_, i) => {
     const hour = String(Math.floor(i / 2)).padStart(2, "0");
     const minutes = i % 2 === 0 ? "00" : "30";
     return { value: `${hour}:${minutes}`, label: `${hour}:${minutes}` };
@@ -82,8 +85,8 @@ const BatchCreateSchedule = () => {
     const newSchedules = selectedDays.map(day => ({
       day: day.value,
       name: selectedParticipants.map(participant => participant.value).join(", "),
-      start: selectedStartTime.value,
-      end: selectedEndTime.value,
+      start: selectedStartTime?.value || "",
+      end: selectedEndTime?.value || "",
       from: selectedFromTime?.value || "",
       to: selectedToTime?.value || "",
     }));
@@ -91,7 +94,7 @@ const BatchCreateSchedule = () => {
   };
 
   return (
-    <div>
+    <Container>
       <p>Selecione os dias</p>
       <Select
         isMulti
@@ -101,38 +104,50 @@ const BatchCreateSchedule = () => {
         placeholder="Selecione os dias"
         styles={customStyles}
       />
-      <p>Selecione o Horário de Início</p>
-      <Select
-        options={timeOptions}
-        value={selectedStartTime}
-        onChange={setSelectedStartTime}
-        placeholder="Selecione o horário de início"
-        styles={customStyles}
-      />
-      <p>Selecione o Horário de Término</p>
-      <Select
-        options={timeOptions}
-        value={selectedEndTime}
-        onChange={setSelectedEndTime}
-        placeholder="Selecione o horário de término"
-        styles={customStyles}
-      />
-      <p>Selecione o Intervalo das</p>
-      <Select
-        options={timeOptions}
-        value={selectedFromTime}
-        onChange={setSelectedFromTime}
-        placeholder="Selecione o intervalo das"
-        styles={customStyles}
-      />
-      <p>Selecione o Intervalo às</p>
-      <Select
-        options={timeOptions}
-        value={selectedToTime}
-        onChange={setSelectedToTime}
-        placeholder="Selecione o intervalo às"
-        styles={customStyles}
-      />
+      <Row>
+        <div>
+          <p>Início</p>
+          <Select
+            options={timeOptions}
+            value={selectedStartTime}
+            onChange={setSelectedStartTime}
+            placeholder="horário de início"
+            styles={customStyles}
+          />
+        </div>
+        <div>
+          <p>Término</p>
+          <Select
+            options={timeOptions}
+            value={selectedEndTime}
+            onChange={setSelectedEndTime}
+            placeholder="Selecione o horário de término"
+            styles={customStyles}
+          />
+        </div>
+      </Row>
+      <Row>
+        <div>
+          <p>Intervalo das</p>
+          <Select
+            options={timeOptions}
+            value={selectedFromTime}
+            onChange={setSelectedFromTime}
+            placeholder="Selecione o intervalo das"
+            styles={customStyles}
+          />
+        </div>
+        <div>
+          <p>Intervalo às</p>
+          <Select
+            options={timeOptions}
+            value={selectedToTime}
+            onChange={setSelectedToTime}
+            placeholder="Selecione o intervalo às"
+            styles={customStyles}
+          />
+        </div>
+      </Row>
       <p>Selecione os Participantes</p>
       <Select
         isMulti
@@ -142,8 +157,8 @@ const BatchCreateSchedule = () => {
         placeholder="Selecione os participantes"
         styles={customStyles}
       />
-      <button style={{ marginTop: 20 }} onClick={handleCreate}>Criar</button>
-    </div>
+      <Button style={{ marginTop: 20 }} onClick={handleCreate}>Criar</Button>
+    </Container>
   );
 };
 

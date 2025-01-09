@@ -6,14 +6,17 @@ import React from "react";
 import Select from "react-select";
 import BatchCreateSchedule from "@/components/BatchCreateSchedule";
 import { ScheduleProvider } from "@/context/ScheduleContext";
+import AvailableSchedulesContext from "@/context/AvailableSchedulesContext";
 
 const Schedules = () => {
+  const { year, setYear, monthNumber, setMonthNumber, setLocalChosen, setPlantaoChosen, availableDays, availableDaysData } = React.useContext(AvailableSchedulesContext);
+
   const plantaoOptions = [
     { value: "Operacional", label: "Operacional" },
     { value: "ETA", label: "ETA" },
     { value: "Transporte", label: "Transporte" },
     { value: "Manutenção", label: "Manutenção" },
-    { value: "Controle De Perdas", label: "Controle De Perdas" }
+    { value: "Controle De Perdas", label: "Controle De Perdas" },
   ];
 
   const localOptions = [
@@ -83,8 +86,20 @@ const Schedules = () => {
       <Container>
         <Header>
           <Filters>
-            <Select className='react-select-container' styles={customStyles} options={plantaoOptions} placeholder='Plantão' />
-            <Select className='react-select-container' styles={customStyles} options={localOptions} placeholder='Local' />
+            <Select
+              className='react-select-container'
+              styles={customStyles}
+              options={plantaoOptions}
+              placeholder='Plantão'
+              onChange={(e) => setPlantaoChosen(e?.value || '')}
+            />
+            <Select
+              className='react-select-container'
+              styles={customStyles}
+              options={localOptions}
+              placeholder='Local'
+              onChange={(e) => setLocalChosen(e?.value || '')}
+            />
           </Filters>
           <Buttons>
             <button>Visualizar Escala</button>

@@ -60,6 +60,7 @@ const customSelectStyleWithoutIcon = {
 
 const ScheduleTable = () => {
   const { schedules, addSchedules } = useSchedules();
+  
   const [newSchedules, setNewSchedules] = useState<
     {
       id: number;

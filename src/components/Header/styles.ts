@@ -116,3 +116,35 @@ export const UserButton = styled.div`
   padding: 10px;
   cursor: pointer;
 `
+
+export const DropdownMenu = styled.div`
+  position: absolute;
+  top: 55px;
+  right: 20px;
+  background-color: white;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  z-index: 1000;
+  display: none;
+  flex-direction: column;
+
+  &.active {
+    display: flex;
+  }
+
+  button {
+    display: flex;
+    gap: 8px;
+    padding: 0px 20px !important;
+    background: none;
+    border: none;
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+    height: 36px;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
+`;

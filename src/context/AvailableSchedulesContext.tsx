@@ -100,7 +100,6 @@ export function AvailableSchedulesProvider({ children }: SchedulesContextProps) 
   };
 
   const getAvailableSchedules = (
-    plantao: string,
     local: string,
     monthNumber: number,
     year: number
@@ -357,9 +356,9 @@ export function AvailableSchedulesProvider({ children }: SchedulesContextProps) 
   };
 
   useEffect(() => {
-    getAvailableSchedules(plantaoChosen, localChosen, monthNumber, year);
+    getAvailableSchedules(localChosen, monthNumber, year);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [plantaoChosen, localChosen, monthNumber, year]);
+  }, [localChosen, monthNumber, year]);
 
   useEffect(() => {
     getObservetions(plantaoChosen, localChosen, monthNumber, year);

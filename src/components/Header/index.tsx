@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 
-import { Container, UserButton, UserOptions } from "./styles"; // Importando componentes estilizados
+import { Container, UserButton, UserOptions, DropdownMenu } from "./styles"; // Importando componentes estilizados
 import { CgProfile } from "react-icons/cg"; // Importando ícone de perfil
 import { useRouter } from "next/router"; // Importando hook do Next.js para roteamento
 import Link from "next/link"; // Importando componente Link do Next.js para navegação entre páginas
@@ -46,6 +46,8 @@ const Header = () => {
   const router = useRouter();
   const { userInfo } = useContext(UserContext);
   const { setFilter, municipioFilter } = useContext(FiltersContext);
+  const [dropdownActive, setDropdownActive] = useState(false);
+  const dropdownRef = useRef<any>(null);
 
   const getHeaderTitle = () => {
     switch (router.asPath) {
@@ -62,6 +64,23 @@ const Header = () => {
 
   let HeaderTitle = getHeaderTitle();
 
+  const handleLogout = () => {
+    console.log("Logout");
+  };
+
+  const handleClickOutside = (event: any) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setDropdownActive(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <Container>
       <div style={{ display: "flex", gap: 14, paddingTop: 12 }}>
@@ -69,9 +88,15 @@ const Header = () => {
         <span>{">"}</span>
         <h3>{HeaderTitle}</h3>
       </div>
-      <UserButton>
+      <UserButton onClick={() => setDropdownActive(!dropdownActive)}>
         <FaRegUser size={17} color='#505050' />
       </UserButton>
+      <DropdownMenu ref={dropdownRef} className={dropdownActive ? "active" : ""}>
+        <button onClick={handleLogout}>
+          <MdLogout size={18} />
+          Logout
+        </button>
+      </DropdownMenu>
     </Container>
   );
 };
