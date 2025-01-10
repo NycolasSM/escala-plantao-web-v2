@@ -1,15 +1,27 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import { Container } from "../../styles/pages/login";
 
 import Image from "next/image";
-import LocalSIGLogo from "../../../public/LocalSIG Logo.png";
+import LocalSIGLogo from "../../../public/localsig_logo.png";
 
 import "react-toastify/dist/ReactToastify.css";
 import { UserContext } from "../../context/User";
+import { useRouter } from "next/router";
 
 const Login: React.FC = () => {
-  const { logout, userInfo } = useContext(UserContext);
+  const { login } = useContext(UserContext);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const result = await login(username, password);
+    if (result) {
+      router.push("/"); // Redirect to home page after successful login
+    }
+  };
 
   return (
     <>
@@ -26,31 +38,21 @@ const Login: React.FC = () => {
           priority={true}
           alt="Background Logo"
         />
-        {!userInfo ? (
-          <form
-            action="logout"
-            onSubmit={(event) => {
-              event.preventDefault();
-              logout();
-            }}
-          >
-            <p></p>
-            <p></p>
-            <button onClick={() => logout()}>Carregando...</button>
-          </form>
-        ) : (
-          <form
-            action="logout"
-            onSubmit={(event) => {
-              event.preventDefault();
-              logout();
-            }}
-          >
-            <p>Usuário conectado:</p>
-            <p>{userInfo.nome}</p>
-            <button onClick={() => logout()}>Logout</button>
-          </form>
-        )}
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button type="submit">Login</button>
+        </form>
       </Container>
     </>
   );

@@ -44,7 +44,7 @@ addLocale("pt", {
 
 const Header = () => {
   const router = useRouter();
-  const { userInfo } = useContext(UserContext);
+  const { userInfo, logout } = useContext(UserContext);
   const { setFilter, municipioFilter } = useContext(FiltersContext);
   const [dropdownActive, setDropdownActive] = useState(false);
   const dropdownRef = useRef<any>(null);
@@ -65,7 +65,8 @@ const Header = () => {
   let HeaderTitle = getHeaderTitle();
 
   const handleLogout = () => {
-    console.log("Logout");
+    logout();
+    router.push("/login");
   };
 
   const handleClickOutside = (event: any) => {
