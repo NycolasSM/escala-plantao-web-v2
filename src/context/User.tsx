@@ -11,6 +11,7 @@ type UsersType = {
   nome: string;
   unidade: string;
   admin: boolean;
+  n_pes: string;
 };
 
 interface UserContextProps {
@@ -33,7 +34,7 @@ export function UserProvider({ children }: UserProviderProps) {
 
   const login = async (username: string, password: string): Promise<boolean> => {
     if (username === "admin" && password === "admin") {
-      const user = { id: 1, usuario: "admin", nome: "Admin", unidade: "Admin", admin: true };
+      const user = { id: 1, usuario: "admin", nome: "Admin", unidade: "Admin", admin: true, n_pes: "0" };
       setUserInfo(user);
       localStorage.setItem("userInfo", JSON.stringify(user));
       return true;
