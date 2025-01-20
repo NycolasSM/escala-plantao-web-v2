@@ -44,6 +44,7 @@ type RegisterData = {
   employees: EmployeeData[];
   scheduleHour: any;
   action: string;
+  isNew?: boolean;
 };
 
 interface IFormContext {

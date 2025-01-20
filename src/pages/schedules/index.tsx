@@ -2,53 +2,75 @@ import Calendar from "@/components/Calendar";
 import { Filters } from "@/components/Header/styles";
 import ScheduleTable from "@/components/ScheduleTable";
 import { FlexContainer, Column, BoxContainer, Container, SectionTitle, Header, Buttons, CreateSchedule } from "@/styles/pages/schedules";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Select from "react-select";
 import BatchCreateSchedule from "@/components/BatchCreateSchedule";
 import { ScheduleProvider } from "@/context/ScheduleContext";
 import AvailableSchedulesContext from "@/context/AvailableSchedulesContext";
+import { BiError } from "react-icons/bi";
+import FormContext from "@/context/formContext";
+import { EmptyFieldError, LoadingContainer } from "./styles";
+import { localOptions, permissoes } from "./mocked";
+import { useRouter } from "next/router";
+import { Slide, ToastContainer } from 'react-toastify';
+import { TailSpin } from "react-loader-spinner";
+
+type selectedOption = {
+  plantaoSelected: string;
+  localSelected: string;
+};
 
 const Schedules = () => {
-  const { year, setYear, monthNumber, setMonthNumber, setLocalChosen, setPlantaoChosen, availableDays, availableDaysData } = React.useContext(AvailableSchedulesContext);
+  const { plantaoAvailable, plantaoChosen, localChosen, setPlantaoChosen, setLocalChosen, setAvailableDaysData, setMonthNumber } =
+    React.useContext(AvailableSchedulesContext);
 
-  const plantaoOptions = [
-    { value: "Operacional", label: "Operacional" },
-    { value: "ETA", label: "ETA" },
-    { value: "Transporte", label: "Transporte" },
-    { value: "Manutenção", label: "Manutenção" },
-    { value: "Controle De Perdas", label: "Controle De Perdas" },
-  ];
+  const {
+    haveEmptyField,
+    registers,
+    isEmpty,
+    setIsEmpty,
+    sendForm,
+    isSendingForm,
+    setRegisters,
+    formularioDelete,
+    setFormularioDelete,
+    setLoadedForms,
+    isLoadingRegisters,
+    setIsLoadingRegisters,
+    haveSchedulesHourChanged,
+    setHaveSchedulesHourChanged,
+    verifyEmptyFields,
+    setIsSendingForm,
+    setHaveEmptyField,
+  } = useContext(FormContext);
 
-  const localOptions = [
-    { value: "Apiaí", label: "Apiaí" },
-    { value: "Barra do Chapéu", label: "Barra do Chapéu" },
-    { value: "São Lourenço", label: "São Lourenço" },
-    { value: "Juquitiba", label: "Juquitiba" },
-    { value: "Registro / Sete Barras", label: "Registro / Sete Barras" },
-    { value: "Registro", label: "Registro" },
-    { value: "Sete Barras", label: "Sete Barras" },
-    { value: "Barra do Turvo", label: "Barra do Turvo" },
-    { value: "Cajati", label: "Cajati" },
-    { value: "Cajati / Jacupiranga", label: "Cajati / Jacupiranga" },
-    { value: "Eldorado", label: "Eldorado" },
-    { value: "Iporanga", label: "Iporanga" },
-    { value: "Jacupiranga", label: "Jacupiranga" },
-    { value: "Cananéia", label: "Cananéia" },
-    { value: "Iguape", label: "Iguape" },
-    { value: "Iguape / Ilha Comprida", label: "Iguape / Ilha Comprida" },
-    { value: "Ilha Comprida", label: "Ilha Comprida" },
-    { value: "Ilha Comprida / Pedrinhas", label: "Ilha Comprida / Pedrinhas" },
-    { value: "Pariquera-Açu", label: "Pariquera-Açu" },
-    { value: "Itariri", label: "Itariri" },
-    { value: "Juquiá", label: "Juquiá" },
-    { value: "Miracatu", label: "Miracatu" },
-    { value: "Pedro de Toledo", label: "Pedro de Toledo" },
-    { value: "Tapiraí", label: "Tapiraí" },
-    { value: "Itaoca", label: "Itaoca" },
-    { value: "Itapirapuã Paulista", label: "Itapirapuã Paulista" },
-    { value: "Ribeira", label: "Ribeira" },
-    { value: "Ribeira / Itapirapuã Paulista", label: "Ribeira / Itapirapuã Paulista" },
-  ];
+  const router = useRouter();
+
+  const [selectedOptions, setSelectedOptions] = useState<selectedOption>({
+    plantaoSelected: "",
+    localSelected: "",
+  });
+
+  const plantaoOptions = plantaoAvailable?.map((plantao) => {
+    return {
+      value: plantao,
+      label: plantao,
+    };
+  });
+
+  const localOptions = permissoes.has(selectedOptions.plantaoSelected)
+    ? permissoes
+        .get(selectedOptions.plantaoSelected)!
+        .sort()
+        .map((local: string) => {
+          return {
+            value: local,
+            label: local,
+          };
+        })
+    : [];
+
+  const [showLocationOptions, setShowLocationOptions] = useState<boolean>(false);
 
   const customStyles = {
     control: (provided: any) => ({
@@ -81,8 +103,64 @@ const Schedules = () => {
     }),
   };
 
+  function handleChangeSetor(plantao: string) {
+    setPlantaoChosen(plantao);
+    setSelectedOptions({ ...selectedOptions, ["plantaoSelected"]: plantao });
+
+    if (plantao === "Transporte" || plantao === "Controle De Perdas") {
+      setLocalChosen("");
+      setSelectedOptions({
+        plantaoSelected: plantao,
+        localSelected: "",
+      });
+      setShowLocationOptions(false);
+      setHaveEmptyField(false);
+    } else {
+      setHaveEmptyField(false);
+      setShowLocationOptions(true);
+    }
+    if (localChosen != "") {
+      setIsLoadingRegisters(true);
+    }
+  }
+
+  useEffect(() => {
+    setIsLoadingRegisters(true);
+    setPlantaoChosen(selectedOptions.plantaoSelected);
+    setLocalChosen(selectedOptions.localSelected);
+    // window.history.pushState({}, document.title, "/" + "");
+    if (router.query.Plantao != undefined) {
+      setIsLoadingRegisters(true);
+
+      setSelectedOptions({
+        plantaoSelected: router.query.Plantao as string,
+        localSelected: router.query.Local as string,
+      });
+
+      setPlantaoChosen(router.query.Plantao as string);
+      setLocalChosen(router.query.Local as string);
+
+      if (router.query.Mes != undefined) {
+        setMonthNumber(parseInt(router.query.Mes as string));
+      }
+    }
+  }, []);
+
+  const handleChangeLocal = (local: string) => {
+    setIsLoadingRegisters(true);
+    setPlantaoChosen(selectedOptions.plantaoSelected);
+    setLocalChosen(local);
+    setSelectedOptions({ ...selectedOptions, ["localSelected"]: local });
+  };
+
   return (
     <ScheduleProvider>
+      {haveEmptyField ? (
+        <EmptyFieldError>
+          <BiError size={24} />
+          <span>Existem campos vazios a serem preenchidos</span>
+        </EmptyFieldError>
+      ) : null}
       <Container>
         <Header>
           <Filters>
@@ -91,15 +169,17 @@ const Schedules = () => {
               styles={customStyles}
               options={plantaoOptions}
               placeholder='Plantão'
-              onChange={(e) => setPlantaoChosen(e?.value || '')}
+              onChange={(e) => handleChangeSetor(e?.value || "")}
             />
-            <Select
-              className='react-select-container'
-              styles={customStyles}
-              options={localOptions}
-              placeholder='Local'
-              onChange={(e) => setLocalChosen(e?.value || '')}
-            />
+            {showLocationOptions && (
+              <Select
+                className='react-select-container'
+                styles={customStyles}
+                options={localOptions}
+                placeholder='Local'
+                onChange={(e) => handleChangeLocal(e?.value || "")}
+              />
+            )}
           </Filters>
           <Buttons>
             <button>Visualizar Escala</button>
@@ -108,7 +188,17 @@ const Schedules = () => {
         <FlexContainer>
           <Column>
             <BoxContainer style={{ padding: "0px" }}>
-              <ScheduleTable />
+              {isLoadingRegisters ? (
+                <Container>
+                  <ToastContainer autoClose={2500} transition={Slide} />
+                  <Header />
+                  <LoadingContainer>
+                    <TailSpin height='100' width='100' color='#2faee0a2' ariaLabel='loading' />;
+                  </LoadingContainer>
+                </Container>
+              ) : (
+                <ScheduleTable />
+              )}
             </BoxContainer>
           </Column>
           <Column style={{ maxWidth: 400 }}>

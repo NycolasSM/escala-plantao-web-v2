@@ -10,6 +10,7 @@ import NavButton from "./components/NavButton";
 // Icons
 import { RiFileCopy2Line, RiFileHistoryLine, RiMenuUnfoldFill } from "react-icons/ri";
 import { FiUsers } from "react-icons/fi";
+import { IoOptions } from "react-icons/io5";
 
 import { useRouter } from "next/router";
 
@@ -64,6 +65,13 @@ const Navbar = () => {
             icon={<FiUsers size={22} color={hasHightlight("/users") ? "#e9e9e9" : "#e9e9e9"} />}
             name={"Usuários"}
             hasHightlight={hasHightlight("/users")}
+          />
+          <NavButton
+            initials='Cadastro'
+            navLink='/register'
+            icon={<IoOptions size={26} color={hasHightlight("/register") ? "#e9e9e9" : "#e9e9e9"} />}
+            name={"Cadastro"}
+            hasHightlight={hasHightlight("/register")}
           />
         </ul>
       </nav>

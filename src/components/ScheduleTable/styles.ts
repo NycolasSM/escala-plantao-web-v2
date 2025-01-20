@@ -80,3 +80,50 @@ export const Button = styled.button`
     background-color: #2d7e97;
   }
 `;
+
+export const EmptyRegistersMessage = styled.div`
+  background-color: #f5f8fa;
+  width: 400px;
+  display: flex;
+  align-items: center;
+  margin: 10px auto 10px auto;
+  gap: 50px;
+  border-radius: 6px;
+  animation: showMessage 0.8s forwards cubic-bezier(0.215, 0.61, 0.355, 1);
+  opacity: 0;
+  box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.1);
+
+  h3 {
+    font-weight: 500;
+  }
+
+  @media (max-width: 520px) {
+    width: 20rem;
+
+    h3 {
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+  }
+
+  div {
+    height: 100%;
+    width: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #cacaca;
+    border-radius: 6px 0px 0px 6px;
+  }
+
+  @keyframes showMessage {
+    0% {
+      opacity: 0;
+      height: 46px;
+    }
+    100% {
+      opacity: 1;
+      height: 52px;
+    }
+  }
+`;
