@@ -26,7 +26,6 @@ const Login: React.FC = () => {
   return (
     <>
       <Container style={{ width: "100%" }}>
-        <h3>LocalSIG</h3>
         <Image
           src={LocalSIGLogo}
           height={80}

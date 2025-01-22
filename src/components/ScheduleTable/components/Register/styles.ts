@@ -1,17 +1,10 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
-export const Container = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  width: 100%;
-  margin-bottom: 1.2rem;
-  gap: 2.1rem;
-  padding: 0.15rem;
+export const Container = styled.tr`
+  padding: 0 !important;
 
   .register__button--unlock {
     background-color: #df862d;
-    display: flex;
     align-items: center;
     justify-content: center;
     height: 30px;
@@ -37,17 +30,6 @@ export const Container = styled.div`
     }
   }
 
-  @media (max-width: 520px) {
-    display: grid;
-    grid-template-columns: repeat(9, 1fr);
-    gap: 2.9rem;
-    width: 1000px;
-  }
-
-  /* animação desativada por causa de um bug com os inputs se sobrepondo */
-  /* animation: showRegister 0.1s forwards; */
-  /* opacity: 0.1; */
-
   @keyframes showRegister {
     0% {
       opacity: 0;
@@ -64,16 +46,9 @@ export const Container = styled.div`
   }
 
   .checkbox {
-    height: 31px;
-    width: 31px;
+    height: 20px;
+    width: 20px;
     cursor: pointer;
-  }
-
-  @media (max-width: 550px) {
-    .checkbox {
-      height: 20px;
-      width: 20px;
-    }
   }
 
   select {
@@ -81,29 +56,35 @@ export const Container = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 20%;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 13px;
     border: none;
     text-align: center;
-    padding: 0 0.3rem;
-    height: 37px;
+    height: 30px;
     outline: 2px solid #c1c1c1;
+    width: 100%;
 
     option {
       font-size: 1.1rem;
       display: flex;
       justify-content: center;
       align-items: center;
+      background-color: red;
     }
   }
 `;
 
 export const SelectDays = styled.select`
-  display: flex;
+  /* display: flex;
   width: 15%;
   justify-content: center;
   align-items: center;
   text-align: center;
-  font-size: 15;
+  font-size: 13px; */
+
+  font-size: 11px !important;
+
+  option {
+    font-size: 8px !important;
+  }
 `;

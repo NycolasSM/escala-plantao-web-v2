@@ -1,15 +1,39 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Container, Table, ButtonContainer, Button, EmptyRegistersMessage } from "./styles";
-import { RiDeleteBin7Line } from "react-icons/ri";
-import Select from "react-select";
-import { useSchedules } from "@/context/ScheduleContext";
+import Header from "./components/Header";
+import Register from "./components/Register";
 import { useAvailableSchedulesContext } from "@/context/AvailableSchedulesContext";
+
+import { FaTrashAlt, FaTrashRestoreAlt } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";
-import FormContext from "@/context/formContext";
+
+import { TailSpin } from "react-loader-spinner";
+
+import { IoClose } from "react-icons/io5";
+
+import {
+  Container,
+  DEVLOGS,
+  EmptyFieldError,
+  AddRegisters,
+  ButtonsContainer,
+  PenIconContainer,
+  EmptyRegistersMessage,
+  ObservationSection,
+  LoadingContainer,
+  Tbody,
+  ButtonContainer,
+  Button,
+} from "./styles";
+
+import FormContext from "../../context/formContext";
+import { BiError } from "react-icons/bi";
+import { api } from "../../services/api";
+import { Buttons } from "@/styles/pages/dashboard";
+import { Slide, ToastContainer } from "react-toastify";
+import { UserContext } from "@/context/User";
 import { useRouter } from "next/router";
-import { api } from "@/services/api";
-import { getDayOfTheWeek } from "@/utils/days";
-import EmployeeInput from "@/pages/ScheduleTable/components/EmployeeInput";
+
+import HaveScheduleHoursChanges from "@/components/Modal/HaveScheduleHoursChanges";
 
 type RegistersLoaded = {
   data: string;
@@ -26,91 +50,9 @@ type RegistersLoaded = {
   telefone_2: string;
 };
 
-const customStyles = {
-  control: (provided: any) => ({
-    ...provided,
-    minHeight: "29px",
-    height: "29px",
-    fontSize: "12px",
-  }),
-  valueContainer: (provided: any) => ({
-    ...provided,
-    height: "30px",
-    padding: "0 6px",
-  }),
-  input: (provided: any) => ({
-    ...provided,
-    margin: "0px",
-  }),
-  indicatorSeparator: (provided: any) => ({
-    display: "none",
-  }),
-  indicatorsContainer: (provided: any) => ({
-    ...provided,
-    height: "30px",
-  }),
-  option: (provided: any) => ({
-    ...provided,
-    fontSize: "12px",
-    padding: "8px 10px",
-  }),
-  multiValueLabel: (provided: any) => ({
-    ...provided,
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    maxWidth: "100px",
-  }),
-  placeholder: (provided: any) => ({
-    ...provided,
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    maxWidth: "100px",
-  }),
-};
-
-const customSelectStyleWithoutIcon = {
-  indicatorsContainer: (provided: any) => ({
-    ...provided,
-    height: "30px",
-    padding: 0,
-    margin: 0,
-    display: "none",
-  }),
-};
-
 const ScheduleTable = () => {
-  const { schedules, addSchedules } = useSchedules();
-
-  const [newSchedules, setNewSchedules] = useState<
-    {
-      id: number;
-      day: string;
-      name: string;
-      hours24: boolean;
-      start: string;
-      from: string;
-      to: string;
-      end: string;
-      totalHours: string;
-      isNew: boolean;
-    }[]
-  >([]);
-
-  const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
-
-  const {
-    localChosen,
-    plantaoChosen,
-    setLocalChosen,
-    setPlantaoChosen,
-    year,
-    monthNumber,
-    observationForm,
-    setObervationForm,
-    setLoadedForms2,
-  } = useAvailableSchedulesContext();
+  const { localChosen, plantaoChosen, setLocalChosen, setPlantaoChosen, year, monthNumber, observationForm, setObervationForm } =
+    useAvailableSchedulesContext();
 
   const {
     haveEmptyField,
@@ -123,7 +65,6 @@ const ScheduleTable = () => {
     formularioDelete,
     setFormularioDelete,
     setLoadedForms,
-    loadedForms,
     isLoadingRegisters,
     setIsLoadingRegisters,
     haveSchedulesHourChanged,
@@ -133,77 +74,8 @@ const ScheduleTable = () => {
     setHaveEmptyField,
   } = useContext(FormContext);
 
-  const [allDays, setAllDays] = useState<any[]>([]);
-
-  // para setar o total de dias do mês nos
-  let totalOfDays = new Date(year, monthNumber, 0).getDate();
-  useEffect(() => {
-    setAllDays(Array.from({ length: totalOfDays }, (v, k) => k + 1));
-  }, [monthNumber, year]);
-
-  const nameOptions = [
-    { value: "ALEXANDRE RIBEIRO", label: "ALEXANDRE RIBEIRO" },
-    { value: "JOÃO SILVA", label: "JOÃO SILVA" },
-    { value: "CARLOS PEREIRA", label: "CARLOS PEREIRA" },
-    { value: "ANA COSTA", label: "ANA COSTA" },
-  ];
-
-  const timeOptions = Array.from({ length: 48 }, (_, i) => {
-    const hour = String(Math.floor(i / 2)).padStart(2, "0");
-    const minutes = i % 2 === 0 ? "00" : "30";
-    return { value: `${hour}:${minutes}`, label: `${hour}:${minutes}` };
-  });
-
-  const handleCheckboxChange = (id: string | number) => {
-    setSelectedRows((prevSelectedRows) =>
-      prevSelectedRows.includes(id) ? prevSelectedRows.filter((rowId) => rowId !== id) : [...prevSelectedRows, id]
-    );
-  };
-
-  // const handleAddRow = () => {
-  //   setNewSchedules([
-  //     ...newSchedules,
-  //     {
-  //       id: newSchedules.length + schedules.length + 1,
-  //       day: 1,
-  //       hours24: false,
-  //       employees: [],
-  //       scheduleHour: [],
-  //       isNew: true,
-  //       action: "create",
-  //     },
-  //   ]);
-  // };
-
-  const handleSave = () => {
-    addSchedules(newSchedules);
-    setNewSchedules([]);
-  };
-
-  const handleInputChange = (id: number, field: string, value: any) => {
-    setNewSchedules((prevSchedules) => prevSchedules.map((schedule) => (schedule.id === id ? { ...schedule, [field]: value } : schedule)));
-  };
-
-  const calculateTotalHours = (start: string, end: string, from: string, to: string) => {
-    if (!start || !end) return "0h:0m";
-
-    const startTime = new Date(`1970-01-01T${start}:00`);
-    const endTime = new Date(`1970-01-01T${end}:00`);
-    const fromTime = from ? new Date(`1970-01-01T${from}:00`) : null;
-    const toTime = to ? new Date(`1970-01-01T${to}:00`) : null;
-
-    let totalWorkTime = (endTime.getTime() - startTime.getTime()) / (1000 * 60 * 60);
-    let intervalTime = fromTime && toTime ? (toTime.getTime() - fromTime.getTime()) / (1000 * 60 * 60) : 0;
-
-    if (totalWorkTime < 0) totalWorkTime += 24;
-    if (intervalTime < 0) intervalTime += 24;
-
-    const totalHours = totalWorkTime - intervalTime;
-    const hours = Math.floor(totalHours);
-    const minutes = Math.round((totalHours - hours) * 60);
-
-    return `${hours}h:${minutes}m`;
-  };
+  // const { isLogged } = useContext(UserContext);
+  const isLogged = true;
 
   const [registersLoaded, setRegistersLoaded] = useState<RegistersLoaded[]>([]);
 
@@ -288,13 +160,7 @@ const ScheduleTable = () => {
         return;
       } else {
         api.get(`/schedulesRegistered/?year=${year}&month=${mes ?? monthNumber}&setor=${setor}`).then((resp) => {
-          console.log("resp.data", resp.data);
-
-          setLoadedForms(resp.data);
-          setLoadedForms2(resp.data);
-
-          console.log("LoadedForms", loadedForms);
-
+          console.log("resp.data2", resp.data);
           setRegistersLoaded(resp.data);
           setIsLoadingRegisters(false);
           router.query.Plantao = undefined;
@@ -346,6 +212,11 @@ const ScheduleTable = () => {
     setObervationForm(observation);
   };
 
+  // function handleKeyDownObservation(e: any) {
+  //   e.target.style.height = "inherit";
+  //   e.target.style.height = `${e.target.scrollHeight}px`;
+  // }
+
   useEffect(() => {
     setRegisters(new Map());
     setRegistersLoaded([]);
@@ -363,7 +234,9 @@ const ScheduleTable = () => {
 
   useEffect(() => {
     setIsEmpty(false);
+  }, []);
 
+  useEffect(() => {
     setTimeout(() => {
       setRegisters(new Map());
     }, 80);
@@ -388,242 +261,137 @@ const ScheduleTable = () => {
     userInfo: {},
   });
 
-  const daysOptions = allDays.map((day) => {
-    return {
-      value: day,
-      label: `${day} - ${getDayOfTheWeek(day, year, monthNumber)}`,
-    };
-  });
-
-  function converterParaHorasMinuto(horario: number) {
-    let horatioToString = (horario / 60).toString();
-
-    let [hora, minuto] = horatioToString.split(".").map((v) => parseInt(v));
-
-    if (minuto === 5) {
-      minuto = 30;
-    } else {
-      minuto = 0;
-    }
-
-    return {
-      total: minuto === 5 ? hora + 0.5 : hora,
-      diference: `${hora}h:${minuto}m`,
-    };
+  if (isLoadingRegisters) {
+    return (
+      <Container>
+        <ToastContainer autoClose={2500} transition={Slide} />
+        <Header />
+        <LoadingContainer>
+          <TailSpin height='100' width='100' color='#2faee0a2' ariaLabel='loading' />;
+        </LoadingContainer>
+      </Container>
+    );
   }
 
-  const getTotalHours = (rangeOfScheduleSelected) => {
-    if (rangeOfScheduleSelected.length != 4) {
-      return {
-        total: 0,
-        diference: `0h:0m`,
-      }
-    }
-
-    function parse(horario: string) {
-      let [hora, minuto] = horario.split(":").map((v) => parseInt(v));
-      if (!minuto) {
-        // para o caso de não ter os minutos
-        minuto = 0;
-      }
-      return minuto + hora * 60;
-    }
-
-    function calculoDaJornadaComIntervalo(entrada1: string, saida1: string, entrada2: string, saida2: string) {
-      return parse(saida1) - parse(entrada1) + (parse(saida2) - parse(entrada2));
-    }
-
-    let jornadaDoFuncionario = calculoDaJornadaComIntervalo(
-      rangeOfScheduleSelected[0],
-      rangeOfScheduleSelected[1],
-      rangeOfScheduleSelected[2],
-      rangeOfScheduleSelected[3]
-    );
-
-    return converterParaHorasMinuto(jornadaDoFuncionario);
-  };
-
   return (
-    <Container>
-      <Table>
-        <thead>
-          <tr style={{ height: 35 }}>
-            <th colSpan={3}>Escala</th>
-            <th colSpan={4}>Intervalo</th>
-            <th rowSpan={2} style={{ width: 100 }}>
-              Total horas de plantão
-            </th>
-            <th style={{ width: 55, borderRight: "none" }} rowSpan={2}>
-              <RiDeleteBin7Line size={23} color='#808080' />
-            </th>
-          </tr>
-          <tr>
-            <th style={{ width: 95 }}>Dia</th>
-            <th>Nome do Colaborador</th>
-            <th style={{ width: 50 }}>24hrs</th>
-            <th style={{ width: 90 }}>Início</th>
-            <th style={{ width: 90 }}>dás</th>
-            <th style={{ width: 90 }}>às</th>
-            <th style={{ width: 90 }}>Término</th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* verificação se os setores foram escolhidos corretamente e se possuem algum registro */}
-          {plantaoChosen === "Transporte" ||
-          plantaoChosen === "Controle De Perdas" ||
-          (plantaoChosen != "" && localChosen != "" && isEmpty) ? (
-            registers.size === 0 ? (
-              // @ts-ignore
-              <>
-                {setHaveSchedulesHourChanged(false)}
-                <EmptyRegistersMessage>
-                  <div>
-                    <AiOutlineInfoCircle size={36} color={"white"} />
-                  </div>
-                  <h3>Não Há escalas registradas</h3>
-                </EmptyRegistersMessage>
-              </>
-            ) : null
-          ) : null}
+    <>
+      <ToastContainer autoClose={2500} transition={Slide} />
+      {/* {Object.keys(scheduleHoursChanges.userInfo).length != 0 ? (
+        <HaveScheduleHoursChanges
+          userInfo2={scheduleHoursChanges.userInfo}
+          plantao={`${plantaoChosen} - ${localChosen}`}
+          closeModal={() =>
+            setScheduleHoursChanges({
+              userInfo: {},
+            })
+          }
+          data_escala={{ year, monthNumber }}
+        />
+      ) : null}
+      {haveEmptyField ? (
+        <EmptyFieldError>
+          <BiError size={24} />
+          <span>Existem campos vazios a serem preenchidos</span>
+        </EmptyFieldError>
+      ) : null} */}
+      <Container>
+        <Header />
+        <Tbody>
           <>
-            {Array.from(registers).map((data, index) => {
-              const schedule = data[1];
+            {/* verificação se os setores foram escolhidos corretamente e se possuem algum registro */}
+            {plantaoChosen === "Transporte" ||
+            plantaoChosen === "Controle De Perdas" ||
+            (plantaoChosen != "" && localChosen != "" && isEmpty) ? (
+              registers.size === 0 ? (
+                // @ts-ignore
+                <>
+                  {setHaveSchedulesHourChanged(false)}
+                  <EmptyRegistersMessage colSpan={5}>
+                    <div>
+                      <AiOutlineInfoCircle size={36} color={"white"} />
+                    </div>
+                    <h3>Não Há escalas registradas</h3>
+                  </EmptyRegistersMessage>
+                </>
+              ) : null
+            ) : null}
 
-              return (
-                <tr key={schedule.id} style={{ backgroundColor: selectedRows.includes(schedule.id) ? "#fd9797" : "transparent" }}>
-                  <td>
-                    {/* {action === "edit" ? (
-                      <option key={defaultValues?.dayLoaded} value={defaultValues?.dayLoaded}>
-                        {defaultValues?.dayLoaded} - {getDayOfTheWeek(defaultValues?.dayLoaded)}
-                      </option>
-                    ) : (
-                      <option value='' disabled selected>
-                        Dia &nbsp;
-                      </option>
-                    )}
-                    {allDays.map((day) => (
-                      <option key={day} value={day}>
-                        {day} - {getDayOfTheWeek(day)}
-                      </option>
-                    ))} */}
-                    {schedule.isNew ? (
-                      <Select
-                        styles={{ ...customStyles, ...customSelectStyleWithoutIcon }}
-                        options={daysOptions}
-                        value={daysOptions.find((option) => option.value === schedule.day)}
-                        // @ts-ignore
-                        onChange={(option) => handleInputChange(schedule.id, "day", option?.value || "")}
-                        placeholder='Selecione'
-                      />
-                    ) : (
-                      schedule.day
-                    )}
-                  </td>
-                  <td className='text-left'>
-                    <EmployeeInput index={index} />
-                    {/* {schedule.isNew ? (
-                      <Select
-                        styles={customStyles}
-                        options={nameOptions}
-                        value={schedule.employees}
-                        onChange={(option) => handleInputChange(schedule.id, "name", option?.value || "")}
-                        placeholder='Selecione'
-                        // isMulti
-                      />
-                    ) : (
-                      schedule.name
-                    )} */}
-                  </td>
-                  <td>
-                    <input
-                      type='checkbox'
-                      checked={schedule.hours24}
-                      onChange={(e) => handleInputChange(schedule.id, "hours24", e.target.checked)}
-                      placeholder='Selecione'
-                    />
-                  </td>
-                  <td colSpan={schedule.hours24 ? 4 : 1}>
-                    {schedule.hours24 ? (
-                      "FullTime"
-                    ) : schedule.isNew ? (
-                      <Select
-                        styles={{ ...customStyles, ...customSelectStyleWithoutIcon }}
-                        options={timeOptions.filter((option) => !schedule.scheduleHour[3] || option.value < schedule.scheduleHour[3])}
-                        value={timeOptions.find((option) => option.value === schedule.scheduleHour[0])}
-                        onChange={(option) => handleInputChange(schedule.id, "start", option?.value || "")}
-                        placeholder='Selecione'
-                      />
-                    ) : (
-                      schedule.scheduleHour[0]
-                    )}
-                  </td>
-                  {!schedule.hours24 && (
-                    <td>
-                      {schedule.isNew ? (
-                        <Select
-                          styles={{ ...customStyles, ...customSelectStyleWithoutIcon }}
-                          options={timeOptions.filter((option) => !schedule.scheduleHour[1] || option.value < schedule.scheduleHour[2])}
-                          value={timeOptions.find((option) => option.value === schedule.scheduleHour[1])}
-                          onChange={(option) => handleInputChange(schedule.id, "from", option?.value || "")}
-                          placeholder='Selecione'
-                        />
-                      ) : (
-                        schedule.scheduleHour[1]
-                      )}
-                    </td>
-                  )}
-                  {!schedule.hours24 && (
-                    <td>
-                      {schedule.isNew ? (
-                        <Select
-                          styles={{ ...customStyles, ...customSelectStyleWithoutIcon }}
-                          options={timeOptions.filter((option) => !schedule.scheduleHour[2] || option.value > schedule.scheduleHour[2])}
-                          value={timeOptions.find((option) => option.value === schedule.scheduleHour[2])}
-                          onChange={(option) => handleInputChange(schedule.id, "to", option?.value || "")}
-                          placeholder='Selecione'
-                        />
-                      ) : (
-                        schedule.scheduleHour[2]
-                      )}
-                    </td>
-                  )}
-                  {!schedule.hours24 && (
-                    <td>
-                      {schedule.isNew ? (
-                        <Select
-                          styles={{ ...customStyles, ...customSelectStyleWithoutIcon }}
-                          options={timeOptions.filter((option) => !schedule.scheduleHour[0] || option.value > schedule.scheduleHour[0])}
-                          value={timeOptions.find((option) => option.value === schedule.scheduleHour[3])}
-                          onChange={(option) => handleInputChange(schedule.id, "end", option?.value || "")}
-                          placeholder='Selecione'
-                        />
-                      ) : (
-                        schedule.scheduleHour[3]
-                      )}
-                    </td>
-                  )}
-                  <td>{getTotalHours(schedule.scheduleHour).diference}</td>
-                  <td>
-                    <input type='checkbox' onChange={() => handleCheckboxChange(schedule.id)} />
-                  </td>
-                </tr>
-              );
-            })}
+            {Array.from(registers).map((data, index) => (
+              <Register
+                id={data[1].id}
+                day={data[1].day}
+                index={index}
+                action={data[1].action}
+                defaultValues={
+                  data[1].action === "edit" && {
+                    idLoaded: "",
+                    dayLoaded: data[1].day,
+                    employeesLoaded: [],
+                    scheduleHourLoaded: data[1].scheduleHour,
+                  }
+                }
+                removeRegisterOfRemoveList={removeRegisterOfRemoveList}
+                removeRegisterSaved={removeRegisterSaved}
+                removeRegister={removeRegister}
+              />
+            ))}
           </>
-        </tbody>
-      </Table>
+        </Tbody>
+
+        {/* <DEVLOGS>
+          <button onClick={() => console.log(responsavel)}>
+            CONSOLE LOG Responsavel
+          </button>
+          <button onClick={() => console.log(registers)}>registers list</button>
+          <button onClick={() => consoleLogForm()}>
+            CONSOLE LOG Formulário
+          </button>
+          <button onClick={() => console.log(formularioDelete)}>
+            CONSOLE LOG Formulário Delete
+          </button>
+          <button onClick={() => gerarEscalas()}>gerar escalas</button>
+        </DEVLOGS> */}
+      </Container>
       <ButtonContainer>
         {plantaoChosen === "Transporte" || plantaoChosen === "Controle De Perdas" || (plantaoChosen != "" && localChosen != "") ? (
           <Button onClick={addRegister}>Adicionar Linha</Button>
         ) : null}
-        <Button onClick={handleSave}>Salvar</Button>
+        <Button
+          disabled={registers.size === 0 || formularioDelete.size === 0 || isSendingForm}
+          onClick={haveSchedulesHourChanged ? sendFormWithChanges : sendForm}
+        >
+          {isSendingForm ? "Carregando..." : "Salvar"}
+        </Button>
       </ButtonContainer>
-      <div style={{ display: "flex", flexDirection: "column", gap: 15, paddingTop: 15 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 15, padding: 10 }}>
         <span>Observação</span>
-        <textarea style={{ minHeight: 60 }} name='observations' id='observations' wrap='hard'>{observationForm}</textarea>
+        <textarea
+          style={{ minHeight: 80 }}
+          name='observations'
+          id='observations'
+          value={observationForm}
+          cols={130}
+          wrap='hard'
+          onChange={(e) => handleChangeObservation(e.target.value)}
+        ></textarea>
       </div>
-    </Container>
+    </>
   );
 };
 
 export default ScheduleTable;
+
+export const PenIcon = () => (
+  <PenIconContainer width='29' height='29' viewBox='0 0 29 29' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <svg>
+      <path
+        d='M27.8303 0.995058L27.7956 0.962646C27.1312 0.341898 26.27 0 25.3705 0C24.3622 0 23.394 0.436597 22.7143 1.19774L9.86069 15.5911C9.74354 15.7223 9.65467 15.8771 9.59974 16.0456L8.08834 20.68C7.9136 21.2158 8.0013 21.8083 8.32291 22.265C8.64708 22.7252 9.16933 23 9.72004 23H9.72012C9.95832 23 10.1912 22.9499 10.412 22.8511L14.788 20.8929C14.9471 20.8218 15.0899 20.7172 15.2069 20.5861L28.0606 6.19275C29.3981 4.69509 29.295 2.36358 27.8303 0.995058ZM10.9841 19.8239L11.871 17.1045L11.9458 17.0207L13.6267 18.591L13.5519 18.6748L10.9841 19.8239ZM26.2279 4.48047L15.3008 16.7166L13.6198 15.1462L24.547 2.91003C24.7607 2.6707 25.0532 2.53885 25.3706 2.53885C25.649 2.53885 25.9157 2.6448 26.122 2.83758L26.1567 2.87C26.6104 3.2939 26.6424 4.01637 26.2279 4.48047Z'
+        fill='black'
+      />
+      <path
+        d='M25.7269 11.0498C25.0237 11.0498 24.4537 11.6225 24.4537 12.3289V23.1887C24.4537 24.9824 23.0011 26.4418 21.2157 26.4418H5.78439C3.99892 26.4418 2.54643 24.9824 2.54643 23.1887V7.81138C2.54643 6.01766 3.999 4.55831 5.78439 4.55831H16.9536C17.6568 4.55831 18.2269 3.98559 18.2269 3.27916C18.2269 2.57272 17.6568 2 16.9536 2H5.78439C2.59481 2 0 4.60701 0 7.81138V23.1886C0 26.393 2.5949 29 5.78439 29H21.2156C24.4051 29 27 26.393 27 23.1886V12.3289C27.0001 11.6225 26.43 11.0498 25.7269 11.0498Z'
+        fill='black'
+      />
+    </svg>
+  </PenIconContainer>
+);

@@ -1,16 +1,6 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-
-  width: 100%;
-  gap: 2.4rem;
-  margin-bottom: 1.5rem;
-
-  /* padding: 0.5rem; */
-  padding-left: 55px;
+export const Thead = styled.thead`
 
   @media (max-width: 520px) {
     display: grid;
@@ -23,21 +13,6 @@ export const Container = styled.div`
   .employee_name {
     @media (min-width: 1000px) {
       min-width: 330px;
-    }
-  }
-
-  h3 {
-    width: fit-content;
-
-    font-weight: 500;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    font-size: 18px;
-
-    @media (max-width: 520px) {
-      font-size: 1rem;
     }
   }
 

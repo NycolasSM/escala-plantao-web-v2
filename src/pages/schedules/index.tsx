@@ -1,6 +1,6 @@
 import Calendar from "@/components/Calendar";
 import { Filters } from "@/components/Header/styles";
-import ScheduleTable from "../ScheduleTable";
+import ScheduleTable from "@/components/ScheduleTable";
 import { FlexContainer, Column, BoxContainer, Container, SectionTitle, Header, Buttons, CreateSchedule } from "@/styles/pages/schedules";
 import React, { useContext, useEffect, useState } from "react";
 import Select from "react-select";

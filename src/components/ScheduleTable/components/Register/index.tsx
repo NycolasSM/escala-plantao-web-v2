@@ -9,12 +9,16 @@ import EmployeeInput from "../EmployeeInput/index.jsx";
 import { BiLockOpenAlt } from "react-icons/bi";
 
 import FormContext from "../../../../context/formContext";
-import AvailableSchedulesContext from "../../../../context/availableSchedulesContext";
+import AvailableSchedulesContext from "@/context/AvailableSchedulesContext";
 
 import Select from "react-select/async";
 
-import ChangeDefaultHoursModal from "../../../Modal/EditScheduleHour";
-import HaveScheduleHoursChanges from "../../../Modal/HaveScheduleHoursChanges";
+import ChangeDefaultHoursModal from "@/components/Modal/EditScheduleHour";
+import HaveScheduleHoursChanges from "@/components/Modal/HaveScheduleHoursChanges";
+import { RiDeleteBin7Line } from "react-icons/ri";
+import { ButtonsContainer } from "../../styles";
+import { FaTrashAlt, FaTrashRestoreAlt } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
 
 type LoadData = {
   idLoaded: string;
@@ -28,6 +32,10 @@ type Props = {
   action: string;
   day: number;
   defaultValues?: LoadData;
+  removeRegisterOfRemoveList: any;
+  removeRegisterSaved: any;
+  removeRegister: any;
+  id: any;
 };
 
 const Register = ({
@@ -40,6 +48,10 @@ const Register = ({
     scheduleHourLoaded: ["00:00", "00:00", "00:00", "24:00"],
   },
   day,
+  removeRegisterOfRemoveList,
+  removeRegisterSaved,
+  removeRegister,
+  id,
 }: Props) => {
   const {
     registers,
@@ -68,6 +80,8 @@ const Register = ({
   const [rangeOfScheduleSelected, setRangeOfScheduleSelected] = useState(defaultValues.scheduleHourLoaded);
 
   function parse(horario: string) {
+    if (!horario) return 0;
+
     let [hora, minuto] = horario.split(":").map((v) => parseInt(v));
     if (!minuto) {
       // para o caso de não ter os minutos
@@ -105,10 +119,10 @@ const Register = ({
 
   useEffect(() => {
     let jornadaDoFuncionario = calculoDaJornadaComIntervalo(
-      rangeOfScheduleSelected[0],
-      rangeOfScheduleSelected[1],
-      rangeOfScheduleSelected[2],
-      rangeOfScheduleSelected[3]
+      rangeOfScheduleSelected && rangeOfScheduleSelected[0],
+      rangeOfScheduleSelected && rangeOfScheduleSelected[1],
+      rangeOfScheduleSelected && rangeOfScheduleSelected[2],
+      rangeOfScheduleSelected && rangeOfScheduleSelected[3]
     );
     updateScheduleRegister(rangeOfScheduleSelected);
     converterParaHorasMinuto(jornadaDoFuncionario);
@@ -576,7 +590,7 @@ const Register = ({
 
   return (
     <>
-      {Object.keys(scheduleRegisterInfo.registerInfo).length != 0 ? (
+      {/* {Object.keys(scheduleRegisterInfo.registerInfo).length != 0 ? (
         <ChangeDefaultHoursModal
           registerInfo={scheduleRegisterInfo.registerInfo}
           setHaveSchedulesHourChanged={setHaveSchedulesHourChanged}
@@ -587,44 +601,34 @@ const Register = ({
             })
           }
         />
-      ) : null}
-      <Container
-        className={`
-      ${formularioDelete.get(index.toString()) ? "delete" : action === "edit" ? "edit" : "create"}
-      `}
-      >
-        <SelectDays
-          style={{
-            display: "flex",
-            width: "15%",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            fontSize: 15,
-          }}
-          defaultValue=''
-          name=''
-          id=''
-          onChange={(e: any) => {
-            setDaySelected(JSON.parse(e.target.value));
-          }}
-        >
-          {action === "edit" ? (
-            <option key={defaultValues?.dayLoaded} value={defaultValues?.dayLoaded}>
-              {defaultValues?.dayLoaded} - {getDayOfTheWeek(defaultValues?.dayLoaded)}
-            </option>
-          ) : (
-            <option value='' disabled selected>
-              Dia &nbsp;
-            </option>
-          )}
-          {allDays.map((day) => (
-            <option key={day} value={day}>
-              {day} - {getDayOfTheWeek(day)}
-            </option>
-          ))}
-        </SelectDays>
-        <div style={{ width: "50%" }}>
+      ) : null} */}
+      <Container className={`${formularioDelete.get(index.toString()) ? "delete" : action === "edit" ? "edit" : "create"}`}>
+        <td>
+          <SelectDays
+            defaultValue=''
+            name=''
+            id=''
+            onChange={(e: any) => {
+              setDaySelected(JSON.parse(e.target.value));
+            }}
+          >
+            {action === "edit" ? (
+              <option key={defaultValues?.dayLoaded} value={defaultValues?.dayLoaded}>
+                {defaultValues?.dayLoaded} - {getDayOfTheWeek(defaultValues?.dayLoaded)}
+              </option>
+            ) : (
+              <option value='' disabled selected>
+                Dia &nbsp;
+              </option>
+            )}
+            {allDays.map((day) => (
+              <option key={day} value={day}>
+                {day} - {getDayOfTheWeek(day)}
+              </option>
+            ))}
+          </SelectDays>
+        </td>
+        <td>
           {daySelected != undefined ? (
             <EmployeeInput index={index} />
           ) : (
@@ -632,89 +636,67 @@ const Register = ({
               <Select placeholder='Selecione o Dia' isDisabled />
             </EmployeeInputContainer>
           )}
-        </div>
+        </td>
         {daySelected != undefined ? (
           <>
-            <input
-              className='checkbox'
-              type='checkbox'
-              onChange={() => setIsFulltime(!isFullTime)}
-              onClick={() => {
-                handleSetFullTime();
-                setIsFulltime(!isFullTime);
-              }}
-            />
+            <td>
+              <input
+                className='checkbox'
+                type='checkbox'
+                onChange={() => setIsFulltime(!isFullTime)}
+                onClick={() => {
+                  handleSetFullTime();
+                  setIsFulltime(!isFullTime);
+                }}
+              />
+            </td>
 
             {isFullTime ? (
-              <span style={{ width: "66%", textAlign: "center" }}>FullTime</span>
+              <td colSpan={4}>
+                <span style={{ textAlign: "center" }}>FullTime</span>
+              </td>
             ) : (
               <>
-                <select
-                  style={{ width: "12%" }}
-                  name='startHour'
-                  id='startHour'
-                  defaultValue={rangeOfScheduleSelected[0]}
-                  value={rangeOfScheduleSelected[0]}
-                  disabled={isLockedScheduleHours}
-                  onChange={(e) => {
-                    handleUpdateScheduleHour(0, e.target.value);
-                  }}
-                >
-                  <>
-                    {AvaibleScheduleHours.map((hour) => (
-                      <>
-                        {parseFloat(hour) < parseFloat(rangeOfScheduleSelected[3]) ? (
-                          <option key={hour} value={hour}>
-                            {hour}
-                          </option>
-                        ) : null}
-                      </>
-                    ))}
-                  </>
-                </select>
-                <select
-                  style={{ width: "12%" }}
-                  name='startBreakHour'
-                  id='startBreakHour'
-                  defaultValue={rangeOfScheduleSelected[1]}
-                  value={rangeOfScheduleSelected[1]}
-                  disabled={isLockedScheduleHours}
-                  onChange={(e) => {
-                    e.target.value === "00:00" ? handleUpdateScheduleHour(1, "00:00") : null;
-                    handleUpdateScheduleHour(1, e.target.value);
-                  }}
-                >
-                  <option value={"00:00"} style={{ fontSize: 15 }}>
-                    Sem Intervalo
-                  </option>
-                  {AvaibleScheduleHours.map((hour) => (
-                    <>
-                      {parseFloat(hour) > parseFloat(rangeOfScheduleSelected[0]) ? (
-                        <option key={hour} value={hour}>
-                          {hour}
-                        </option>
-                      ) : null}
-                    </>
-                  ))}
-                  <option value={"24:00"}>23:59</option>
-                </select>
-                {rangeOfScheduleSelected[1] != "00:00" ? (
+                <td>
                   <select
-                    style={{ width: "12%" }}
-                    name='endBreakHour'
-                    id='endBreakHour'
-                    defaultValue={rangeOfScheduleSelected[2]}
-                    value={rangeOfScheduleSelected[2]}
+                    name='startHour'
+                    id='startHour'
+                    defaultValue={rangeOfScheduleSelected && rangeOfScheduleSelected[0]}
+                    value={rangeOfScheduleSelected && rangeOfScheduleSelected[0]}
                     disabled={isLockedScheduleHours}
-                    onChange={(e) => handleUpdateScheduleHour(2, e.target.value)}
+                    onChange={(e) => {
+                      handleUpdateScheduleHour(0, e.target.value);
+                    }}
                   >
-                    <option style={{ fontSize: 15 }} value={"00:00"}>
-                      Sem Intervalo
-                    </option>
+                    <>
+                      {AvaibleScheduleHours.map((hour) => (
+                        <>
+                          {parseFloat(hour) < parseFloat(rangeOfScheduleSelected && rangeOfScheduleSelected[3]) ? (
+                            <option key={hour} value={hour}>
+                              {hour}
+                            </option>
+                          ) : null}
+                        </>
+                      ))}
+                    </>
+                  </select>
+                </td>
+                <td>
+                  <select
+                    name='startBreakHour'
+                    id='startBreakHour'
+                    defaultValue={rangeOfScheduleSelected && rangeOfScheduleSelected[1]}
+                    value={rangeOfScheduleSelected && rangeOfScheduleSelected[1]}
+                    disabled={isLockedScheduleHours}
+                    onChange={(e) => {
+                      e.target.value === "00:00" ? handleUpdateScheduleHour(1, "00:00") : null;
+                      handleUpdateScheduleHour(1, e.target.value);
+                    }}
+                  >
+                    <option value={"00:00"}>Sem Intervalo</option>
                     {AvaibleScheduleHours.map((hour) => (
                       <>
-                        {parseFloat(hour) > parseFloat(rangeOfScheduleSelected[1]) &&
-                        parseFloat(hour) > parseFloat(rangeOfScheduleSelected[0]) ? (
+                        {parseFloat(hour) > parseFloat(rangeOfScheduleSelected && rangeOfScheduleSelected[0]) ? (
                           <option key={hour} value={hour}>
                             {hour}
                           </option>
@@ -723,98 +705,158 @@ const Register = ({
                     ))}
                     <option value={"24:00"}>23:59</option>
                   </select>
-                ) : (
-                  <select
-                    style={{ width: "12%" }}
-                    disabled
-                    name='endBreakHour'
-                    id='endBreakHour'
-                    defaultValue={"00:00"}
-                    value={rangeOfScheduleSelected[2]}
-                  >
-                    <option style={{ fontSize: 15 }} value={"00:00"}>
-                      Sem Intervalo
-                    </option>
-                  </select>
-                )}
+                </td>
 
-                <select
-                  style={{ width: "12%" }}
-                  name='endHour'
-                  id='endHour'
-                  ref={endHourRef}
-                  defaultValue={rangeOfScheduleSelected[3]}
-                  disabled={isLockedScheduleHours}
-                  onChange={(e) => handleUpdateScheduleHour(3, e.target.value)}
-                >
-                  <option value={"00:00"} disabled style={{ fontSize: 15 }}>
-                    Sem Horário
-                  </option>
-                  {AvaibleScheduleHours.map((hour) => (
-                    <>
-                      {parseFloat(hour) > parseFloat(rangeOfScheduleSelected[2]) &&
-                      parseFloat(hour) > parseFloat(rangeOfScheduleSelected[1]) &&
-                      parseFloat(hour) > parseFloat(rangeOfScheduleSelected[0]) ? (
-                        <option key={hour} value={hour}>
-                          {hour}
-                        </option>
-                      ) : null}
-                    </>
-                  ))}
-                  <option value={"24:00"}>23:59</option>
-                </select>
-                {isLockedScheduleHours ? (
-                  <button
-                    className='register__button--unlock'
-                    onClick={() =>
-                      setScheduleRegisterInfo({
-                        registerInfo: {
-                          teste: "teste",
-                        },
-                      })
-                    }
+                {rangeOfScheduleSelected && rangeOfScheduleSelected[1] != "00:00" ? (
+                  <td>
+                    <select
+                      name='endBreakHour'
+                      id='endBreakHour'
+                      defaultValue={rangeOfScheduleSelected[2]}
+                      value={rangeOfScheduleSelected[2]}
+                      disabled={isLockedScheduleHours}
+                      onChange={(e) => handleUpdateScheduleHour(2, e.target.value)}
+                    >
+                      <option value={"00:00"}>Sem Intervalo</option>
+                      {AvaibleScheduleHours.map((hour) => (
+                        <>
+                          {parseFloat(hour) > parseFloat(rangeOfScheduleSelected && rangeOfScheduleSelected[1]) &&
+                          parseFloat(hour) > parseFloat(rangeOfScheduleSelected && rangeOfScheduleSelected[0]) ? (
+                            <option key={hour} value={hour}>
+                              {hour}
+                            </option>
+                          ) : null}
+                        </>
+                      ))}
+                      <option value={"24:00"}>23:59</option>
+                    </select>
+                  </td>
+                ) : (
+                  <td>
+                    <select disabled name='endBreakHour' id='endBreakHour' defaultValue={"00:00"} value={rangeOfScheduleSelected && rangeOfScheduleSelected[2]}>
+                      <option value={"00:00"}>Sem Intervalo</option>
+                    </select>
+                  </td>
+                )}
+                <td>
+                  <select
+                    name='endHour'
+                    id='endHour'
+                    ref={endHourRef}
+                    defaultValue={rangeOfScheduleSelected && rangeOfScheduleSelected[3]}
+                    disabled={isLockedScheduleHours}
+                    onChange={(e) => handleUpdateScheduleHour(3, e.target.value)}
                   >
-                    <BiLockOpenAlt size={24} />
-                  </button>
+                    <option value={"00:00"} disabled>
+                      Sem Horário
+                    </option>
+                    {AvaibleScheduleHours.map((hour) => (
+                      <>
+                        {parseFloat(hour) > parseFloat(rangeOfScheduleSelected && rangeOfScheduleSelected[2]) &&
+                        parseFloat(hour) > parseFloat(rangeOfScheduleSelected && rangeOfScheduleSelected[1]) &&
+                        parseFloat(hour) > parseFloat(rangeOfScheduleSelected &&rangeOfScheduleSelected[0]) ? (
+                          <option key={hour} value={hour}>
+                            {hour}
+                          </option>
+                        ) : null}
+                      </>
+                    ))}
+                    <option value={"24:00"}>23:59</option>
+                  </select>
+                </td>
+                {isLockedScheduleHours ? (
+                  <td>
+                    <button
+                      className='register__button--unlock'
+                      onClick={() =>
+                        setScheduleRegisterInfo({
+                          registerInfo: {
+                            teste: "teste",
+                          },
+                        })
+                      }
+                    >
+                      <BiLockOpenAlt size={24} />
+                    </button>
+                  </td>
                 ) : null}
               </>
             )}
           </>
         ) : (
           <>
-            <div className='checkbox'>
+            <td className='checkbox'>
               <input type='checkbox' onChange={() => setIsFulltime(!isFullTime)} disabled />
-            </div>
+            </td>
 
-            <select disabled>
-              <option value='' disabled selected>
-                Hora
-              </option>
-            </select>
+            <td>
+              <select disabled>
+                <option value='' disabled selected>
+                  Hora
+                </option>
+              </select>
+            </td>
 
-            <select disabled>
-              <option value='' disabled selected>
-                Hora
-              </option>
-            </select>
+            <td>
+              <select disabled>
+                <option value='' disabled selected>
+                  Hora
+                </option>
+              </select>
+            </td>
 
-            <select disabled>
-              <option value='' disabled selected>
-                Hora
-              </option>
-            </select>
+            <td>
+              <select disabled>
+                <option value='' disabled selected>
+                  Hora
+                </option>
+              </select>
+            </td>
 
-            <select disabled>
-              <option value='' disabled selected>
-                Hora
-              </option>
-            </select>
+            <td>
+              <select disabled>
+                <option value='' disabled selected>
+                  Hora
+                </option>
+              </select>
+            </td>
           </>
         )}
 
-        <span className='total__hours' style={{ width: "9%" }}>
-          {rangeOfScheduleSelected[3] != "00:00" ? diferenca : isFullTime ? <span>24hrs</span> : null}
-        </span>
+        <td className='text-center'>
+          <span>{rangeOfScheduleSelected && rangeOfScheduleSelected[3] != "00:00" ? diferenca : isFullTime ? <span>24hrs</span> : null}</span>
+        </td>
+        <td>
+          {action === "edit" ? (
+            <ButtonsContainer>
+              <>
+                {formularioDelete.get(index.toString()) ? (
+                  <button className='register__button--restore' onClick={() => removeRegisterOfRemoveList(index.toString(), id)}>
+                    <FaTrashRestoreAlt size={20} color={"white"} />
+                  </button>
+                ) : (
+                  <button className='register__button--delete' onClick={() => removeRegisterSaved(index.toString(), id)}>
+                    <FaTrashAlt size={20} color={"white"} />
+                  </button>
+                )}
+              </>
+            </ButtonsContainer>
+          ) : (
+            <>
+              {registers.size === index + 1 ? (
+                <ButtonsContainer>
+                  <button className='register__button--cancel' onClick={() => removeRegister(index.toString())}>
+                    <IoClose color='white' size={36} />
+                  </button>
+                </ButtonsContainer>
+              ) : (
+                <ButtonsContainer>
+                  <button className='button--hide'></button>
+                </ButtonsContainer>
+              )}
+            </>
+          )}
+        </td>
       </Container>
     </>
   );
