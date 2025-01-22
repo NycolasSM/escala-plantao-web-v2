@@ -1,8 +1,53 @@
 import React, { useContext, useState } from 'react';
 import { customStyles, EmployeeInputContainer } from './styles';
 import Select from 'react-select/async';
-import AvailableSchedulesContext from '../../../../context/availableSchedulesContext';
 import FormContext from '../../../../context/formContext';
+import AvailableSchedulesContext from '@/context/AvailableSchedulesContext';
+
+const customStyles2 = {
+  control: (provided) => ({
+    ...provided,
+    minHeight: "29px",
+    height: "29px",
+    fontSize: "12px",
+    margin: 0
+  }),
+  valueContainer: (provided) => ({
+    ...provided,
+    height: "30px",
+    padding: "0 6px",
+  }),
+  input: (provided) => ({
+    ...provided,
+    margin: "0px",
+  }),
+  indicatorSeparator: (provided) => ({
+    display: "none",
+  }),
+  indicatorsContainer: (provided) => ({
+    ...provided,
+    height: "30px",
+  }),
+  option: (provided) => ({
+    ...provided,
+    fontSize: "12px",
+    padding: "8px 10px",
+  }),
+  multiValueLabel: (provided) => ({
+    ...provided,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    maxWidth: "100px",
+  }),
+  placeholder: (provided) => ({
+    ...provided,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    maxWidth: "100px",
+  }),
+};
 
 const EmployeeInput = ({ index }) => {
   const { availableEmployees } = useContext(AvailableSchedulesContext);
@@ -107,7 +152,8 @@ const EmployeeInput = ({ index }) => {
           };
         })}
         isMulti
-        styles={customStyles}
+        styles={{...customStyles2, ...customStyles}}
+        // styles={{ ...customStyles }}
       />
     </EmployeeInputContainer>
   );

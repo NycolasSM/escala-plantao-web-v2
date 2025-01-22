@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const EmployeeInputContainer = styled.div`
   width: 22rem;
-  height: 37px;
+  /* height: 37px; */
 
   @media (max-width: 520px) {
     width: 10rem;

@@ -9,6 +9,7 @@ import FormContext from "@/context/formContext";
 import { useRouter } from "next/router";
 import { api } from "@/services/api";
 import { getDayOfTheWeek } from "@/utils/days";
+import EmployeeInput from "@/pages/ScheduleTable/components/EmployeeInput";
 
 type RegistersLoaded = {
   data: string;
@@ -99,8 +100,17 @@ const ScheduleTable = () => {
 
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
 
-  const { localChosen, plantaoChosen, setLocalChosen, setPlantaoChosen, year, monthNumber, observationForm, setObervationForm } =
-    useAvailableSchedulesContext();
+  const {
+    localChosen,
+    plantaoChosen,
+    setLocalChosen,
+    setPlantaoChosen,
+    year,
+    monthNumber,
+    observationForm,
+    setObervationForm,
+    setLoadedForms2,
+  } = useAvailableSchedulesContext();
 
   const {
     haveEmptyField,
@@ -113,6 +123,7 @@ const ScheduleTable = () => {
     formularioDelete,
     setFormularioDelete,
     setLoadedForms,
+    loadedForms,
     isLoadingRegisters,
     setIsLoadingRegisters,
     haveSchedulesHourChanged,
@@ -149,23 +160,20 @@ const ScheduleTable = () => {
     );
   };
 
-  const handleAddRow = () => {
-    setNewSchedules([
-      ...newSchedules,
-      {
-        id: newSchedules.length + schedules.length + 1,
-        day: "",
-        name: "",
-        hours24: false,
-        start: "",
-        from: "",
-        to: "",
-        end: "",
-        totalHours: "",
-        isNew: true,
-      },
-    ]);
-  };
+  // const handleAddRow = () => {
+  //   setNewSchedules([
+  //     ...newSchedules,
+  //     {
+  //       id: newSchedules.length + schedules.length + 1,
+  //       day: 1,
+  //       hours24: false,
+  //       employees: [],
+  //       scheduleHour: [],
+  //       isNew: true,
+  //       action: "create",
+  //     },
+  //   ]);
+  // };
 
   const handleSave = () => {
     addSchedules(newSchedules);
@@ -280,7 +288,13 @@ const ScheduleTable = () => {
         return;
       } else {
         api.get(`/schedulesRegistered/?year=${year}&month=${mes ?? monthNumber}&setor=${setor}`).then((resp) => {
+          console.log("resp.data", resp.data);
+
           setLoadedForms(resp.data);
+          setLoadedForms2(resp.data);
+
+          console.log("LoadedForms", loadedForms);
+
           setRegistersLoaded(resp.data);
           setIsLoadingRegisters(false);
           router.query.Plantao = undefined;
@@ -376,9 +390,58 @@ const ScheduleTable = () => {
 
   const daysOptions = allDays.map((day) => {
     return {
-      value: day, label: `${day} - ${getDayOfTheWeek(day, year, monthNumber)}`
+      value: day,
+      label: `${day} - ${getDayOfTheWeek(day, year, monthNumber)}`,
+    };
+  });
+
+  function converterParaHorasMinuto(horario: number) {
+    let horatioToString = (horario / 60).toString();
+
+    let [hora, minuto] = horatioToString.split(".").map((v) => parseInt(v));
+
+    if (minuto === 5) {
+      minuto = 30;
+    } else {
+      minuto = 0;
     }
-  })
+
+    return {
+      total: minuto === 5 ? hora + 0.5 : hora,
+      diference: `${hora}h:${minuto}m`,
+    };
+  }
+
+  const getTotalHours = (rangeOfScheduleSelected) => {
+    if (rangeOfScheduleSelected.length != 4) {
+      return {
+        total: 0,
+        diference: `0h:0m`,
+      }
+    }
+
+    function parse(horario: string) {
+      let [hora, minuto] = horario.split(":").map((v) => parseInt(v));
+      if (!minuto) {
+        // para o caso de não ter os minutos
+        minuto = 0;
+      }
+      return minuto + hora * 60;
+    }
+
+    function calculoDaJornadaComIntervalo(entrada1: string, saida1: string, entrada2: string, saida2: string) {
+      return parse(saida1) - parse(entrada1) + (parse(saida2) - parse(entrada2));
+    }
+
+    let jornadaDoFuncionario = calculoDaJornadaComIntervalo(
+      rangeOfScheduleSelected[0],
+      rangeOfScheduleSelected[1],
+      rangeOfScheduleSelected[2],
+      rangeOfScheduleSelected[3]
+    );
+
+    return converterParaHorasMinuto(jornadaDoFuncionario);
+  };
 
   return (
     <Container>
@@ -448,6 +511,7 @@ const ScheduleTable = () => {
                         styles={{ ...customStyles, ...customSelectStyleWithoutIcon }}
                         options={daysOptions}
                         value={daysOptions.find((option) => option.value === schedule.day)}
+                        // @ts-ignore
                         onChange={(option) => handleInputChange(schedule.id, "day", option?.value || "")}
                         placeholder='Selecione'
                       />
@@ -456,18 +520,19 @@ const ScheduleTable = () => {
                     )}
                   </td>
                   <td className='text-left'>
-                    {schedule.isNew ? (
+                    <EmployeeInput index={index} />
+                    {/* {schedule.isNew ? (
                       <Select
                         styles={customStyles}
                         options={nameOptions}
-                        value={nameOptions.find((option) => option.value === schedule.name)}
+                        value={schedule.employees}
                         onChange={(option) => handleInputChange(schedule.id, "name", option?.value || "")}
                         placeholder='Selecione'
                         // isMulti
                       />
                     ) : (
                       schedule.name
-                    )}
+                    )} */}
                   </td>
                   <td>
                     <input
@@ -483,13 +548,13 @@ const ScheduleTable = () => {
                     ) : schedule.isNew ? (
                       <Select
                         styles={{ ...customStyles, ...customSelectStyleWithoutIcon }}
-                        options={timeOptions.filter((option) => !schedule.end || option.value < schedule.end)}
-                        value={timeOptions.find((option) => option.value === schedule.start)}
+                        options={timeOptions.filter((option) => !schedule.scheduleHour[3] || option.value < schedule.scheduleHour[3])}
+                        value={timeOptions.find((option) => option.value === schedule.scheduleHour[0])}
                         onChange={(option) => handleInputChange(schedule.id, "start", option?.value || "")}
                         placeholder='Selecione'
                       />
                     ) : (
-                      schedule.start
+                      schedule.scheduleHour[0]
                     )}
                   </td>
                   {!schedule.hours24 && (
@@ -497,13 +562,13 @@ const ScheduleTable = () => {
                       {schedule.isNew ? (
                         <Select
                           styles={{ ...customStyles, ...customSelectStyleWithoutIcon }}
-                          options={timeOptions.filter((option) => !schedule.to || option.value < schedule.to)}
-                          value={timeOptions.find((option) => option.value === schedule.from)}
+                          options={timeOptions.filter((option) => !schedule.scheduleHour[1] || option.value < schedule.scheduleHour[2])}
+                          value={timeOptions.find((option) => option.value === schedule.scheduleHour[1])}
                           onChange={(option) => handleInputChange(schedule.id, "from", option?.value || "")}
                           placeholder='Selecione'
                         />
                       ) : (
-                        schedule.from
+                        schedule.scheduleHour[1]
                       )}
                     </td>
                   )}
@@ -512,13 +577,13 @@ const ScheduleTable = () => {
                       {schedule.isNew ? (
                         <Select
                           styles={{ ...customStyles, ...customSelectStyleWithoutIcon }}
-                          options={timeOptions.filter((option) => !schedule.from || option.value > schedule.from)}
-                          value={timeOptions.find((option) => option.value === schedule.to)}
+                          options={timeOptions.filter((option) => !schedule.scheduleHour[2] || option.value > schedule.scheduleHour[2])}
+                          value={timeOptions.find((option) => option.value === schedule.scheduleHour[2])}
                           onChange={(option) => handleInputChange(schedule.id, "to", option?.value || "")}
                           placeholder='Selecione'
                         />
                       ) : (
-                        schedule.to
+                        schedule.scheduleHour[2]
                       )}
                     </td>
                   )}
@@ -527,17 +592,17 @@ const ScheduleTable = () => {
                       {schedule.isNew ? (
                         <Select
                           styles={{ ...customStyles, ...customSelectStyleWithoutIcon }}
-                          options={timeOptions.filter((option) => !schedule.start || option.value > schedule.start)}
-                          value={timeOptions.find((option) => option.value === schedule.end)}
+                          options={timeOptions.filter((option) => !schedule.scheduleHour[0] || option.value > schedule.scheduleHour[0])}
+                          value={timeOptions.find((option) => option.value === schedule.scheduleHour[3])}
                           onChange={(option) => handleInputChange(schedule.id, "end", option?.value || "")}
                           placeholder='Selecione'
                         />
                       ) : (
-                        schedule.end
+                        schedule.scheduleHour[3]
                       )}
                     </td>
                   )}
-                  <td>{schedule.hours24 ? "24:00" : calculateTotalHours(schedule.start, schedule.end, schedule.from, schedule.to)}</td>
+                  <td>{getTotalHours(schedule.scheduleHour).diference}</td>
                   <td>
                     <input type='checkbox' onChange={() => handleCheckboxChange(schedule.id)} />
                   </td>
@@ -549,13 +614,13 @@ const ScheduleTable = () => {
       </Table>
       <ButtonContainer>
         {plantaoChosen === "Transporte" || plantaoChosen === "Controle De Perdas" || (plantaoChosen != "" && localChosen != "") ? (
-          <Button onClick={handleAddRow}>Adicionar Linha</Button>
+          <Button onClick={addRegister}>Adicionar Linha</Button>
         ) : null}
         <Button onClick={handleSave}>Salvar</Button>
       </ButtonContainer>
       <div style={{ display: "flex", flexDirection: "column", gap: 15, paddingTop: 15 }}>
         <span>Observação</span>
-        <textarea style={{ minHeight: 60 }} name='observations' id='observations' wrap='hard'></textarea>
+        <textarea style={{ minHeight: 60 }} name='observations' id='observations' wrap='hard'>{observationForm}</textarea>
       </div>
     </Container>
   );

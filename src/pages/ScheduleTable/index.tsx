@@ -167,7 +167,7 @@ const ScheduleTable = () => {
         return;
       } else {
         api.get(`/schedulesRegistered/?year=${year}&month=${mes ?? monthNumber}&setor=${setor}`).then((resp) => {
-          setLoadedForms(resp.data);
+          console.log("resp.data2", resp.data)
           setRegistersLoaded(resp.data);
           setIsLoadingRegisters(false);
           router.query.Plantao = undefined;

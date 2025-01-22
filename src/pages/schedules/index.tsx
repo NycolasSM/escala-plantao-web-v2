@@ -1,6 +1,6 @@
 import Calendar from "@/components/Calendar";
 import { Filters } from "@/components/Header/styles";
-import ScheduleTable from "@/components/ScheduleTable";
+import ScheduleTable from "../ScheduleTable";
 import { FlexContainer, Column, BoxContainer, Container, SectionTitle, Header, Buttons, CreateSchedule } from "@/styles/pages/schedules";
 import React, { useContext, useEffect, useState } from "react";
 import Select from "react-select";
@@ -12,8 +12,11 @@ import FormContext from "@/context/formContext";
 import { EmptyFieldError, LoadingContainer } from "./styles";
 import { localOptions, permissoes } from "./mocked";
 import { useRouter } from "next/router";
-import { Slide, ToastContainer } from 'react-toastify';
+import { Slide, ToastContainer } from "react-toastify";
 import { TailSpin } from "react-loader-spinner";
+import { generatePdfSchedule } from "@/services/generatePdfSchedule";
+import { toast } from "react-toastify";
+import { UserContext } from "@/context/User";
 
 type selectedOption = {
   plantaoSelected: string;
@@ -21,8 +24,21 @@ type selectedOption = {
 };
 
 const Schedules = () => {
-  const { plantaoAvailable, plantaoChosen, localChosen, setPlantaoChosen, setLocalChosen, setAvailableDaysData, setMonthNumber } =
-    React.useContext(AvailableSchedulesContext);
+  const {
+    plantaoAvailable,
+    plantaoChosen,
+    localChosen,
+    setPlantaoChosen,
+    setLocalChosen,
+    setAvailableDaysData,
+    setMonthNumber,
+    monthNumber,
+    year,
+    observationForm,
+    loadedForms2
+  } = React.useContext(AvailableSchedulesContext);
+
+  const { userInfo, logout } = useContext(UserContext);
 
   const {
     haveEmptyField,
@@ -42,7 +58,10 @@ const Schedules = () => {
     verifyEmptyFields,
     setIsSendingForm,
     setHaveEmptyField,
+    loadedForms
   } = useContext(FormContext);
+
+  console.log("loadedForms", loadedForms)
 
   const router = useRouter();
 
@@ -153,6 +172,10 @@ const Schedules = () => {
     setSelectedOptions({ ...selectedOptions, ["localSelected"]: local });
   };
 
+  const toastId = React.useRef(null);
+  const notifyLoading = () => toast.info("Gerando Relatório..", { autoClose: false });
+  const dismissLoadingNotify = () => toast.dismiss(toastId.current!);
+
   return (
     <ScheduleProvider>
       {haveEmptyField ? (
@@ -182,7 +205,23 @@ const Schedules = () => {
             )}
           </Filters>
           <Buttons>
-            <button>Visualizar Escala</button>
+            <button
+              onClick={() => {
+                generatePdfSchedule(
+                  loadedForms2,
+                  userInfo.nome,
+                  plantaoChosen,
+                  localChosen,
+                  monthNumber,
+                  year,
+                  observationForm,
+                  dismissLoadingNotify,
+                  notifyLoading
+                );
+              }}
+            >
+              Visualizar Escala
+            </button>
           </Buttons>
         </Header>
         <FlexContainer>

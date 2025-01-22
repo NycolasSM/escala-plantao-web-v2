@@ -10,6 +10,8 @@ export const Container = styled.section`
   padding: 0px 0px 45px 0px;
   margin: 0 auto;
   margin-top: 5%;
+  border-top: 16px solid #3691ad;
+  padding-top: 30px;
 
   display: flex;
   flex-direction: column;
@@ -20,7 +22,7 @@ export const Container = styled.section`
     width: 100%;
     border-radius: 5px 5px 0 0;
     margin: 0 0 0px 0;
-    background-color: #4b909f;
+    background-color: #3691ad;
     padding: 12px 15px;
     color: white;
     font-weight: 500;
@@ -29,7 +31,7 @@ export const Container = styled.section`
   }
 
   form {
-    gap: 26px;
+    gap: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -70,11 +72,11 @@ export const Container = styled.section`
 
     button {
       margin-top: 15px;
-      height: 43px;
+      height: 46px;
       width: 100%;
-      border-radius: 8px;
+      border-radius: 4px;
       border: solid 1px #a6d7c0;
-      background-color: #4b909f;
+      background-color: #3691ad;
       align-self: flex-end;
       transition: all ease 0.1s;
       font-size: 15px;
