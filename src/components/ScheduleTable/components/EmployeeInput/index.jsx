@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { customStyles, EmployeeInputContainer } from './styles';
 import Select from 'react-select/async';
 import FormContext from '../../../../context/formContext';
-import AvailableSchedulesContext from '@/context/AvailableSchedulesContext';
+import AvailableSchedulesContext from '../../../../context/availableSchedulesContext';
 
 const customStyles2 = {
   control: (provided) => ({

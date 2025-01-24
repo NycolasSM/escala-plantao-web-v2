@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Select, { SingleValue, MultiValue } from "react-select";
-import { useSchedules } from "@/context/ScheduleContext";
 import { Container, Row, Button } from "./styles";
 
 const customStyles = {
@@ -50,7 +49,10 @@ const customStyles = {
 type OptionType = { value: string; label: string };
 
 const BatchCreateSchedule = () => {
-  const { addSchedules } = useSchedules();
+  // const { addSchedules } = useSchedules();
+
+  const addSchedules = () => null;
+
   const [selectedDays, setSelectedDays] = useState<MultiValue<OptionType>>([]);
   const [selectedParticipants, setSelectedParticipants] = useState<MultiValue<OptionType>>([]);
   const [selectedStartTime, setSelectedStartTime] = useState<SingleValue<OptionType>>(null);

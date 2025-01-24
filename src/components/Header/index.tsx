@@ -4,10 +4,10 @@ import { Container, UserButton, UserOptions, DropdownMenu } from "./styles"; // 
 import { CgProfile } from "react-icons/cg"; // Importando ícone de perfil
 import { useRouter } from "next/router"; // Importando hook do Next.js para roteamento
 import Link from "next/link"; // Importando componente Link do Next.js para navegação entre páginas
-import { UserContext } from "../../context/User"; // Importando contexto de usuário
+import { AuthContext } from "../../context/AuthContext"; // Importando contexto de usuário
 import { MdLogout } from "react-icons/md"; // Importando ícone de logout
 import Select, { components, PlaceholderProps } from "react-select"; // Importando componente Select do react-select
-import { FiltersContext } from "@/context/Filters"; // Importando contexto de filtros
+import AvailableSchedulesContext from "../../context/availableSchedulesContext"; // Importando contexto de filtros
 import "react-datepicker/dist/react-datepicker.css"; // Importando estilos do react-datepicker
 import { addLocale } from "primereact/api"; // Adicionando localização para o primereact
 import { FaRegUser } from "react-icons/fa6";
@@ -44,8 +44,19 @@ addLocale("pt", {
 
 const Header = () => {
   const router = useRouter();
-  const { userInfo, logout } = useContext(UserContext);
-  const { setFilter, municipioFilter } = useContext(FiltersContext);
+  // const { userInfo, logout } = useContext(AuthContext);
+  const { userInfo } = useContext(AuthContext);
+
+  const {
+    plantaoAvailable,
+    plantaoChosen,
+    localChosen,
+    setPlantaoChosen,
+    setLocalChosen,
+    setAvailableDaysData,
+    setMonthNumber,
+  } = React.useContext(AvailableSchedulesContext);
+
   const [dropdownActive, setDropdownActive] = useState(false);
   const dropdownRef = useRef<any>(null);
 
@@ -65,7 +76,7 @@ const Header = () => {
   let HeaderTitle = getHeaderTitle();
 
   const handleLogout = () => {
-    logout();
+    // logout();
     router.push("/login");
   };
 

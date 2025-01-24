@@ -1,12 +1,14 @@
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { createContext } from 'react';
 import { api } from '../services/api';
-import AvailableSchedulesContext from './AvailableSchedulesContext';
+import { useAuthContext } from './AuthContext';
+import AvailableSchedulesContext from './availableSchedulesContext';
 
 // Toastfify
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { UserContext } from './User';
+import { Slide, Zoom, Flip, Bounce } from 'react-toastify';
+import { Registers } from '../components/ScheduleTable/styles';
 
 type EscalasContextProps = {
   children: ReactNode;
@@ -44,7 +46,6 @@ type RegisterData = {
   employees: EmployeeData[];
   scheduleHour: any;
   action: string;
-  isNew?: boolean;
 };
 
 interface IFormContext {
@@ -146,11 +147,11 @@ const FormProvider = ({ children }: EscalasContextProps) => {
   const [isSendingForm, setIsSendingForm] = useState<boolean>(initilValue.isSendingForm);
 
   // AuthContext
-  const { userInfo } = useContext(UserContext);
+  const { userInfo } = useAuthContext();
 
   useEffect(() => {
-    setResponsavel(userInfo?.nome || "");
-    setN_pes_responsavel(userInfo?.n_pes || "");
+    setResponsavel(userInfo.nome);
+    setN_pes_responsavel(userInfo.n_pes);
   }, [userInfo]);
 
   const calcularTotalJornada = (scheduleHour: string[]) => {

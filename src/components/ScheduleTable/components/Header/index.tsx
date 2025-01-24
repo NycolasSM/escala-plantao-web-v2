@@ -17,7 +17,7 @@ const Header = () => {
       <tr>
         <th style={{ width: 95 }}>Dia</th>
         <th>Nome do Colaborador</th>
-        <th style={{ width: 50 }}>24hrs</th>
+        <th style={{ width: 50, fontSize: 13 }}>24hrs</th>
         <th style={{ width: 90 }}>Início</th>
         <th style={{ width: 90 }}>dás</th>
         <th style={{ width: 90 }}>às</th>

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const Container = styled.tr`
-  padding: 0 !important;
+  border-bottom: 1px solid #aaaaaa !important;
 
   .register__button--unlock {
     background-color: #df862d;
@@ -65,11 +65,10 @@ export const Container = styled.tr`
     width: 100%;
 
     option {
-      font-size: 1.1rem;
+      font-size: 14px;
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: red;
     }
   }
 `;

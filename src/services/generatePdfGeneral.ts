@@ -19,7 +19,7 @@ type LoadedForm = {
 };
 
 export async function generatePdfGeneral(sector: string, month: number, year: number) {
-  pdfMake.vfs = pdfFonts.pdfMake.vfs;
+  // pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
   let forms: LoadedForm[] = await api.get(`schedulesRegistered/?year=2022&month=${month}&setor=${sector}`, { timeout: 100000 }).then((resp) => {
     return resp.data;
@@ -112,7 +112,7 @@ export async function generatePdfGeneral(sector: string, month: number, year: nu
             fontSize: 9,
             text: [
               {
-                text: "sistema de gestão de escala digital v1.0 - LocalSIG",
+                text: "sistema de gestão de escala digital v2.0 - LocalSIG",
                 margin: [0, 20],
               },
             ],

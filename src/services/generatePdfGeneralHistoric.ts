@@ -45,7 +45,7 @@ export async function generatePdfGeneralHistoric(
   console.log(dayStart);
   console.log(dayEnd);
 
-  pdfMake.vfs = pdfFonts.pdfMake.vfs;
+  // pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
   notifyLoading();
   // OBS: Lembrar de na coluna do banco cargo, quando for inserir um responsável em manuntenção deve colocar o prefixo MANUTENÇÃO
@@ -1528,7 +1528,7 @@ export async function generatePdfGeneralHistoric(
             fontSize: 9,
             text: [
               {
-                text: "sistema de gestão de escala digital v1.0 - LocalSIG",
+                text: "sistema de gestão de escala digital v2.0 - LocalSIG",
                 margin: [0, 20],
               },
             ],

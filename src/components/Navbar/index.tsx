@@ -14,10 +14,10 @@ import { IoOptions } from "react-icons/io5";
 
 import { useRouter } from "next/router";
 
-import { UserContext } from "../../context/User";
+import { AuthContext } from "../../context/AuthContext";
 
 const Navbar = () => {
-  const { userInfo } = useContext(UserContext);
+  const { userInfo } = useContext(AuthContext);
 
   const router = useRouter();
 
@@ -37,6 +37,7 @@ const Navbar = () => {
             src={require("../../../public/localsig_logo_white_bolder.png")}
             alt='LocalSIG Logo'
             width={41}
+            height={41}
             placeholder='empty'
             priority={true}
             style={{ transition: "all ease 0.2s", marginRight: -2 }}
@@ -47,10 +48,10 @@ const Navbar = () => {
         <ul>
           <NavButton
             initials='Escalas'
-            navLink='/schedules'
-            icon={<RiFileCopy2Line size={24} color={hasHightlight("/schedules") ? "#e9e9e9" : "#e9e9e9"} />}
+            navLink='/'
+            icon={<RiFileCopy2Line size={24} color={hasHightlight("/") ? "#e9e9e9" : "#e9e9e9"} />}
             name={"Escalas"}
-            hasHightlight={hasHightlight("/schedules")}
+            hasHightlight={hasHightlight("/")}
           />
           <NavButton
             initials='Histórico'
@@ -79,7 +80,8 @@ const Navbar = () => {
         <Image
           src={require("../../../public/sabesp_logo.png")}
           alt='Sabesp Logo'
-          width={34}
+          width={38}
+          height={50}
           placeholder='empty'
           priority={true}
           style={{ transition: "all ease 0.2s", marginRight: -2 }}

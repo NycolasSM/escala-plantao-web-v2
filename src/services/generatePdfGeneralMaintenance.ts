@@ -24,7 +24,7 @@ export async function generatePdfGeneralMaintenance(
   month: number,
   year: number
 ) {
-  pdfMake.vfs = pdfFonts.pdfMake.vfs;
+  // pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
   let dateNow = new Date();
 
@@ -190,7 +190,7 @@ export async function generatePdfGeneralMaintenance(
             fontSize: 9,
             text: [
               {
-                text: "sistema de gestão de escala digital v1.0 - LocalSIG",
+                text: "sistema de gestão de escala digital v2.0 - LocalSIG",
                 margin: [0, 20],
               },
             ],

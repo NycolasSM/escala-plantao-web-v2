@@ -1,10 +1,29 @@
 import React, { useState, useEffect } from "react";
-import AvailableSchedulesContext from "@/context/AvailableSchedulesContext";
-import { Container, Header, Month, Buttons, Line, Weeks, Days, HolidaysNameList, CalendarContainer, Content, SectionTitle } from "./styles";
+import AvailableSchedulesContext from "../../context/availableSchedulesContext";
+import {
+  Container,
+  Header,
+  Month,
+  Buttons,
+  Line,
+  Weeks,
+  Days,
+  HolidaysNameList,
+  CalendarContainer,
+  Content,
+  SectionTitle
+} from "./styles";
 
 // estou passando valores por padrão mas essas informações deveram ser enviadas para o calendario quando o usuário escolher o setor
 const Calendar = () => {
-  const { year, setYear, monthNumber, setMonthNumber, availableDays, availableDaysData } = React.useContext(AvailableSchedulesContext);
+  const {
+    year,
+    setYear,
+    monthNumber,
+    setMonthNumber,
+    availableDays,
+    availableDaysData,
+  } = React.useContext(AvailableSchedulesContext);
 
   const [monthName, setMonthName] = useState<string>("");
 
@@ -133,9 +152,15 @@ const Calendar = () => {
             <span>Dom</span>
           </Weeks>
           <Days>
-            <div className={`starting-weekday-${getWeekName(newDate.getDay())}`}>
+            <div
+              className={`starting-weekday-${getWeekName(newDate.getDay())}`}
+            >
               {allDays.map((day) => (
-                <button key={day} tabIndex={-1} className={availableDays.has(day) ? "highlight" : ""}>
+                <button
+                  key={day}
+                  tabIndex={-1}
+                  className={availableDays.has(day) ? "highlight" : ""}
+                >
                   <time dateTime={`${year}-${monthNumber}-${day}`}>{day}</time>
                 </button>
               ))}

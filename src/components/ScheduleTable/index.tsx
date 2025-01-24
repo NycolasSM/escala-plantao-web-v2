@@ -1,18 +1,19 @@
+import Image from "next/image";
+import plusIcon from "../../assets/plus.png";
+import closeIcon from "../../assets/close.png";
+
 import React, { useContext, useEffect, useState } from "react";
 import Header from "./components/Header";
 import Register from "./components/Register";
-import { useAvailableSchedulesContext } from "@/context/AvailableSchedulesContext";
+import { useAvailableSchedulesContext } from "../../context/availableSchedulesContext";
 
 import { FaTrashAlt, FaTrashRestoreAlt } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 
 import { TailSpin } from "react-loader-spinner";
 
-import { IoClose } from "react-icons/io5";
-
 import {
   Container,
-  DEVLOGS,
   EmptyFieldError,
   AddRegisters,
   ButtonsContainer,
@@ -28,12 +29,12 @@ import {
 import FormContext from "../../context/formContext";
 import { BiError } from "react-icons/bi";
 import { api } from "../../services/api";
-import { Buttons } from "@/styles/pages/dashboard";
+import { Buttons } from "../../../styles/pages/dashboard";
 import { Slide, ToastContainer } from "react-toastify";
-import { UserContext } from "@/context/User";
+import { useAuthContext } from "../../context/AuthContext";
 import { useRouter } from "next/router";
 
-import HaveScheduleHoursChanges from "@/components/Modal/HaveScheduleHoursChanges";
+import HaveScheduleHoursChanges from "../Modal/HaveScheduleHoursChanges";
 
 type RegistersLoaded = {
   data: string;
@@ -74,8 +75,7 @@ const ScheduleTable = () => {
     setHaveEmptyField,
   } = useContext(FormContext);
 
-  // const { isLogged } = useContext(UserContext);
-  const isLogged = true;
+  const { isLogged } = useAuthContext();
 
   const [registersLoaded, setRegistersLoaded] = useState<RegistersLoaded[]>([]);
 
@@ -160,7 +160,7 @@ const ScheduleTable = () => {
         return;
       } else {
         api.get(`/schedulesRegistered/?year=${year}&month=${mes ?? monthNumber}&setor=${setor}`).then((resp) => {
-          console.log("resp.data2", resp.data);
+          setLoadedForms(resp.data);
           setRegistersLoaded(resp.data);
           setIsLoadingRegisters(false);
           router.query.Plantao = undefined;
@@ -276,105 +276,110 @@ const ScheduleTable = () => {
   return (
     <>
       <ToastContainer autoClose={2500} transition={Slide} />
-      {/* {Object.keys(scheduleHoursChanges.userInfo).length != 0 ? (
-        <HaveScheduleHoursChanges
-          userInfo2={scheduleHoursChanges.userInfo}
-          plantao={`${plantaoChosen} - ${localChosen}`}
-          closeModal={() =>
-            setScheduleHoursChanges({
-              userInfo: {},
-            })
-          }
-          data_escala={{ year, monthNumber }}
-        />
-      ) : null}
-      {haveEmptyField ? (
-        <EmptyFieldError>
-          <BiError size={24} />
-          <span>Existem campos vazios a serem preenchidos</span>
-        </EmptyFieldError>
-      ) : null} */}
       <Container>
         <Header />
         <Tbody>
-          <>
-            {/* verificação se os setores foram escolhidos corretamente e se possuem algum registro */}
-            {plantaoChosen === "Transporte" ||
-            plantaoChosen === "Controle De Perdas" ||
-            (plantaoChosen != "" && localChosen != "" && isEmpty) ? (
-              registers.size === 0 ? (
-                // @ts-ignore
-                <>
-                  {setHaveSchedulesHourChanged(false)}
-                  <EmptyRegistersMessage colSpan={5}>
-                    <div>
-                      <AiOutlineInfoCircle size={36} color={"white"} />
-                    </div>
-                    <h3>Não Há escalas registradas</h3>
-                  </EmptyRegistersMessage>
-                </>
-              ) : null
-            ) : null}
+          {Object.keys(scheduleHoursChanges.userInfo).length != 0 ? (
+            <HaveScheduleHoursChanges
+              userInfo2={scheduleHoursChanges.userInfo}
+              plantao={`${plantaoChosen} - ${localChosen}`}
+              closeModal={() =>
+                setScheduleHoursChanges({
+                  userInfo: {},
+                })
+              }
+              data_escala={{ year, monthNumber }}
+            />
+          ) : null}
+          {haveEmptyField ? (
+            <EmptyFieldError>
+              <BiError size={24} />
+              <span>Existem campos vazios a serem preenchidos</span>
+            </EmptyFieldError>
+          ) : null}
 
-            {Array.from(registers).map((data, index) => (
-              <Register
-                id={data[1].id}
-                day={data[1].day}
-                index={index}
-                action={data[1].action}
-                defaultValues={
-                  data[1].action === "edit" && {
-                    idLoaded: "",
-                    dayLoaded: data[1].day,
-                    employeesLoaded: [],
-                    scheduleHourLoaded: data[1].scheduleHour,
-                  }
+          {/* verificação se os setores foram escolhidos corretamente e se possuem algum registro */}
+          {plantaoChosen === "Transporte" ||
+          plantaoChosen === "Controle De Perdas" ||
+          (plantaoChosen != "" && localChosen != "" && isEmpty) ? (
+            registers.size === 0 ? (
+              <>
+                {setHaveSchedulesHourChanged(false)}
+                <EmptyRegistersMessage>
+                  <div>
+                    <AiOutlineInfoCircle size={36} color={"white"} />
+                  </div>
+                  <h3>Não Há escalas registradas</h3>
+                </EmptyRegistersMessage>
+              </>
+            ) : null
+          ) : null}
+
+          {Array.from(registers).map((data, index) => (
+            <Register
+              id={data[1].id}
+              day={data[1].day}
+              index={index}
+              action={data[1].action}
+              defaultValues={
+                data[1].action === "edit" && {
+                  idLoaded: "",
+                  dayLoaded: data[1].day,
+                  employeesLoaded: [],
+                  scheduleHourLoaded: data[1].scheduleHour,
                 }
-                removeRegisterOfRemoveList={removeRegisterOfRemoveList}
-                removeRegisterSaved={removeRegisterSaved}
-                removeRegister={removeRegister}
-              />
-            ))}
-          </>
+              }
+              removeRegisterOfRemoveList={removeRegisterOfRemoveList}
+              removeRegisterSaved={removeRegisterSaved}
+              removeRegister={removeRegister}
+            />
+          ))}
         </Tbody>
 
-        {/* <DEVLOGS>
-          <button onClick={() => console.log(responsavel)}>
-            CONSOLE LOG Responsavel
-          </button>
-          <button onClick={() => console.log(registers)}>registers list</button>
-          <button onClick={() => consoleLogForm()}>
-            CONSOLE LOG Formulário
-          </button>
-          <button onClick={() => console.log(formularioDelete)}>
-            CONSOLE LOG Formulário Delete
-          </button>
-          <button onClick={() => gerarEscalas()}>gerar escalas</button>
-        </DEVLOGS> */}
       </Container>
       <ButtonContainer>
-        {plantaoChosen === "Transporte" || plantaoChosen === "Controle De Perdas" || (plantaoChosen != "" && localChosen != "") ? (
-          <Button onClick={addRegister}>Adicionar Linha</Button>
-        ) : null}
-        <Button
-          disabled={registers.size === 0 || formularioDelete.size === 0 || isSendingForm}
-          onClick={haveSchedulesHourChanged ? sendFormWithChanges : sendForm}
-        >
-          {isSendingForm ? "Carregando..." : "Salvar"}
-        </Button>
-      </ButtonContainer>
-      <div style={{ display: "flex", flexDirection: "column", gap: 15, padding: 10 }}>
-        <span>Observação</span>
-        <textarea
-          style={{ minHeight: 80 }}
-          name='observations'
-          id='observations'
-          value={observationForm}
-          cols={130}
-          wrap='hard'
-          onChange={(e) => handleChangeObservation(e.target.value)}
-        ></textarea>
-      </div>
+          {plantaoChosen === "Transporte" || plantaoChosen === "Controle De Perdas" || (plantaoChosen != "" && localChosen != "") ? (
+            <Button onClick={addRegister}>Adicionar Linha</Button>
+          ) : null}
+          {/* {isSendingForm ? (
+            <button style={{ margin: "0 auto" }}>Carregando..</button>
+          ) : registers.size != 0 || formularioDelete.size != 0 ? (
+            haveSchedulesHourChanged ? (
+              <button style={{ margin: "0 auto" }} onClick={() => sendFormWithChanges()}>
+                Salvar
+              </button>
+            ) : (
+              <button style={{ margin: "0 auto" }} onClick={() => sendForm()}>
+                Salvar
+              </button>
+            )
+          ) : (
+            <button style={{ margin: "0 auto" }} className='disable' disabled>
+              Salvar
+            </button>
+          )} */}
+          <Button
+            disabled={registers.size === 0 || formularioDelete.size === 0 || isSendingForm}
+            onClick={haveSchedulesHourChanged ? sendFormWithChanges : sendForm}
+          >
+            {isSendingForm ? "Carregando..." : "Salvar"}
+          </Button>
+        </ButtonContainer>
+      {registers.size >= 1 && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 15, padding: 10 }}>
+          <span>Observação</span>
+          <textarea
+            style={{ minHeight: 80 }}
+            name='observations'
+            id='observations'
+            value={observationForm}
+            cols={130}
+            wrap='hard'
+            onChange={(e) => handleChangeObservation(e.target.value)}
+          ></textarea>
+        </div>
+      )}
+      <Buttons></Buttons>
     </>
   );
 };
@@ -395,3 +400,7 @@ export const PenIcon = () => (
     </svg>
   </PenIconContainer>
 );
+
+export const PlusIcon = () => <Image height={22} width={22} src={plusIcon} alt='Icone de adicionar' />;
+
+export const CloseIcon = () => <Image height={22} width={22} src={closeIcon} alt='Icone de excluir' />;

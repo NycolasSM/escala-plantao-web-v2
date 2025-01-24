@@ -1,34 +1,35 @@
-import Head from "next/head";
+// Next - React
+import type { NextPage } from 'next';
+import { useState } from 'react';
 
-export default function Home() {
+// Components
+import Login from './login';
+import Header from '../components/Header';
+import Dashboard from './dashboard';
+import HistoricoCCO from './historicocco';
+import MenuMobile from '../components/MenuMobile';
+
+// Hooks
+import { useAuthContext } from '../context/AuthContext';
+import { FormProvider } from '../context/formContext';
+import { AvailableSchedulesProvider } from '../context/availableSchedulesContext';
+import Head from 'next/head';
+
+const Home: NextPage = () => {
+  const [openMenuMobile, setOpenMenuMobile] = useState(false);
+
+  const { isLogged, userInfo } = useAuthContext();
+
   return (
     <>
-      <Head>
-        <title>Escala De Plantão Digital</title>
-        <meta name="Escala De Plantão Digital" content="Escala De Plantão Digital" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <footer
-        style={{
-          bottom: 20,
-          position: "absolute",
-          left: "45%",
-        }}
-      >
-        <a
-          href="https://localsig.com.br/"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            opacity: 0.8,
-          }}
-        >
-          Painel desenvolvido por LocalSIG
-        </a>
-      </footer>
+      {/* <Header
+        //openMenuMobile={openMenuMobile}
+        setOpenMenuMobile={setOpenMenuMobile}
+      /> */}
+      <MenuMobile openMenuMobile={openMenuMobile} setOpenMenuMobile={setOpenMenuMobile} />
+      {isLogged ? userInfo.setor === 'CCO' ? <HistoricoCCO /> : <Dashboard /> : <Login />}
     </>
   );
-}
+};
+
+export default Home;

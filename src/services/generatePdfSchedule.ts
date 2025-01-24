@@ -31,8 +31,6 @@ export async function generatePdfSchedule(
 ) {
   notifyLoading();
 
-  console.log("forms", forms)
-
   if (forms.length === 0) {
     dismissLoadingNotify();
     throw new Error("vazio");
@@ -259,7 +257,7 @@ export async function generatePdfSchedule(
             fontSize: 9,
             text: [
               {
-                text: "sistema de gestão de escala digital v1.0 - LocalSIG",
+                text: "sistema de gestão de escala digital v2.0 - LocalSIG",
                 margin: [0, 20],
               },
             ],

@@ -9,12 +9,12 @@ import EmployeeInput from "../EmployeeInput/index.jsx";
 import { BiLockOpenAlt } from "react-icons/bi";
 
 import FormContext from "../../../../context/formContext";
-import AvailableSchedulesContext from "@/context/AvailableSchedulesContext";
+import AvailableSchedulesContext from "../../../../context/availableSchedulesContext";
 
 import Select from "react-select/async";
 
-import ChangeDefaultHoursModal from "@/components/Modal/EditScheduleHour";
-import HaveScheduleHoursChanges from "@/components/Modal/HaveScheduleHoursChanges";
+import ChangeDefaultHoursModal from "../../../Modal/EditScheduleHour";
+import HaveScheduleHoursChanges from "../../../Modal/HaveScheduleHoursChanges";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import { ButtonsContainer } from "../../styles";
 import { FaTrashAlt, FaTrashRestoreAlt } from "react-icons/fa";

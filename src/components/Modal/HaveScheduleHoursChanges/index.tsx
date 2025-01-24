@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useContext, useState } from 'react';
-import { UserContext } from '@/context/User';
+import { AuthContext } from '../../../context/AuthContext';
 import FormContext from '../../../context/formContext';
 import { api } from '../../../services/api';
 
@@ -14,7 +14,7 @@ type Props = {
 };
 
 const HaveScheduleHoursChanges = ({ closeModal, userInfo2, plantao, data_escala }: Props) => {
-  const { userInfo } = useContext(UserContext);
+  const { userInfo } = useContext(AuthContext);
 
   const { sendForm } = useContext(FormContext);
 

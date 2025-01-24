@@ -15,7 +15,7 @@ export const Container = styled.table`
 
   th,
   td {
-    padding: 7px 9px;
+    padding: 2px 6px;
     text-align: left;
     border-bottom: 1px solid #ddd;
     font-size: 12px;
@@ -59,8 +59,8 @@ export const Container = styled.table`
   }
 
   .edit {
-    outline: solid 6px #d1d1d1bb;
-    background-color: #d1d1d1aa;
+    /* outline: solid 6px #d1d1d1bb; */
+    /* background-color:rgb(218, 218, 218); */
     pointer-events: none;
   }
 
