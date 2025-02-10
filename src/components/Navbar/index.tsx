@@ -55,10 +55,10 @@ const Navbar = () => {
           />
           <NavButton
             initials='Histórico'
-            navLink='/history'
-            icon={<RiFileHistoryLine size={23} color={hasHightlight("/history") ? "#e9e9e9" : "#e9e9e9"} />}
+            navLink='/historic'
+            icon={<RiFileHistoryLine size={23} color={hasHightlight("/historic") ? "#e9e9e9" : "#e9e9e9"} />}
             name={"Histórico"}
-            hasHightlight={hasHightlight("/history")}
+            hasHightlight={hasHightlight("/historic")}
           />
           <NavButton
             initials='Usuários'

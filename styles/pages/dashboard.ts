@@ -83,73 +83,18 @@ export const FormSendMessage = styled.div`
   }
 `;
 
-// export const Buttons = styled.div`
-//   width: 85%;
-//   display: flex;
-//   justify-content: center;
-//   margin: 50px auto 50px auto;
-
-//   button {
-//     height: 60px;
-//     background-color: var(--button-primary);
-//     color: white;
-//     border: none;
-//     border-radius: 5px;
-//     font-size: 1.1rem;
-//     padding: 0.6rem 3.1rem;
-//     transition: all ease 0.2s;
-//   }
-
-//   .disable {
-//     opacity: 0.6;
-//     cursor: no-drop !important;
-//   }
-
-//   .general__report {
-//     background-color: #2bd0af;
-
-//     @media (max-width: 520px) {
-//       width: 100%;
-//     }
-//   }
-
-//   button:hover {
-//     cursor: pointer;
-//     filter: brightness(0.92);
-//   }
-
-//   @media (max-width: 520px) {
-//     display: flex;
-//     flex-direction: column;
-//     align-items: center;
-//     justify-content: center;
-
-//     width: 100%;
-
-//     gap: 2rem;
-
-//     button {
-//       display: flex;
-//       align-items: center;
-//       justify-content: center;
-
-//       width: 80%;
-//     }
-//   } ;
-// `;
-
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 20px;
+  padding: 20px 14px;
   gap: 11px;
   padding-top: 5px;
 `;
 
 export const FlexContainer = styled.div`
   display: flex;
-  gap: 16px;
+  gap: 12px;
 `;
 
 export const Column = styled.div`

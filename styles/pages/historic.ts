@@ -4,11 +4,10 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  margin-top: 75px;
   display: flex;
   justify-content: center;
-  align-items: center;
   width: 100%;
+  padding: 10px 20px 0px 20px;
 
   @keyframes rotate {
   to {
@@ -48,11 +47,9 @@ export const Title = styled.h3`
 export const Section = styled.div`
   display: flex;
   width: 100%;
-  max-width: 1000px;
-  /* padding-left: 100px; */
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
 `;
 
 export const VisualizeAll = styled.div`
@@ -96,60 +93,7 @@ export const VisualizeAll = styled.div`
 
 export const MonthSelect = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 24px;
   gap: 10px;
-  margin-right: 20px;
-  background-color: #7dc0d7;
-  border: solid #235c70 2px;
-  padding: 10px 26px;
-  border-radius: 10px;
-  box-shadow: 3px 3px 12px -4px rgba(0, 0, 0, 0.75);
-  color: white;
-  text-shadow: 0px 0px 5px #242424;
-
-  .month {
-    width: 30px;
-    text-align: end;
-  }
-
-  .year {
-    width: 50px;
-    text-align: end;
-  }
-
-  h4 {
-    font-size: 16px;
-    font-weight: 400;
-  }
-
-  div {
-    display: flex;
-    flex-direction: column;
-
-    button {
-      padding: 11px 9px;
-      height: 20px;
-      cursor: pointer;
-      margin: 6px 0px;
-      border: 1px solid #4887a8;
-      border-radius: 4px;
-      background-color: #c9dee9;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all ease 0.1s;
-
-      :hover {
-        background-color: #a6c9db;
-      }
-
-      :active {
-        background-color: #83b4cd;
-      }
-    }
-  }
 `;
 
 export const Table = styled.table`
@@ -393,17 +337,37 @@ export const IconGuide = styled.div`
 `;
 
 export const ButtonGenerateXLS = styled.button`
-  margin-top: 20px;
-  padding: 7px 12px;
+  padding: 6px 12px;
   border-radius: 5px;
   border: solid 1px #289b67;
   transition: all ease 0.1s;
   background-color: #32c072;
   color: white;
-  font-size: 15px;
+  font-size: 12px;
 
   :hover {
     filter: brightness(0.9);
     cursor: pointer;
   }
 `;
+
+export const SectionTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 10px 0px;
+
+  h1 {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  p {
+    font-size: 14px;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+  }
+`

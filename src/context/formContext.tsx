@@ -146,6 +146,8 @@ const FormProvider = ({ children }: EscalasContextProps) => {
 
   const [isSendingForm, setIsSendingForm] = useState<boolean>(initilValue.isSendingForm);
 
+  console.log("registers", registers)
+
   // AuthContext
   const { userInfo } = useAuthContext();
 

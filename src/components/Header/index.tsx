@@ -66,7 +66,7 @@ const Header = () => {
         return "Escalas";
       case "/schedules":
         return "Gerenciamento";
-      case "/history":
+      case "/historic":
         return "Histórico de Escalas";
       case "/users":
         return "Usuários";

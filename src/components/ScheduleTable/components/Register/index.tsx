@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 
-import { Container, SelectDays } from "./styles";
+import { Container, SelectDays, ButtonsContainer } from "./styles";
 
 import { EmployeeInputContainer } from "../EmployeeInput/styles";
 
@@ -16,7 +16,6 @@ import Select from "react-select/async";
 import ChangeDefaultHoursModal from "../../../Modal/EditScheduleHour";
 import HaveScheduleHoursChanges from "../../../Modal/HaveScheduleHoursChanges";
 import { RiDeleteBin7Line } from "react-icons/ri";
-import { ButtonsContainer } from "../../styles";
 import { FaTrashAlt, FaTrashRestoreAlt } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 
@@ -64,6 +63,8 @@ const Register = ({
     changesSchedulesHourObservation,
     haveSchedulesHourChanged,
   } = useContext(FormContext);
+
+  console.log("index", index);
 
   const { monthNumber, year, plantaoChosen, localChosen } = useContext(AvailableSchedulesContext);
 
@@ -207,7 +208,7 @@ const Register = ({
       return true;
     }
 
-    const newRange = [...rangeOfScheduleSelected];
+    const newRange = rangeOfScheduleSelected ? [...rangeOfScheduleSelected] : [];
 
     newRange[arrayIndex] = value;
 
@@ -639,7 +640,7 @@ const Register = ({
         </td>
         {daySelected != undefined ? (
           <>
-            <td>
+            <td style={{ padding: 0, margin: 0 }}>
               <input
                 className='checkbox'
                 type='checkbox'
@@ -733,7 +734,13 @@ const Register = ({
                   </td>
                 ) : (
                   <td>
-                    <select disabled name='endBreakHour' id='endBreakHour' defaultValue={"00:00"} value={rangeOfScheduleSelected && rangeOfScheduleSelected[2]}>
+                    <select
+                      disabled
+                      name='endBreakHour'
+                      id='endBreakHour'
+                      defaultValue={"00:00"}
+                      value={rangeOfScheduleSelected && rangeOfScheduleSelected[2]}
+                    >
                       <option value={"00:00"}>Sem Intervalo</option>
                     </select>
                   </td>
@@ -754,7 +761,7 @@ const Register = ({
                       <>
                         {parseFloat(hour) > parseFloat(rangeOfScheduleSelected && rangeOfScheduleSelected[2]) &&
                         parseFloat(hour) > parseFloat(rangeOfScheduleSelected && rangeOfScheduleSelected[1]) &&
-                        parseFloat(hour) > parseFloat(rangeOfScheduleSelected &&rangeOfScheduleSelected[0]) ? (
+                        parseFloat(hour) > parseFloat(rangeOfScheduleSelected && rangeOfScheduleSelected[0]) ? (
                           <option key={hour} value={hour}>
                             {hour}
                           </option>
@@ -824,7 +831,9 @@ const Register = ({
         )}
 
         <td className='text-center'>
-          <span>{rangeOfScheduleSelected && rangeOfScheduleSelected[3] != "00:00" ? diferenca : isFullTime ? <span>24hrs</span> : null}</span>
+          <span>
+            {rangeOfScheduleSelected && rangeOfScheduleSelected[3] != "00:00" ? diferenca : isFullTime ? <span>24hrs</span> : null}
+          </span>
         </td>
         <td>
           {action === "edit" ? (
@@ -832,11 +841,11 @@ const Register = ({
               <>
                 {formularioDelete.get(index.toString()) ? (
                   <button className='register__button--restore' onClick={() => removeRegisterOfRemoveList(index.toString(), id)}>
-                    <FaTrashRestoreAlt size={20} color={"white"} />
+                    <FaTrashRestoreAlt size={14} color={"white"} />
                   </button>
                 ) : (
                   <button className='register__button--delete' onClick={() => removeRegisterSaved(index.toString(), id)}>
-                    <FaTrashAlt size={20} color={"white"} />
+                    <FaTrashAlt size={16} color={"white"} />
                   </button>
                 )}
               </>
@@ -846,13 +855,17 @@ const Register = ({
               {registers.size === index + 1 ? (
                 <ButtonsContainer>
                   <button className='register__button--cancel' onClick={() => removeRegister(index.toString())}>
-                    <IoClose color='white' size={36} />
+                    <IoClose color='white' size={40} />
                   </button>
                 </ButtonsContainer>
               ) : (
-                <ButtonsContainer>
-                  <button className='button--hide'></button>
-                </ButtonsContainer>
+                <>
+                  {/* <ButtonsContainer>
+                  <button className='register__button--cancel' onClick={() => removeRegister(index.toString())}>
+                    <IoClose color='white' size={40} />
+                  </button>
+                </ButtonsContainer> */}
+                </>
               )}
             </>
           )}

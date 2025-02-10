@@ -78,7 +78,7 @@ export const Buttons = styled.div`
     height: 25px;
     width: 30px;
     font-size: 18px;
-    background-color:rgb(53, 156, 187);
+    background-color:#3691ad;
     color: white;
   }
 
@@ -188,11 +188,12 @@ export const Days = styled.div`
   }
 
   .highlight {
-    background-color: #55bee6bb;
+    background-color: #3691ad;
+    color: white;
   }
 
   .highlight:hover {
-    background-color: #55bee6cc;
+    background-color: #3691ad;
     filter: brightness(0.9);
   }
 

@@ -20,6 +20,7 @@ type LoadedForm = {
 
 export async function generatePdfGeneral(sector: string, month: number, year: number) {
   // pdfMake.vfs = pdfFonts.pdfMake.vfs;
+  pdfMake.vfs = pdfFonts['Roboto-Regular.ttf'];
 
   let forms: LoadedForm[] = await api.get(`schedulesRegistered/?year=2022&month=${month}&setor=${sector}`, { timeout: 100000 }).then((resp) => {
     return resp.data;

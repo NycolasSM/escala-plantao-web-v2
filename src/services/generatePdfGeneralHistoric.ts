@@ -44,8 +44,9 @@ export async function generatePdfGeneralHistoric(
 ) {
   console.log(dayStart);
   console.log(dayEnd);
-
+  
   // pdfMake.vfs = pdfFonts.pdfMake.vfs;
+  pdfMake.vfs = pdfFonts['Roboto-Regular.ttf'];
 
   notifyLoading();
   // OBS: Lembrar de na coluna do banco cargo, quando for inserir um responsável em manuntenção deve colocar o prefixo MANUTENÇÃO

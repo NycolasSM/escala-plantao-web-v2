@@ -25,6 +25,7 @@ export async function generatePdfGeneralMaintenance(
   year: number
 ) {
   // pdfMake.vfs = pdfFonts.pdfMake.vfs;
+  pdfMake.vfs = pdfFonts['Roboto-Regular.ttf'];
 
   let dateNow = new Date();
 

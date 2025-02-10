@@ -46,9 +46,10 @@ export const Container = styled.tr`
   }
 
   .checkbox {
-    height: 20px;
-    width: 20px;
+    height: 16px;
+    width: 16px;
     cursor: pointer;
+    margin-top: 4px;
   }
 
   select {
@@ -57,15 +58,15 @@ export const Container = styled.tr`
     justify-content: center;
     align-items: center;
     border-radius: 5px;
-    font-size: 13px;
+    font-size: 12px;
     border: none;
     text-align: center;
-    height: 30px;
-    outline: 2px solid #c1c1c1;
+    height: 28px;
+    outline: 1px solid #c1c1c1;
     width: 100%;
 
     option {
-      font-size: 14px;
+      font-size: 13px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -84,6 +85,44 @@ export const SelectDays = styled.select`
   font-size: 11px !important;
 
   option {
-    font-size: 8px !important;
+    font-size: 12px !important;
+  }
+`;
+
+export const ButtonsContainer = styled.td`
+  pointer-events: auto;
+
+  .border {
+    position: absolute;
+    z-index: 0;
+    margin-left: -5px;
+    height: 46px;
+    width: 54px;
+    background-color: #f4f4f4;
+    padding: 6px;
+    border-radius: 10px;
+    transition: all ease 0.35s;
+    display: flex;
+  }
+
+  button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    width: 30px;
+    padding: 4px !important;
+  }
+
+  .register__button--delete {
+    background-color: #fe6929;
+  }
+
+  .register__button--cancel {
+    background-color: #fd2b2b;
+  }
+
+  .register__button--restore {
+    background-color: #fb3411;
   }
 `;

@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { Title, Container, Table, Section, MonthSelect, IconGuide, ButtonGenerateXLS } from "../../styles/pages/historic";
+import { Title, Container, Table, Section, MonthSelect, IconGuide, ButtonGenerateXLS, SectionTitle } from "../../styles/pages/historic";
 
 // toastify
 import { ToastContainer, toast } from "react-toastify";
@@ -12,7 +12,6 @@ import { AiOutlineCheckCircle, AiOutlineCloseCircle, AiOutlineLoading3Quarters }
 // Services
 import { generatePdfSchedule } from "../services/generatePdfSchedule";
 
-import Header from "../components/Header";
 import { useAuthContext } from "../context/AuthContext";
 
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
@@ -21,15 +20,45 @@ import { data } from "../data/sectorsData";
 import { generatePdfGeneralHistoric } from "../services/generatePdfGeneralHistoric";
 import Link from "next/link";
 import { api } from "../services/api";
-import FormContext from "../context/formContext";
 import AvailableSchedulesContext from "../context/availableSchedulesContext";
 import axios from "axios";
 import { SelectVisualizeReport } from "../components/SelectVisualizeReport";
 
+import Select from "react-select";
+
+const customStyles = {
+  control: (provided: any) => ({
+    ...provided,
+    minHeight: "30px",
+    height: "32px",
+    fontSize: "13px",
+    minWidth: "200px",
+  }),
+  valueContainer: (provided: any) => ({
+    ...provided,
+    height: "30px",
+    padding: "0 6px",
+  }),
+  input: (provided: any) => ({
+    ...provided,
+    margin: "0px",
+  }),
+  indicatorSeparator: (provided: any) => ({
+    display: "none",
+  }),
+  indicatorsContainer: (provided: any) => ({
+    ...provided,
+    height: "30px",
+  }),
+  option: (provided: any) => ({
+    ...provided,
+    fontSize: "13px",
+    padding: "8px 10px",
+  }),
+};
+
 const Historic = () => {
-  const [openMenuMobile, setOpenMenuMobile] = useState<boolean>(false);
   const { userInfo } = useAuthContext();
-  const { loadedForms, registers, setRegisters } = useContext(FormContext);
   const { observationForm, monthNumber, setMonthNumber, year, setYear } = useContext(AvailableSchedulesContext);
 
   const { isLogged } = useAuthContext();
@@ -189,6 +218,7 @@ const Historic = () => {
       done: null,
     },
   });
+
   const [schedulesChanges, setSchedulesChanges] = useState<any>({});
 
   const handleIncrementMonth = () => {
@@ -212,18 +242,6 @@ const Historic = () => {
     if (month > 1) {
       setMonth(month - 1);
       setMonthNumber(month - 1);
-    }
-  };
-
-  const handleSeeMonth = async (sector: string) => {
-    try {
-      await generatePdfGeneralHistoric(sector, 1, 31, month, month, year, dismissLoadingNotify, notifyLoading);
-    } catch (err: any) {
-      if (err.message === "Cannot read properties of undefined (reading 'push')") {
-        notify("Erro Interno (município) Tente novamente em alguns minutos");
-      } else {
-        notify("Não Foram encontrado escalas com esses parâmetros");
-      }
     }
   };
 
@@ -332,10 +350,6 @@ const Historic = () => {
   if (!isLogged) {
     return (
       <>
-        {/* <Header
-          //openMenuMobile={openMenuMobile}
-          setOpenMenuMobile={setOpenMenuMobile}
-        /> */}
         <Container>
           <h3 style={{ fontWeight: 500 }}>Você precisa estar logado para Acessar essa página</h3>
           <Link
@@ -399,40 +413,50 @@ const Historic = () => {
 
   return (
     <>
-      {/* <Header
-        //openMenuMobile={openMenuMobile}
-        setOpenMenuMobile={setOpenMenuMobile}
-      /> */}
       <ToastContainer autoClose={2500} transition={Slide} />
       <Container>
         <Section>
-          {/* <VisualizeAll>
-            <h3>Visualização Geral</h3>
-            <div>
-              <button onClick={() => handleSeeMonth("")}>
-                Visualizar Mensal
-              </button>
-              {month === currentMonth ? (
-                <button
-                  className="button__view__Week"
-                  onClick={() => handleSeeWeek("")}
-                >
-                  Visualizar Semanal
-                </button>
-              ) : (
-                <button disabled className="button__view__Week disable">
-                  Visualizar Semanal
-                </button>
-              )}
-            </div>
-          </VisualizeAll> */}
+          <MonthSelect>
+            <Select
+              className='react-select-container'
+              styles={customStyles}
+              options={[
+                { value: 1, label: "Janeiro" },
+                { value: 2, label: "Fevereiro" },
+                { value: 3, label: "Março" },
+                { value: 4, label: "Abril" },
+                { value: 5, label: "Maio" },
+                { value: 6, label: "Junho" },
+                { value: 7, label: "Julho" },
+                { value: 8, label: "Agosto" },
+                { value: 9, label: "Setembro" },
+                { value: 10, label: "Outubro" },
+                { value: 11, label: "Novembro" },
+                { value: 12, label: "Dezembro" },
+              ]}
+              placeholder='Mês'
+              onChange={(selectedOption) => setMonth(selectedOption!.value)}
+              value={{ value: month, label: new Date(0, month - 1).toLocaleString("pt-BR", { month: "long" }) }}
+            />
+            <Select
+              className='react-select-container'
+              styles={customStyles}
+              options={[...Array(10)].map((_, index) => {
+                const yearValue = new Date().getFullYear() - 5 + index;
+                return { value: yearValue, label: yearValue.toString() };
+              })}
+              value={{ value: year, label: year.toString() }}
+              onChange={(selectedOption) => setYear(selectedOption!.value)}
+              placeholder='Ano'
+              // onChange={(e) => handleChangeLocal(e?.value || "")}
+              // value={localOptions?.find((option) => option.value === selectedOptions.localSelected)}
+            />
+          </MonthSelect>
 
           <div>
             <ButtonGenerateXLS onClick={() => generateXLSFile()}>Gerar Arquivo .xls</ButtonGenerateXLS>
           </div>
-
-          <Title>Histórico de Escalas</Title>
-          <MonthSelect>
+          {/* <MonthSelect>
             <h4>Mês / Ano:</h4>
             <div>
               <button onClick={() => handleIncrementMonth()}>
@@ -455,8 +479,14 @@ const Historic = () => {
                 <IoIosArrowDown />
               </button>
             </div>
-          </MonthSelect>
+          </MonthSelect> */}
         </Section>
+        
+        <SectionTitle>
+          <h1>Relatórios Semanais</h1>
+          <p>Selecione a semana que deseja gerar</p>
+        </SectionTitle>
+
         <Table>
           <thead>
             <tr className='table__header'>

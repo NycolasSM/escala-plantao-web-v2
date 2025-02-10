@@ -31,7 +31,7 @@ export const Container = styled.table`
   th {
     background-color: #f2f2f2;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 13px;
     text-align: center;
     color: #525252;
   }
@@ -50,7 +50,7 @@ export const Container = styled.table`
     cursor: pointer;
 
     &:hover {
-      background-color: #2d7e97;
+      filter: brightness(0.7);
     }
   }
 
@@ -60,13 +60,12 @@ export const Container = styled.table`
 
   .edit {
     /* outline: solid 6px #d1d1d1bb; */
-    /* background-color:rgb(218, 218, 218); */
+    background-color:rgb(218, 218, 218);
     pointer-events: none;
   }
 
   .delete {
-    outline: solid 6px #ff000055;
-    background-color: #ff000055;
+    background-color:rgba(255, 0, 0, 0.16);
     pointer-events: none;
   }
 
@@ -97,7 +96,7 @@ export const DEVLOGS = styled.div`
 `;
 
 export const EmptyFieldError = styled.div`
-  background-color: #ffb366;
+  background-color:rgb(252, 197, 142);
   height: 35px;
   margin-bottom: -30px;
   width: 100%;
@@ -106,7 +105,7 @@ export const EmptyFieldError = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 14px;
   transition: all ease;
   visibility: hidden;
   opacity: 1;
@@ -131,16 +130,15 @@ export const EmptyFieldError = styled.div`
 `;
 
 export const EmptyRegistersMessage = styled.td`
-  /* background-color: #f5f8fa;
-  width: 400px;
+  background-color: #f5f8fa;
   display: flex;
   align-items: center;
-  margin: 10px auto 10px auto;
-  gap: 50px;
+  gap: 20px;
   border-radius: 6px;
   animation: showMessage 0.8s forwards cubic-bezier(0.215, 0.61, 0.355, 1);
   opacity: 0;
-  box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.1); */
+  margin: 10px auto;
+  justify-content: center;
 
   h3 {
     font-weight: 500;
@@ -213,6 +211,7 @@ export const ButtonsContainer = styled.td`
   font-size: 24px;
   font-weight: 100;
   transform: translate(35px, -8px); */
+  pointer-events: auto;
 
   .border {
     position: absolute;
@@ -364,14 +363,6 @@ export const PenIconContainer = styled.svg`
   cursor: pointer;
 `;
 
-export const PlusIconContainer = styled.svg`
-  cursor: pointer;
-`;
-
-export const CloseIconContainer = styled.svg`
-  cursor: pointer;
-`;
-
 export const ObservationSection = styled.div`
   display: flex;
   flex-direction: column;
@@ -411,10 +402,12 @@ export const ObservationSection = styled.div`
 `;
 
 export const LoadingContainer = styled.div`
-  height: 200px;
+  height: 120px;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 20px;
 `;
 
 export const ButtonContainer = styled.div`
@@ -425,12 +418,13 @@ export const ButtonContainer = styled.div`
 `;
 
 export const Button = styled.button`
-  padding: 10px 15px;
+  padding: 8px 15px;
   border: none;
   border-radius: 4px;
   background-color: #3691ad;
   color: white;
   cursor: pointer;
+  font-size: 12px;
 
   &:hover {
     background-color: #2d7e97;

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Select, { SingleValue, MultiValue } from "react-select";
 import { Container, Row, Button } from "./styles";
+import FormContext from "../../context/formContext";
 
 const customStyles = {
   control: (provided: any) => ({
@@ -49,16 +50,13 @@ const customStyles = {
 type OptionType = { value: string; label: string };
 
 const BatchCreateSchedule = () => {
-  // const { addSchedules } = useSchedules();
-
-  const addSchedules = () => null;
-
   const [selectedDays, setSelectedDays] = useState<MultiValue<OptionType>>([]);
   const [selectedParticipants, setSelectedParticipants] = useState<MultiValue<OptionType>>([]);
   const [selectedStartTime, setSelectedStartTime] = useState<SingleValue<OptionType>>(null);
   const [selectedEndTime, setSelectedEndTime] = useState<SingleValue<OptionType>>(null);
   const [selectedFromTime, setSelectedFromTime] = useState<SingleValue<OptionType>>(null);
   const [selectedToTime, setSelectedToTime] = useState<SingleValue<OptionType>>(null);
+  const { registers, setRegisters } = useContext(FormContext);
 
   const daysOptions: OptionType[] = [
     { value: "1 - SAB", label: "1 - SAB" },
@@ -84,15 +82,41 @@ const BatchCreateSchedule = () => {
   });
 
   const handleCreate = () => {
-    const newSchedules = selectedDays.map(day => ({
+    const newEntries = selectedDays.map((day, index) => ({
       day: day.value,
-      name: selectedParticipants.map(participant => participant.value).join(", "),
-      start: selectedStartTime?.value || "",
-      end: selectedEndTime?.value || "",
-      from: selectedFromTime?.value || "",
-      to: selectedToTime?.value || "",
+      id: crypto.randomUUID(),
+      employees: selectedParticipants.map(participant => ({
+        label: participant.label,
+        value: {
+          nome: participant.label,
+          n_pes: `EMP-${Math.random().toString().slice(2, 8)}`, // Exemplo para ID aleatório
+        },
+      })),
+      scheduleHour: [
+        selectedStartTime?.value || "00:00",
+        selectedEndTime?.value || "00:00",
+        selectedFromTime?.value || "00:00",
+        selectedToTime?.value || "24:00",
+      ],
+      action: "create",
     }));
-    addSchedules(newSchedules);
+
+    // Atualizando o estado registers com os novos registros
+    setRegisters((prevRegisters: Map<string, any>) => {
+      const updatedRegisters = new Map(prevRegisters);
+      newEntries.forEach((entry, idx) => {
+        updatedRegisters.set((prevRegisters.size + idx).toString(), entry);
+      });
+      return updatedRegisters;
+    });
+
+    // Limpa os estados selecionados
+    setSelectedDays([]);
+    setSelectedParticipants([]);
+    setSelectedStartTime(null);
+    setSelectedEndTime(null);
+    setSelectedFromTime(null);
+    setSelectedToTime(null);
   };
 
   return (
@@ -159,7 +183,9 @@ const BatchCreateSchedule = () => {
         placeholder="Selecione os participantes"
         styles={customStyles}
       />
-      <Button style={{ marginTop: 20 }} onClick={handleCreate}>Criar</Button>
+      <Button style={{ marginTop: 20 }} onClick={handleCreate}>
+        Criar
+      </Button>
     </Container>
   );
 };

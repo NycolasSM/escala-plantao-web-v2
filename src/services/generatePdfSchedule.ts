@@ -36,7 +36,7 @@ export async function generatePdfSchedule(
     throw new Error("vazio");
   }
 
-  // pdfMake.vfs = pdfFonts.pdfMake.vfs;
+  pdfMake.vfs = pdfFonts['Roboto-Regular.ttf'];
 
   let Issuers = new Set();
 

@@ -1,12 +1,12 @@
 import styled from "styled-components";
 
 export const EmployeeInputContainer = styled.div`
-  width: 22rem;
-  /* height: 37px; */
+  min-width: 310px;
+  /* max-width: 530px !important; */
 
-  @media (max-width: 520px) {
-    width: 10rem;
-  } ;
+  /* @media (max-width: 520px) {
+    min-width: 500px;
+  } ; */
 `;
 
 // Estilização do Select Input
