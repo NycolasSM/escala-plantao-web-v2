@@ -337,13 +337,13 @@ export const IconGuide = styled.div`
 `;
 
 export const ButtonGenerateXLS = styled.button`
-  padding: 6px 12px;
+  padding: 6px 14px;
   border-radius: 5px;
   border: solid 1px #289b67;
   transition: all ease 0.1s;
-  background-color: #32c072;
+  background-color:rgb(43, 172, 101);
   color: white;
-  font-size: 12px;
+  font-size: 13px;
 
   :hover {
     filter: brightness(0.9);
@@ -355,7 +355,8 @@ export const SectionTitle = styled.div`
   display: flex;
   flex-direction: column;
   gap: 5px;
-  margin: 10px 0px;
+  margin: 5px 0px;
+  margin-bottom: 0px;
 
   h1 {
     font-size: 18px;
@@ -370,4 +371,29 @@ export const SectionTitle = styled.div`
     margin: 0;
     padding: 0;
   }
+`
+
+export const WeeklyReportButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: solid 1px #377081;
+  border-radius: 4px;
+  background-color: #377081;
+  
+  :hover {
+    background-color:#306575;
+    cursor: pointer;
+  }
+
+  * {
+    color: white;
+    font-size: 12px;
+  }
+`
+
+export const WeeklyReports = styled.div`
+  display: flex;
+  gap: 20px;
 `

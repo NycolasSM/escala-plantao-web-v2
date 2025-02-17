@@ -1,5 +1,18 @@
+// @ts-nocheck
+
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { Title, Container, Table, Section, MonthSelect, IconGuide, ButtonGenerateXLS, SectionTitle } from "../../styles/pages/historic";
+import {
+  Title,
+  Container,
+  Table,
+  Section,
+  MonthSelect,
+  IconGuide,
+  ButtonGenerateXLS,
+  SectionTitle,
+  WeeklyReportButton,
+  WeeklyReports,
+} from "../../styles/pages/historic";
 
 // toastify
 import { ToastContainer, toast } from "react-toastify";
@@ -23,6 +36,8 @@ import { api } from "../services/api";
 import AvailableSchedulesContext from "../context/availableSchedulesContext";
 import axios from "axios";
 import { SelectVisualizeReport } from "../components/SelectVisualizeReport";
+
+import { GrDocumentPdf } from "react-icons/gr";
 
 import Select from "react-select";
 
@@ -448,110 +463,90 @@ const Historic = () => {
               value={{ value: year, label: year.toString() }}
               onChange={(selectedOption) => setYear(selectedOption!.value)}
               placeholder='Ano'
-              // onChange={(e) => handleChangeLocal(e?.value || "")}
-              // value={localOptions?.find((option) => option.value === selectedOptions.localSelected)}
             />
           </MonthSelect>
 
           <div>
             <ButtonGenerateXLS onClick={() => generateXLSFile()}>Gerar Arquivo .xls</ButtonGenerateXLS>
           </div>
-          {/* <MonthSelect>
-            <h4>Mês / Ano:</h4>
-            <div>
-              <button onClick={() => handleIncrementMonth()}>
-                <IoIosArrowUp />
-              </button>
-              <span className='month'>{("0" + month).slice(-2)}</span>
-              <button onClick={() => handleDecrementMonth()}>
-                <IoIosArrowDown />
-              </button>
-            </div>
-            <span>/</span>
-            <div>
-              <button onClick={() => setYear(year + 1)}>
-                {" "}
-                <IoIosArrowUp />
-              </button>
-              <span className='year'>{year}</span>
-              <button onClick={() => setYear(year - 1)}>
-                {" "}
-                <IoIosArrowDown />
-              </button>
-            </div>
-          </MonthSelect> */}
         </Section>
-        
+
         <SectionTitle>
           <h1>Relatórios Semanais</h1>
           <p>Selecione a semana que deseja gerar</p>
         </SectionTitle>
 
-        <Table>
-          <thead>
-            <tr className='table__header'>
-              <th colSpan={2}>Visualização Semanal</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Semana</td>
-              <td className='weeks'>
-                {daysOfThursday.map((day, i) => (
-                  <div key={i}>
-                    {daysOfSaturday[i] < 6 && day != 1 ? (
-                      <>
-                        {day === 1 ? (
-                          <button
-                            key={i}
-                            onClick={() => {
-                              handleSeeWeek("", day, daysOfSaturday[i] - day + 1);
-                            }}
-                          >
-                            {day < 10 ? "0" : ""}
-                            {day}/{month < 10 ? "0" + month : month} - {daysOfSaturday[i] < 10 ? "0" : ""}
-                            {daysOfSaturday[i]}/{month < 9 ? "0" + (month + 1) : month + 1}
-                            {/* para cada dia ele irá atribuir o (0) caso seja menor que 10 */}
-                          </button>
-                        ) : (
-                          <button key={i} onClick={() => handleSeeWeek("", day)}>
-                            {day < 10 ? "0" : ""}
-                            {day}/{month < 10 ? "0" + month : month} - {daysOfSaturday[i] < 10 ? "0" : ""}
-                            {daysOfSaturday[i]}/{month < 9 ? "0" + (month + 1) : month === 12 ? "01" : month + 1}
-                            {/* para cada dia ele irá atribuir o (0) caso seja menor que 10 */}
-                          </button>
-                        )}
-                      </>
-                    ) : (
-                      <>
-                        {day === 1 ? (
-                          <button
-                            key={i}
-                            onClick={() => {
-                              handleSeeWeek("", day, daysOfSaturday[i] - day + 1);
-                            }}
-                          >
-                            {day < 10 ? "0" : ""}
-                            {day}/{month < 10 ? "0" + month : month} - {daysOfSaturday[i] < 10 ? "0" : ""}
-                            {daysOfSaturday[i]}/{month < 10 ? "0" + month : month}
-                            {/* para cada dia ele irá atribuir o (0) caso seja menor que 10 */}
-                          </button>
-                        ) : (
-                          <button key={i} onClick={() => handleSeeWeek("", day)}>
-                            {day < 10 ? "0" : ""}
-                            {day}/{month < 10 ? "0" + month : month} - {daysOfSaturday[i] < 10 ? "0" : ""}
-                            {daysOfSaturday[i]}/{month < 10 ? "0" + month : month}
-                            {/* para cada dia ele irá atribuir o (0) caso seja menor que 10 */}
-                          </button>
-                        )}
-                      </>
-                    )}
-                  </div>
-                ))}
-              </td>
-            </tr>
-          </tbody>
-        </Table>
+        <WeeklyReports>
+          {daysOfThursday.map((day, i) => (
+            <div key={i}>
+              {daysOfSaturday[i] < 6 && day != 1 ? (
+                <>
+                  {day === 1 ? (
+                    <WeeklyReportButton
+                      key={i}
+                      onClick={() => {
+                        handleSeeWeek("", day, daysOfSaturday[i] - day + 1);
+                      }}
+                    >
+                      <span>
+                        {day < 10 ? "0" : ""}
+                        {day}/{month < 10 ? "0" + month : month} - {daysOfSaturday[i] < 10 ? "0" : ""}
+                        {daysOfSaturday[i]}/{month < 9 ? "0" + (month + 1) : month + 1}
+                        {/* para cada dia ele irá atribuir o (0) caso seja menor que 10 */}
+                      </span>
+                      <GrDocumentPdf size={18} />
+                    </WeeklyReportButton>
+                  ) : (
+                    <WeeklyReportButton key={i} onClick={() => handleSeeWeek("", day)}>
+                      <span>
+                        {day < 10 ? "0" : ""}
+                        {day}/{month < 10 ? "0" + month : month} - {daysOfSaturday[i] < 10 ? "0" : ""}
+                        {daysOfSaturday[i]}/{month < 9 ? "0" + (month + 1) : month === 12 ? "01" : month + 1}
+                        {/* para cada dia ele irá atribuir o (0) caso seja menor que 10 */}
+                      </span>
+                      <GrDocumentPdf size={18} />
+                    </WeeklyReportButton>
+                  )}
+                </>
+              ) : (
+                <>
+                  {day === 1 ? (
+                    <WeeklyReportButton
+                      key={i}
+                      onClick={() => {
+                        handleSeeWeek("", day, daysOfSaturday[i] - day + 1);
+                      }}
+                    >
+                      <span>
+                        {day < 10 ? "0" : ""}
+                        {day}/{month < 10 ? "0" + month : month} - {daysOfSaturday[i] < 10 ? "0" : ""}
+                        {daysOfSaturday[i]}/{month < 10 ? "0" + month : month}
+                        {/* para cada dia ele irá atribuir o (0) caso seja menor que 10 */}
+                      </span>
+                      <GrDocumentPdf size={18} />
+                    </WeeklyReportButton>
+                  ) : (
+                    <WeeklyReportButton key={i} onClick={() => handleSeeWeek("", day)}>
+                      <span>
+                        {day < 10 ? "0" : ""}
+                        {day}/{month < 10 ? "0" + month : month} - {daysOfSaturday[i] < 10 ? "0" : ""}
+                        {daysOfSaturday[i]}/{month < 10 ? "0" + month : month}
+                        {/* para cada dia ele irá atribuir o (0) caso seja menor que 10 */}
+                      </span>
+                      <GrDocumentPdf size={18} />
+                    </WeeklyReportButton>
+                  )}
+                </>
+              )}
+            </div>
+          ))}
+        </WeeklyReports>
+
+        <SectionTitle>
+          <h1>Relatórios Plantão</h1>
+          <p>Selecione a semana que deseja gerar</p>
+        </SectionTitle>
+
         <IconGuide>
           <ul>
             <li>
