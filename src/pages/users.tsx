@@ -30,6 +30,7 @@ import {
   MediumCell,
   NarrowCell,
   Form,
+  SearchUser,
 } from "../../styles/pages/users";
 import { Tooltip } from "@mui/material";
 import { api } from "../services/api";
@@ -212,18 +213,18 @@ const Users = () => {
   return (
     <div>
       <ToastContainer autoClose={2500} transition={Slide} />
-      <Header setOpenMenuMobile={setOpenMenuMobile} />
-      <MenuMobile openMenuMobile={openMenuMobile} setOpenMenuMobile={setOpenMenuMobile} />
-      <div style={{ width: "100%", display: "flex", justifyContent: "space-between", marginTop: 64, paddingLeft: 10, paddingRight: 10 }}>
-        <TextField
-          label='Buscar Usuário'
-          variant='outlined'
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ width: "300px" }}
-          size="small"
-        />
-        <Button onClick={() => handleOpenDialog({}, "create")} variant='contained' color='primary'>
+      <div style={{ width: "100%", display: "flex", justifyContent: "space-between", paddingLeft: 10, paddingRight: 10 }}>
+        <SearchUser>
+          <TextField
+            label='Buscar Usuário'
+            variant='outlined'
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ width: "300px" }}
+            size='small'
+          />
+        </SearchUser>
+        <Button onClick={() => handleOpenDialog({}, "create")} variant='contained' color='primary'> 
           Adicionar Usuário
         </Button>
       </div>
@@ -231,14 +232,14 @@ const Users = () => {
         <Table>
           <StyledTableHead>
             <TableRow>
-              <NarrowCell onClick={() => handleRequestSort("id")}>ID</NarrowCell>
-              <NarrowCell onClick={() => handleRequestSort("n_pes")}>Nº Pessoal</NarrowCell>
-              <MediumCell onClick={() => handleRequestSort("nome")}>Nome</MediumCell>
-              <WideCell onClick={() => handleRequestSort("endereco")}>Endereço</WideCell>
-              <NarrowCell onClick={() => handleRequestSort("telefone_1")}>Telefone 1</NarrowCell>
-              <NarrowCell onClick={() => handleRequestSort("telefone_2")}>Telefone 2</NarrowCell>
-              <MediumCell onClick={() => handleRequestSort("email")}>E-mail</MediumCell>
-              <ActionsCell style={{ paddingTop: 7 }}>Ações</ActionsCell>
+              <NarrowCell onClick={() => handleRequestSort("id")}><span>ID</span></NarrowCell>
+              <NarrowCell onClick={() => handleRequestSort("n_pes")}><span>Nº Pessoal</span></NarrowCell>
+              <MediumCell onClick={() => handleRequestSort("nome")}><span>Nome</span></MediumCell>
+              <WideCell onClick={() => handleRequestSort("endereco")}><span>Endereço</span></WideCell>
+              <MediumCell onClick={() => handleRequestSort("telefone_1")}><span>Telefone</span></MediumCell>
+              {/* <NarrowCell onClick={() => handleRequestSort("telefone_2")}>Telefone 2</NarrowCell> */}
+              <MediumCell onClick={() => handleRequestSort("email")}><span>E-mail</span></MediumCell>
+              <ActionsCell style={{ paddingTop: 7 }}><span>Ações</span></ActionsCell>
             </TableRow>
           </StyledTableHead>
           <TableBody>
@@ -251,25 +252,27 @@ const Users = () => {
                   <NarrowCell>{user.n_pes}</NarrowCell>
                   <MediumCell>{user.nome}</MediumCell>
                   <WideCell>{user.endereco}</WideCell>
-                  <NarrowCell>{user.telefone_1}</NarrowCell>
-                  <NarrowCell>{user.telefone_2}</NarrowCell>
+                  <MediumCell>{user.telefone_1}</MediumCell>
+                  {/* <NarrowCell>{user.telefone_2}</NarrowCell> */}
                   <MediumCell>{user.email}</MediumCell>
                   <ActionsCell>
-                    <Tooltip title='Visualizar'>
-                      <Button onClick={() => handleOpenDialog(user, "view")}>
-                        <VisibilityIcon />
-                      </Button>
-                    </Tooltip>
-                    <Tooltip title='Editar'>
-                      <Button onClick={() => handleOpenDialog(user, "edit")}>
-                        <EditIcon />
-                      </Button>
-                    </Tooltip>
-                    <Tooltip title='Excluir'>
-                      <Button onClick={() => handleOpenDialog(user, "delete")}>
-                        <DeleteIcon />
-                      </Button>
-                    </Tooltip>
+                    <div style={{ display: "flex", justifyContent: "center", gap: 8, alignItems: "center", paddingTop: 4 }}>
+                      <Tooltip title='Visualizar'>
+                        <Button onClick={() => handleOpenDialog(user, "view")}>
+                          <VisibilityIcon />
+                        </Button>
+                      </Tooltip>
+                      <Tooltip title='Editar'>
+                        <Button onClick={() => handleOpenDialog(user, "edit")}>
+                          <EditIcon />
+                        </Button>
+                      </Tooltip>
+                      <Tooltip title='Excluir'>
+                        <Button onClick={() => handleOpenDialog(user, "delete")}>
+                          <DeleteIcon />
+                        </Button>
+                      </Tooltip>
+                    </div>
                   </ActionsCell>
                 </StyledTableRow>
               ))}
@@ -305,6 +308,7 @@ const Users = () => {
                     value={formData.n_pes}
                     onChange={handleInputChange}
                     disabled={dialogType === "view"}
+                    size="small"
                   />
                   <StyledTextField
                     label='Nome'
@@ -314,6 +318,7 @@ const Users = () => {
                     value={formData.nome}
                     onChange={handleInputChange}
                     disabled={dialogType === "view"}
+                    size="small"
                   />
                   <StyledTextField
                     label='Unidade'
@@ -323,6 +328,7 @@ const Users = () => {
                     value={formData.unidade}
                     onChange={handleInputChange}
                     disabled={dialogType === "view"}
+                    size="small"
                   />
                   <StyledTextField
                     label='Endereço'
@@ -332,6 +338,7 @@ const Users = () => {
                     value={formData.endereco}
                     onChange={handleInputChange}
                     disabled={dialogType === "view"}
+                    size="small"
                   />
                   <StyledTextField
                     label='Telefone 1'
@@ -341,6 +348,7 @@ const Users = () => {
                     value={formData.telefone_1}
                     onChange={handleInputChange}
                     disabled={dialogType === "view"}
+                    size="small"
                   />
                   <StyledTextField
                     label='Telefone 2'
@@ -350,6 +358,7 @@ const Users = () => {
                     value={formData.telefone_2}
                     onChange={handleInputChange}
                     disabled={dialogType === "view"}
+                    size="small"
                   />
                   <StyledTextField
                     label='E-mail'
@@ -359,6 +368,7 @@ const Users = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     disabled={dialogType === "view"}
+                    size="small"
                   />
                 </Form>
               </>

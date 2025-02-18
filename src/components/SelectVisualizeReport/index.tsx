@@ -22,7 +22,7 @@ export function SelectVisualizeReport({
   return (
     <Container
       style={{
-        height: `${isOpen ? '94px' : '40px'}`,
+        height: `${isOpen ? '90px' : '35px'}`,
         zIndex: `${100 - zIndex}`,
       }}
     >

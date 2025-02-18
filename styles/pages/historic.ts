@@ -7,7 +7,7 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  padding: 10px 20px 0px 20px;
+  padding: 10px 20px 30px 20px;
 
   @keyframes rotate {
   to {
@@ -101,7 +101,6 @@ export const Table = styled.table`
   /* border-collapse: collapse; */
   border-spacing: 0px 3px;
   /* border-bottom: 4px solid #6cb8d0; */
-  max-width: 1300px;
   justify-content: space-between;
 
   @media (max-width: 1400px) {
@@ -110,18 +109,15 @@ export const Table = styled.table`
   }
 
   th {
-    font-weight: 500;
-    font-size: 18px;
-
-    @media (max-width: 1400px) {
-      font-size: 16px;
-    }
+    font-weight: 400;
+    background-color: #377081;
+    color: white;
+    padding: 12px 0px;
+    font-size: 15px;
   }
 
   tr {
     height: 40px;
-    margin-top: 2px;
-    margin-bottom: 2px;
     border: solid 1px black;
     background-color: #dce8f1;
   }
@@ -237,18 +233,22 @@ export const Table = styled.table`
   }
 
   td.sector {
-    /* background-color: #9dd1db; */
+    background-color:rgb(172, 201, 211);
   }
 
   .col__schedule__done {
-    text-align: left;
-    width: 110px;
+    display: flex;
+    gap: 15px;
     padding: 10px 18px;
+    justify-content: center;
 
     div {
       display: flex;
+      flex-direction: row;
       justify-content: space-between;
       align-items: center;
+      gap: 5px;
+      font-size: 14px;
     }
   }
   .col__schedule__alterations {
@@ -334,7 +334,6 @@ export const SectionTitle = styled.div`
   display: flex;
   flex-direction: column;
   gap: 5px;
-  margin: 5px 0px;
   margin-bottom: 0px;
 
   h1 {
@@ -375,4 +374,30 @@ export const WeeklyReportButton = styled.button`
 export const WeeklyReports = styled.div`
   display: flex;
   gap: 20px;
+  margin-bottom: 10px;
+`
+
+export const ScheduleButtonsOptions = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 20px;
+  
+  button {
+    margin: 0 !important;
+    padding: 8px 0px !important;
+  }
+
+  div {
+    display: flex;
+    gap: 10px;
+  }
+`
+
+export const AlterationsLogs = styled.ul`
+  list-style: none;
+  margin-top: 10px;
+
+  li {
+    padding: 7px 10px;
+  }
 `

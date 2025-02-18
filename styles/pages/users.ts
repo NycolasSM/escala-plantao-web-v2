@@ -5,6 +5,7 @@ export const StyledTableContainer = styled(TableContainer)`
   margin: 10px;
   max-width: 99%;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  min-width: 92vw !important;
 
   th {
     cursor: pointer;
@@ -12,7 +13,8 @@ export const StyledTableContainer = styled(TableContainer)`
 `;
 
 export const StyledTableCell = styled(TableCell)`
-  padding: 8px 10px !important;
+  padding: 5px 10px !important;
+  font-size: 12px !important;
   color: #333 !important;
 `;
 
@@ -44,10 +46,20 @@ export const StyledDialog = styled(Dialog)`
 
 export const StyledTextField = styled(TextField)`
   margin: 8px 0;
+  background-color: white;
+  font-size: 13px !important;
+  padding: 0px !important;
 `;
 
 export const StyledTableHead = styled(TableHead)`
-  background-color: #e0e0e0;
+  background-color: #377081;
+  height: 40px;
+
+  span {
+    font-size: 13px;
+    font-weight: 500 !important;
+    color: white;
+  }
 `;
 
 export const StyledTableHeaderCell = styled(StyledTableCell)`
@@ -70,7 +82,15 @@ export const NarrowCell = styled(StyledTableCell)`
 export const Form = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
   width: 500px;
   padding-top: 10px;
 `;
+
+export const SearchUser = styled.div`
+  background-color: white;
+
+  * {
+    font-size: 14px !important;
+  }
+`

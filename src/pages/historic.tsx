@@ -12,6 +12,8 @@ import {
   SectionTitle,
   WeeklyReportButton,
   WeeklyReports,
+  ScheduleButtonsOptions,
+  AlterationsLogs,
 } from "../../styles/pages/historic";
 
 // toastify
@@ -584,7 +586,9 @@ const Historic = () => {
               <th colSpan={1}>Plantão</th>
               <th colSpan={1}>Ações</th>
               <th colSpan={1}>Escala Feita</th>
-              <th colSpan={1}>Alterações</th>
+              <th colSpan={1} style={{ maxWidth: 100 }}>
+                Alterações
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -657,41 +661,43 @@ const Historic = () => {
                     <>
                       {sector.name === "Transporte" ? (
                         <>
-                          <Link
-                            href={{
-                              pathname: "/",
-                              query: {
-                                Plantao: "Transporte",
-                                Local: "",
-                                Mes: month,
-                              },
-                            }}
-                          >
-                            <button className='button__edit'>Editar</button>
-                          </Link>
-                          <button
-                            className='visualize__schedule'
-                            onClick={async () => {
-                              await generatePdfSchedule(
-                                await getForms("Transporte").then((schedules) => schedules),
-                                userInfo.nome,
-                                "Transporte",
-                                "",
-                                month,
-                                year,
-                                observationForm,
-                                dismissLoadingNotify,
-                                notifyLoading
-                              ).catch(() => {
-                                notify("Escala não feita");
-                              });
-                            }}
-                          >
-                            Visualizar Escala
-                          </button>
+                          <ScheduleButtonsOptions>
+                            <Link
+                              href={{
+                                pathname: "/",
+                                query: {
+                                  Plantao: "Transporte",
+                                  Local: "",
+                                  Mes: month,
+                                },
+                              }}
+                            >
+                              <button className='button__edit'>Editar</button>
+                            </Link>
+                            <button
+                              className='visualize__schedule'
+                              onClick={async () => {
+                                await generatePdfSchedule(
+                                  await getForms("Transporte").then((schedules) => schedules),
+                                  userInfo.nome,
+                                  "Transporte",
+                                  "",
+                                  month,
+                                  year,
+                                  observationForm,
+                                  dismissLoadingNotify,
+                                  notifyLoading
+                                ).catch(() => {
+                                  notify("Escala não feita");
+                                });
+                              }}
+                            >
+                              Visualizar Escala
+                            </button>
+                          </ScheduleButtonsOptions>
                         </>
                       ) : sector.name === "Controle_De_Perdas" ? (
-                        <>
+                        <ScheduleButtonsOptions>
                           <Link
                             href={{
                               pathname: "/",
@@ -724,10 +730,10 @@ const Historic = () => {
                           >
                             Visualizar Escala
                           </button>
-                        </>
+                        </ScheduleButtonsOptions>
                       ) : sector.manutencao === true ? (
                         <>
-                          <>
+                          <ScheduleButtonsOptions>
                             <Link
                               href={{
                                 pathname: "/",
@@ -760,7 +766,7 @@ const Historic = () => {
                             >
                               Visualizar Escala
                             </button>
-                          </>
+                          </ScheduleButtonsOptions>
                         </>
                       ) : sector.name === "Operacional" ? null : sector.name === "ETA" ? null : (
                         <>
@@ -847,40 +853,31 @@ const Historic = () => {
                         </td>
                         <td>
                           <Button
-                            onClick={() =>
+                            style={{ margin: 0 }}
+                            onClick={() => {
+                              const operacionalReports = schedulesChanges["Operacional - " + sector.name]?.reports || [];
+                              const etaReports = schedulesChanges["ETA - " + sector.name]?.reports || [];
+
+                              const allReports = [...operacionalReports, ...etaReports];
+
                               showModal(
-                                <>
-                                  {schedulesChanges["Operacional - " + sector.name]?.reports?.map((report: any, i: any) => (
-                                    <p key={i}>
-                                      nº {report.n_responsavel}
-                                      {` - `}
-                                      {new Date(report.data).getUTCDate()}/
-                                      {new Date(report.data).getMonth() + 1 < 10
-                                        ? "0" + (new Date(report.data).getMonth() + 1)
-                                        : new Date(report.data).getMonth() + 1}
-                                      {` : `}
-                                      {new Date(report.hora).getHours() + 3}:{new Date(report.hora).getMinutes()}hr (
-                                      {report.setor.split(" - ")[0] === "Operacional" ? "Oper" : "ETA"})
-                                    </p>
-                                  ))}
-                                  {schedulesChanges["ETA - " + sector.name]?.reports?.map((report: any, i: any) => (
-                                    <p key={i}>
-                                      nº {report.n_responsavel}
-                                      {` - `}
-                                      {new Date(report.data).getUTCDate()}/
-                                      {new Date(report.data).getMonth() + 1 < 10
-                                        ? "0" + (new Date(report.data).getMonth() + 1)
-                                        : new Date(report.data).getMonth() + 1}
-                                      {` : `}
-                                      {new Date(report.hora).getHours() + 3}:{new Date(report.hora).getMinutes()}hr (
-                                      {report.setor.split(" - ")[0] === "Operacional" ? "Oper" : "ETA"})
-                                    </p>
-                                  ))}
-                                </>
-                              )
-                            }
+                                allReports.map((report: any, i: any) => (
+                                  <p key={i}>
+                                    nº {report.n_responsavel}
+                                    {` - `}
+                                    {new Date(report.data).getUTCDate()}/
+                                    {new Date(report.data).getMonth() + 1 < 10
+                                      ? "0" + (new Date(report.data).getMonth() + 1)
+                                      : new Date(report.data).getMonth() + 1}
+                                    {` : `}
+                                    {new Date(report.hora).getHours() + 3}:{new Date(report.hora).getMinutes()}hr (
+                                    {report.setor.split(" - ")[0] === "Operacional" ? "Oper" : "ETA"})
+                                  </p>
+                                ))
+                              );
+                            }}
                           >
-                            <AiOutlineFileSearch color="#aeaeae" size={30} />
+                            <AiOutlineFileSearch color='#aeaeae' size={30} />
                           </Button>
                         </td>
                         {/* <td className='col__schedule__alterations'>
@@ -947,6 +944,7 @@ const Historic = () => {
                             </td>
                             <td>
                               <Button
+                                style={{ margin: 0 }}
                                 onClick={() =>
                                   showModal(
                                     schedulesChanges["Manutenção - " + sector.name]?.reports?.map((report: any, i: any) => (
@@ -964,7 +962,7 @@ const Historic = () => {
                                   )
                                 }
                               >
-                                <AiOutlineFileSearch color="#aeaeae" size={30} />
+                                <AiOutlineFileSearch color='#aeaeae' size={30} />
                               </Button>
                             </td>
                             {/* <td className='col__schedule__alterations'>
@@ -1017,6 +1015,7 @@ const Historic = () => {
                                     </td>
                                     <td>
                                       <Button
+                                        style={{ margin: 0 }}
                                         onClick={() =>
                                           showModal(
                                             schedulesChanges["Transporte"]?.reports?.map((report: any, i: any) => (
@@ -1035,7 +1034,7 @@ const Historic = () => {
                                           )
                                         }
                                       >
-                                        <AiOutlineFileSearch color="#aeaeae" size={30} />
+                                        <AiOutlineFileSearch color='#aeaeae' size={30} />
                                       </Button>
                                     </td>
                                     {/* <td className='col__schedule__alterations'>
@@ -1085,6 +1084,7 @@ const Historic = () => {
                                     </td>
                                     <td>
                                       <Button
+                                        style={{ margin: 0 }}
                                         onClick={() =>
                                           showModal(
                                             schedulesChanges["Controle De Perdas"]?.reports?.map((report: any, i: any) => (
@@ -1103,7 +1103,7 @@ const Historic = () => {
                                           )
                                         }
                                       >
-                                        <AiOutlineFileSearch color="#aeaeae" size={30} />
+                                        <AiOutlineFileSearch color='#aeaeae' size={30} />
                                       </Button>
                                     </td>
                                     {/* <td className='col__schedule__alterations'>
@@ -1162,40 +1162,29 @@ const Historic = () => {
                                     </td>
                                     <td>
                                       <Button
-                                        onClick={() =>
+                                        style={{ margin: 0 }}
+                                        onClick={() => {
+                                          const operacionalReports = schedulesChanges["Operacional - " + sector.name]?.reports || [];
+                                          const etaReports = schedulesChanges["ETA - " + sector.name]?.reports || [];
+
+                                          const allReports = [...operacionalReports, ...etaReports];
+
                                           showModal(
-                                            <>
-                                              {schedulesChanges["Operacional - " + sector.name]?.reports?.map((report: any, i: any) => (
-                                                <p key={i}>
-                                                  nº {report.n_responsavel}
-                                                  {` - `}
-                                                  {new Date(report.data).getUTCDate()}/
-                                                  {new Date(report.data).getMonth() + 1 < 10
-                                                    ? "0" + (new Date(report.data).getMonth() + 1)
-                                                    : new Date(report.data).getMonth() + 1}
-                                                  {` : `}
-                                                  {new Date(report.hora).getHours() + 3}:{new Date(report.hora).getMinutes()}
-                                                  hr ({report.setor.split(" - ")[0] === "Operacional" ? "Oper" : "ETA"})
-                                                </p>
-                                              ))}
-                                              {schedulesChanges["ETA - " + sector.name]?.reports?.map((report: any, i: any) => (
-                                                <p key={i}>
-                                                  nº {report.n_responsavel}
-                                                  {` - `}
-                                                  {new Date(report.data).getUTCDate()}/
-                                                  {new Date(report.data).getMonth() + 1 < 10
-                                                    ? "0" + (new Date(report.data).getMonth() + 1)
-                                                    : new Date(report.data).getMonth() + 1}
-                                                  {` : `}
-                                                  {new Date(report.hora).getHours() + 3}:{new Date(report.hora).getMinutes()}
-                                                  hr ({report.setor.split(" - ")[0] === "Operacional" ? "Oper" : "ETA"})
-                                                </p>
-                                              ))}
-                                            </>
-                                          )
-                                        }
+                                            allReports.map((report: any, i: any) => (
+                                              <p key={i}>
+                                                nº {report.n_responsavel}
+                                                {` - `}
+                                                {new Date(report.data).getUTCDate()}/
+                                                {(new Date(report.data).getMonth() + 1).toString().padStart(2, "0")}
+                                                {` : `}
+                                                {new Date(report.hora).getHours() + 3}:{new Date(report.hora).getMinutes()}hr (
+                                                {report.setor.split(" - ")[0] === "Operacional" ? "Oper" : "ETA"})
+                                              </p>
+                                            ))
+                                          );
+                                        }}
                                       >
-                                        <AiOutlineFileSearch color="#aeaeae" size={30} />
+                                        <AiOutlineFileSearch color='#aeaeae' size={30} />
                                       </Button>
                                     </td>
                                     {/* <td className='col__schedule__alterations'>
@@ -1255,23 +1244,18 @@ const Historic = () => {
         </Table>
         <Modal open={isModalVisible} onClose={handleCancel} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
           <Box sx={style}>
-            <Typography id='modal-modal-title' variant='h6' component='h2'>
-              Text in a modal
+            <Typography id='modal-modal-title' style={{ fontSize: 18 }}>
+              Logs De Alterações
             </Typography>
-            <Typography id='modal-modal-description' sx={{ mt: 2 }}>
-              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-            </Typography>
-            <ul>
+            <AlterationsLogs>
               {logs?.map((log, index) => (
-                <li key={index}>{log}</li>
+                <li key={index} style={{ backgroundColor: `${index % 2 === 0 ? "#dce7eb" : "#ccd9dd"}` }}>
+                  {log}
+                </li>
               ))}
-            </ul>
+            </AlterationsLogs>
           </Box>
         </Modal>
-        <br />
-        <br />
-        <br />
-        <br />
       </Container>
     </>
   );
@@ -1284,9 +1268,9 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: 400,
   bgcolor: "background.paper",
-  border: "2px solid #000",
   boxShadow: 24,
-  p: 4,
+  p: 2,
+  borderRadius: 2,
 };
 
 export default Historic;

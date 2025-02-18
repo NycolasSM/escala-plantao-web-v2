@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Container = styled.div`
   position: absolute;
   right: 30px;
-  width: 180px;
+  width: 160px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -13,7 +13,7 @@ export const Container = styled.div`
   border-radius: 8px;
 
   button {
-    height: 27px;
+    height: 28px;
     width: 100%;
     display: flex;
     justify-content: space-evenly;
@@ -22,12 +22,16 @@ export const Container = styled.div`
     transition: all ease 0.1s;
     background-color: #3ca8c8;
     color: white;
-    font-size: 14px;
+    font-size: 13px;
+
+    span {
+      font-size: 13px;
+    }
 
     :nth-child(1) {
       background-color: #54c1e5;
       border-radius: 0;
-      height: 40px;
+      height: 36px;
       font-size: 15px;
     }
 
