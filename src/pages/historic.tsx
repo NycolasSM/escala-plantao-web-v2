@@ -39,7 +39,10 @@ import { SelectVisualizeReport } from "../components/SelectVisualizeReport";
 
 import { GrDocumentPdf } from "react-icons/gr";
 
+import { AiOutlineFileSearch } from "react-icons/ai";
+
 import Select from "react-select";
+import { Box, Button, Modal, Typography } from "@mui/material";
 
 const customStyles = {
   control: (provided: any) => ({
@@ -234,6 +237,9 @@ const Historic = () => {
     },
   });
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [logs, setLogs] = useState([]);
+
   const [schedulesChanges, setSchedulesChanges] = useState<any>({});
 
   const handleIncrementMonth = () => {
@@ -426,6 +432,19 @@ const Historic = () => {
     });
   };
 
+  const showModal = (logs) => {
+    setLogs(logs);
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   return (
     <>
       <ToastContainer autoClose={2500} transition={Slide} />
@@ -544,21 +563,21 @@ const Historic = () => {
 
         <SectionTitle>
           <h1>Relatórios Plantão</h1>
-          <p>Selecione a semana que deseja gerar</p>
+          {/* <p>Selecione a semana que deseja gerar</p> */}
+          <IconGuide>
+            <ul>
+              <li>
+                <AiOutlineCloseCircle color='red' size={20} />
+                <span>Não feita e ou integrada a outro município</span>
+              </li>
+              <li>
+                <AiOutlineCheckCircle color='green' size={20} />
+                <span>Escalas Feitas</span>
+              </li>
+            </ul>
+          </IconGuide>
         </SectionTitle>
 
-        <IconGuide>
-          <ul>
-            <li>
-              <AiOutlineCloseCircle color='red' size={24} />
-              <span>Não feita e ou integrada a outro município</span>
-            </li>
-            <li>
-              <AiOutlineCheckCircle color='green' size={24} />
-              <span>Escalas Feitas</span>
-            </li>
-          </ul>
-        </IconGuide>
         <Table>
           <thead>
             <tr className='table__header'>
@@ -826,7 +845,45 @@ const Historic = () => {
                             )}
                           </div>
                         </td>
-                        <td className='col__schedule__alterations'>
+                        <td>
+                          <Button
+                            onClick={() =>
+                              showModal(
+                                <>
+                                  {schedulesChanges["Operacional - " + sector.name]?.reports?.map((report: any, i: any) => (
+                                    <p key={i}>
+                                      nº {report.n_responsavel}
+                                      {` - `}
+                                      {new Date(report.data).getUTCDate()}/
+                                      {new Date(report.data).getMonth() + 1 < 10
+                                        ? "0" + (new Date(report.data).getMonth() + 1)
+                                        : new Date(report.data).getMonth() + 1}
+                                      {` : `}
+                                      {new Date(report.hora).getHours() + 3}:{new Date(report.hora).getMinutes()}hr (
+                                      {report.setor.split(" - ")[0] === "Operacional" ? "Oper" : "ETA"})
+                                    </p>
+                                  ))}
+                                  {schedulesChanges["ETA - " + sector.name]?.reports?.map((report: any, i: any) => (
+                                    <p key={i}>
+                                      nº {report.n_responsavel}
+                                      {` - `}
+                                      {new Date(report.data).getUTCDate()}/
+                                      {new Date(report.data).getMonth() + 1 < 10
+                                        ? "0" + (new Date(report.data).getMonth() + 1)
+                                        : new Date(report.data).getMonth() + 1}
+                                      {` : `}
+                                      {new Date(report.hora).getHours() + 3}:{new Date(report.hora).getMinutes()}hr (
+                                      {report.setor.split(" - ")[0] === "Operacional" ? "Oper" : "ETA"})
+                                    </p>
+                                  ))}
+                                </>
+                              )
+                            }
+                          >
+                            <AiOutlineFileSearch color="#aeaeae" size={30} />
+                          </Button>
+                        </td>
+                        {/* <td className='col__schedule__alterations'>
                           <>
                             <div className='reportChange'>
                               {schedulesChanges["Operacional - " + sector.name]?.reports?.map((report: any, i: any) => (
@@ -857,7 +914,7 @@ const Historic = () => {
                               ))}
                             </div>
                           </>
-                        </td>
+                        </td> */}
                       </>
                     ) : (
                       <>
@@ -867,7 +924,6 @@ const Historic = () => {
                               className='col__schedule__done'
                               style={{
                                 fontSize: 16,
-                                height: 60,
                                 display: "flex",
                                 justifyContent: "center",
                                 alignItems: "center",
@@ -889,7 +945,29 @@ const Historic = () => {
                                 )}
                               </div>
                             </td>
-                            <td className='col__schedule__alterations'>
+                            <td>
+                              <Button
+                                onClick={() =>
+                                  showModal(
+                                    schedulesChanges["Manutenção - " + sector.name]?.reports?.map((report: any, i: any) => (
+                                      <p key={i}>
+                                        nº {report.n_responsavel}
+                                        {` - `}
+                                        {new Date(report.data).getUTCDate()}/
+                                        {new Date(report.data).getMonth() + 1 < 10
+                                          ? "0" + (new Date(report.data).getMonth() + 1)
+                                          : new Date(report.data).getMonth() + 1}
+                                        {` : `}
+                                        {new Date(report.hora).getHours() + 3}:{new Date(report.hora).getMinutes()}hr
+                                      </p>
+                                    ))
+                                  )
+                                }
+                              >
+                                <AiOutlineFileSearch color="#aeaeae" size={30} />
+                              </Button>
+                            </td>
+                            {/* <td className='col__schedule__alterations'>
                               <>
                                 <div className='reportChange'>
                                   {schedulesChanges["Manutenção - " + sector.name]?.reports?.map((report: any, i: any) => (
@@ -906,7 +984,7 @@ const Historic = () => {
                                   ))}
                                 </div>
                               </>
-                            </td>
+                            </td> */}
                           </>
                         ) : (
                           <>
@@ -918,7 +996,6 @@ const Historic = () => {
                                       className='col__schedule__done'
                                       style={{
                                         fontSize: 16,
-                                        height: 60,
                                         display: "flex",
                                         justifyContent: "center",
                                         alignItems: "center",
@@ -938,7 +1015,30 @@ const Historic = () => {
                                         )}
                                       </div>
                                     </td>
-                                    <td className='col__schedule__alterations'>
+                                    <td>
+                                      <Button
+                                        onClick={() =>
+                                          showModal(
+                                            schedulesChanges["Transporte"]?.reports?.map((report: any, i: any) => (
+                                              <p key={i}>
+                                                nº {report.n_responsavel}
+                                                {` - `}
+                                                {new Date(report.data).getUTCDate()}/
+                                                {new Date(report.data).getMonth() + 1 < 10
+                                                  ? "0" + (new Date(report.data).getMonth() + 1)
+                                                  : new Date(report.data).getMonth() + 1}
+                                                {` : `}
+                                                {new Date(report.hora).getHours() + 3}:{new Date(report.hora).getMinutes()}
+                                                hr
+                                              </p>
+                                            ))
+                                          )
+                                        }
+                                      >
+                                        <AiOutlineFileSearch color="#aeaeae" size={30} />
+                                      </Button>
+                                    </td>
+                                    {/* <td className='col__schedule__alterations'>
                                       <>
                                         <div className='reportChange'>
                                           {schedulesChanges["Transporte"]?.reports?.map((report: any, i: any) => (
@@ -956,7 +1056,7 @@ const Historic = () => {
                                           ))}
                                         </div>
                                       </>
-                                    </td>
+                                    </td> */}
                                   </>
                                 ) : sector.name === "Controle_De_Perdas" ? (
                                   <>
@@ -964,7 +1064,6 @@ const Historic = () => {
                                       className='col__schedule__done'
                                       style={{
                                         fontSize: 16,
-                                        height: 60,
                                         display: "flex",
                                         justifyContent: "center",
                                         alignItems: "center",
@@ -984,7 +1083,30 @@ const Historic = () => {
                                         )}
                                       </div>
                                     </td>
-                                    <td className='col__schedule__alterations'>
+                                    <td>
+                                      <Button
+                                        onClick={() =>
+                                          showModal(
+                                            schedulesChanges["Controle De Perdas"]?.reports?.map((report: any, i: any) => (
+                                              <p key={i}>
+                                                nº {report.n_responsavel}
+                                                {` - `}
+                                                {new Date(report.data).getUTCDate()}/
+                                                {new Date(report.data).getMonth() + 1 < 10
+                                                  ? "0" + (new Date(report.data).getMonth() + 1)
+                                                  : new Date(report.data).getMonth() + 1}
+                                                {` : `}
+                                                {new Date(report.hora).getHours() + 3}:{new Date(report.hora).getMinutes()}
+                                                hr
+                                              </p>
+                                            ))
+                                          )
+                                        }
+                                      >
+                                        <AiOutlineFileSearch color="#aeaeae" size={30} />
+                                      </Button>
+                                    </td>
+                                    {/* <td className='col__schedule__alterations'>
                                       <>
                                         <div className='reportChange'>
                                           {schedulesChanges["Controle De Perdas"]?.reports?.map((report: any, i: any) => (
@@ -1002,7 +1124,7 @@ const Historic = () => {
                                           ))}
                                         </div>
                                       </>
-                                    </td>
+                                    </td> */}
                                   </>
                                 ) : (
                                   <>
@@ -1038,7 +1160,45 @@ const Historic = () => {
                                         )}
                                       </div>
                                     </td>
-                                    <td className='col__schedule__alterations'>
+                                    <td>
+                                      <Button
+                                        onClick={() =>
+                                          showModal(
+                                            <>
+                                              {schedulesChanges["Operacional - " + sector.name]?.reports?.map((report: any, i: any) => (
+                                                <p key={i}>
+                                                  nº {report.n_responsavel}
+                                                  {` - `}
+                                                  {new Date(report.data).getUTCDate()}/
+                                                  {new Date(report.data).getMonth() + 1 < 10
+                                                    ? "0" + (new Date(report.data).getMonth() + 1)
+                                                    : new Date(report.data).getMonth() + 1}
+                                                  {` : `}
+                                                  {new Date(report.hora).getHours() + 3}:{new Date(report.hora).getMinutes()}
+                                                  hr ({report.setor.split(" - ")[0] === "Operacional" ? "Oper" : "ETA"})
+                                                </p>
+                                              ))}
+                                              {schedulesChanges["ETA - " + sector.name]?.reports?.map((report: any, i: any) => (
+                                                <p key={i}>
+                                                  nº {report.n_responsavel}
+                                                  {` - `}
+                                                  {new Date(report.data).getUTCDate()}/
+                                                  {new Date(report.data).getMonth() + 1 < 10
+                                                    ? "0" + (new Date(report.data).getMonth() + 1)
+                                                    : new Date(report.data).getMonth() + 1}
+                                                  {` : `}
+                                                  {new Date(report.hora).getHours() + 3}:{new Date(report.hora).getMinutes()}
+                                                  hr ({report.setor.split(" - ")[0] === "Operacional" ? "Oper" : "ETA"})
+                                                </p>
+                                              ))}
+                                            </>
+                                          )
+                                        }
+                                      >
+                                        <AiOutlineFileSearch color="#aeaeae" size={30} />
+                                      </Button>
+                                    </td>
+                                    {/* <td className='col__schedule__alterations'>
                                       <>
                                         <div className='reportChange'>
                                           {schedulesChanges["Operacional - " + sector.name]?.reports?.map((report: any, i: any) => (
@@ -1069,7 +1229,7 @@ const Historic = () => {
                                           ))}
                                         </div>
                                       </>
-                                    </td>
+                                    </td> */}
                                   </>
                                 )}
                               </>
@@ -1093,6 +1253,21 @@ const Historic = () => {
             ))}
           </tbody>
         </Table>
+        <Modal open={isModalVisible} onClose={handleCancel} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
+          <Box sx={style}>
+            <Typography id='modal-modal-title' variant='h6' component='h2'>
+              Text in a modal
+            </Typography>
+            <Typography id='modal-modal-description' sx={{ mt: 2 }}>
+              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+            </Typography>
+            <ul>
+              {logs?.map((log, index) => (
+                <li key={index}>{log}</li>
+              ))}
+            </ul>
+          </Box>
+        </Modal>
         <br />
         <br />
         <br />
@@ -1100,6 +1275,18 @@ const Historic = () => {
       </Container>
     </>
   );
+};
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
 };
 
 export default Historic;

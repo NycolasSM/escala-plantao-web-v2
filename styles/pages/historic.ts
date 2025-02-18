@@ -100,10 +100,8 @@ export const Table = styled.table`
   font-weight: 500;
   /* border-collapse: collapse; */
   border-spacing: 0px 3px;
-  border-bottom: 4px solid #6cb8d0;
+  /* border-bottom: 4px solid #6cb8d0; */
   max-width: 1300px;
-  min-width: 1300px;
-  margin-top: 20px;
   justify-content: space-between;
 
   @media (max-width: 1400px) {
@@ -112,20 +110,16 @@ export const Table = styled.table`
   }
 
   th {
-    height: 65px;
     font-weight: 500;
-    font-size: 20px;
-
-    padding: 10px;
-    background-color: #6cb8d0;
+    font-size: 18px;
 
     @media (max-width: 1400px) {
-      font-size: 18px;
+      font-size: 16px;
     }
   }
 
   tr {
-    height: 60px;
+    height: 40px;
     margin-top: 2px;
     margin-bottom: 2px;
     border: solid 1px black;
@@ -163,18 +157,14 @@ export const Table = styled.table`
       }
       /* padding: 10px 10px; */
       button {
-        margin: 0;
+        margin: 4px 0px;
         min-width: 100px;
         max-width: 100px;
-        font-size: 12px;
-        padding: 10px 0px;
+        font-size: 11px;
+        padding: 8px 0px;
         background-color: #508a9f;
       }
     }
-  }
-
-  .type {
-    padding: 8px 25px;
   }
 
   .button__edit {
@@ -213,7 +203,7 @@ export const Table = styled.table`
     }
 
     option {
-      font-size: 15px;
+      font-size: 14px;
       background-color: #2fb4df;
     }
   }
@@ -228,8 +218,7 @@ export const Table = styled.table`
   }
 
   td {
-    font-size: 16px;
-    padding: 10px 10px;
+    font-size: 14px;
     text-align: center;
     border-right: 1px solid #35353550;
     border-left: 1px solid #35353550;
@@ -238,21 +227,17 @@ export const Table = styled.table`
       border: 1px solid transparent;
       border-radius: 10px;
       min-width: 140px;
-      padding: 9px 16px;
+      padding: 7px 6px;
       margin: 0 20px;
       cursor: pointer;
       color: white;
       transition: all ease 0.1s;
-
-      @media (max-width: 1400px) {
-        padding: 9px 14px;
-      }
+      font-size: 12px;
     }
   }
 
   td.sector {
-    height: 70px;
-    background-color: #9dd1db;
+    /* background-color: #9dd1db; */
   }
 
   .col__schedule__done {
@@ -272,8 +257,9 @@ export const Table = styled.table`
   }
 
   .reportChange {
-    height: 67px;
-    max-height: 67px;
+    /* height: 67px; */
+    /* max-height: 67px; */
+    max-height: 44px;
     padding-left: 1px;
     margin-left: 1px;
     display: flex;
@@ -314,24 +300,17 @@ export const Table = styled.table`
 
 export const IconGuide = styled.div`
   display: flex;
-  margin-top: 30px;
-  margin-bottom: -25px;
-  width: 100%;
-  max-width: 1150px;
-  justify-content: center;
 
   ul {
     display: flex;
     flex-direction: row;
-    align-items: center;
     list-style: none;
-    gap: 35px;
+    gap: 20px;
 
     li {
       display: flex;
-      align-items: center;
       gap: 5px;
-      font-size: 15px;
+      font-size: 14px;
     }
   }
 `;
