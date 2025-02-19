@@ -1,14 +1,14 @@
-import React, { ReactNode, useContext, useEffect, useState } from 'react';
-import { createContext } from 'react';
-import { api } from '../services/api';
-import { useAuthContext } from './AuthContext';
-import AvailableSchedulesContext from './availableSchedulesContext';
+import React, { ReactNode, useContext, useEffect, useState } from "react";
+import { createContext } from "react";
+import { api } from "../services/api";
+import { useAuthContext } from "./AuthContext";
+import AvailableSchedulesContext from "./availableSchedulesContext";
 
 // Toastfify
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { Slide, Zoom, Flip, Bounce } from 'react-toastify';
-import { Registers } from '../components/ScheduleTable/styles';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Slide, Zoom, Flip, Bounce } from "react-toastify";
+import { Registers } from "../components/ScheduleTable/styles";
 
 type EscalasContextProps = {
   children: ReactNode;
@@ -79,13 +79,14 @@ interface IFormContext {
   verifyEmptyFields: () => boolean;
   setIsSendingForm: (state: boolean) => void;
   setHaveEmptyField: (state: boolean) => void;
-  
+  registersIndex: any;
+  setRegistersIndex: any;
 }
 
 const initilValue = {
   formulario: {},
-  responsavel: 'Responsavel Teste',
-  n_pes_responsavel: '0000',
+  responsavel: "Responsavel Teste",
+  n_pes_responsavel: "0000",
   haveEmptyField: false,
   registers: new Map(),
   formularioDelete: new Map(),
@@ -95,7 +96,7 @@ const initilValue = {
   isEmpty: false,
   isSendingForm: false,
   haveSchedulesHourChanged: true,
-  changesSchedulesHourObservation: '',
+  changesSchedulesHourObservation: "",
   setHaveSchedulesHourChanged: () => {},
   setChangesSchedulesHourObservation: () => {},
   setIsEmpty: () => {},
@@ -120,17 +121,14 @@ const initilValue = {
 const FormContext = createContext<IFormContext>(initilValue);
 
 const FormProvider = ({ children }: EscalasContextProps) => {
-  const { monthNumber, year, localChosen, plantaoChosen, setPlantaoChosen, observationForm } =
-    useContext(AvailableSchedulesContext);
+  const { monthNumber, year, localChosen, plantaoChosen, setPlantaoChosen, observationForm } = useContext(AvailableSchedulesContext);
 
   const [responsavel, setResponsavel] = useState(initilValue.responsavel);
   const [n_pes_responsavel, setN_pes_responsavel] = useState(initilValue.n_pes_responsavel);
 
   const [formularioDelete, setFormularioDelete] = useState(initilValue.formularioDelete);
 
-  const [showFormSendMessage, setShowFormSendMessage] = useState<boolean>(
-    initilValue.showFormSendMessage
-  );
+  const [showFormSendMessage, setShowFormSendMessage] = useState<boolean>(initilValue.showFormSendMessage);
 
   const [loadedForms, setLoadedForms] = useState<LoadedForm[]>(initilValue.loadedForms);
 
@@ -138,15 +136,15 @@ const FormProvider = ({ children }: EscalasContextProps) => {
 
   const [haveEmptyField, setHaveEmptyField] = useState<boolean>(initilValue.haveEmptyField);
 
-  const [isLoadingRegisters, setIsLoadingRegisters] = useState<boolean>(
-    initilValue.isLoadingRegisters
-  );
+  const [isLoadingRegisters, setIsLoadingRegisters] = useState<boolean>(initilValue.isLoadingRegisters);
 
   const [isEmpty, setIsEmpty] = useState<boolean | null>(initilValue.isEmpty);
 
   const [isSendingForm, setIsSendingForm] = useState<boolean>(initilValue.isSendingForm);
 
-  console.log("registers", registers)
+  let [registersIndex, setRegistersIndex] = useState<number>(0);
+
+  console.log("registers", registers);
 
   // AuthContext
   const { userInfo } = useAuthContext();
@@ -160,7 +158,7 @@ const FormProvider = ({ children }: EscalasContextProps) => {
     let horasFormatadas: number[] = [];
 
     scheduleHour.map((hora) => {
-      horasFormatadas.push(parseFloat(hora.replace(':', '.').replace('.3', '.5')));
+      horasFormatadas.push(parseFloat(hora.replace(":", ".").replace(".3", ".5")));
     });
 
     return horasFormatadas[3] - horasFormatadas[0] - (horasFormatadas[2] - horasFormatadas[1]);
@@ -177,7 +175,7 @@ const FormProvider = ({ children }: EscalasContextProps) => {
       const registerSchedule = value.scheduleHour;
       const registerType = value.action;
 
-      if (registerType === 'create') {
+      if (registerType === "create") {
         registerEmployees!.map((employee: any) => {
           escalas.push({
             funcionario: employee.value.nome,
@@ -185,10 +183,10 @@ const FormProvider = ({ children }: EscalasContextProps) => {
             data: `${year}/${monthNumber}/${registerDay}`,
             horario: `${registerSchedule[0]} - ${registerSchedule[1]} / ${registerSchedule[2]} - ${registerSchedule[3]}`,
             total_horas: calcularTotalJornada([
-              registerSchedule[0] ?? '00:00',
-              registerSchedule[1] ?? '00:00',
-              registerSchedule[2] ?? '00:00',
-              registerSchedule[3] ?? '24:00',
+              registerSchedule[0] ?? "00:00",
+              registerSchedule[1] ?? "00:00",
+              registerSchedule[2] ?? "00:00",
+              registerSchedule[3] ?? "24:00",
             ]),
             endereco: employee.value.endereco,
             telefone_1: employee.value.telefone_1,
@@ -214,7 +212,7 @@ const FormProvider = ({ children }: EscalasContextProps) => {
   };
 
   function getScheduleType() {
-    if (plantaoChosen === 'Transporte' || plantaoChosen === 'Controle De Perdas') {
+    if (plantaoChosen === "Transporte" || plantaoChosen === "Controle De Perdas") {
       return plantaoChosen;
     } else {
       return `${plantaoChosen} - ${localChosen}`;
@@ -266,18 +264,18 @@ const FormProvider = ({ children }: EscalasContextProps) => {
       if (verifyEmptyFields() === true) {
         setIsSendingForm(false);
         setHaveEmptyField(true);
-        return console.log('Existem campos para preencher');
+        return console.log("Existem campos para preencher");
       } else {
         await api
           .post(`/schedules/?scheduleType=${getScheduleType()}`, formToSend)
           .then(() => {
             api
-              .post('/observation', formularioObservacao)
+              .post("/observation", formularioObservacao)
               .then((e) => {
                 setHaveEmptyField(false);
                 setShowFormSendMessage(true);
                 refreshRegistersAfterSend();
-                notify('Formulário Enviado');
+                notify("Formulário Enviado");
               })
               .catch((erro) => {
                 console.log(`erro na atualização da observação: ${erro}`);
@@ -297,14 +295,14 @@ const FormProvider = ({ children }: EscalasContextProps) => {
           });
 
           api
-            .delete('/schedules/', {
+            .delete("/schedules/", {
               data: idList,
             })
             .then(() => {
               setHaveEmptyField(false);
               setShowFormSendMessage(true);
               refreshRegistersAfterSend();
-              notify('Registro(s) Excluído');
+              notify("Registro(s) Excluído");
               // window.location.reload();
             })
             .catch((erro) => {
@@ -314,7 +312,7 @@ const FormProvider = ({ children }: EscalasContextProps) => {
       }
     } else {
       api
-        .post('/observation', formularioObservacao)
+        .post("/observation", formularioObservacao)
         .then((e) => {
           setHaveEmptyField(false);
           setShowFormSendMessage(true);
@@ -330,7 +328,7 @@ const FormProvider = ({ children }: EscalasContextProps) => {
 
   function refreshRegistersAfterSend() {
     setFormularioDelete(new Map());
-    setPlantaoChosen('');
+    setPlantaoChosen("");
     setTimeout(() => {
       setIsSendingForm(false);
       setPlantaoChosen(plantaoChosen);
@@ -342,7 +340,7 @@ const FormProvider = ({ children }: EscalasContextProps) => {
 
   const [haveSchedulesHourChanged, setHaveSchedulesHourChanged] = useState(false);
 
-  const [changesSchedulesHourObservation, setChangesSchedulesHourObservation] = useState('');
+  const [changesSchedulesHourObservation, setChangesSchedulesHourObservation] = useState("");
 
   function verifyEmptyFields() {
     let haveNullField: boolean = false;
@@ -356,7 +354,7 @@ const FormProvider = ({ children }: EscalasContextProps) => {
       // se todos os horários vierem com 00:00 este horáio é invalido (lembrando que cajo venha das 00:00 meia noite ele virá 24:00)
       let count = 0;
       registerSchedule.map((horarios) => {
-        if (horarios == '00:00') {
+        if (horarios == "00:00") {
           count = count + 1;
         }
       });
@@ -364,28 +362,28 @@ const FormProvider = ({ children }: EscalasContextProps) => {
       // o count seria quantas vezes os horarios vieram como 00:00
       if (count === 4) {
         haveNullField = true;
-        console.log('verificao1');
+        console.log("verificao1");
         return true;
       }
 
       // verifica se o dia está vazio
-      if (registerDay === '') {
+      if (registerDay === "") {
         haveNullField = true;
-        console.log('verificao2');
+        console.log("verificao2");
         return true;
       }
 
       // verifica se o campo de funcionarios esta vazio
       if (registerEmployees.length === 0) {
         haveNullField = true;
-        console.log('verificao3');
+        console.log("verificao3");
         return true;
       }
 
       // verifica se o horario de saída é menor que o horário de entrada
       if (parseFloat(value.scheduleHour[3]) < parseFloat(value.scheduleHour[0])) {
         haveNullField = true;
-        console.log('verificao4');
+        console.log("verificao4");
         return true;
       }
 
@@ -438,6 +436,8 @@ const FormProvider = ({ children }: EscalasContextProps) => {
         setHaveSchedulesHourChanged,
         setIsSendingForm,
         verifyEmptyFields,
+        registersIndex,
+        setRegistersIndex,
       }}
     >
       {children}

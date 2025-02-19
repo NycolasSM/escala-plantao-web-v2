@@ -74,6 +74,8 @@ const ScheduleTable = () => {
     verifyEmptyFields,
     setIsSendingForm,
     setHaveEmptyField,
+    registersIndex,
+    setRegistersIndex,
   } = useContext(FormContext);
 
   const { isLogged } = useAuthContext();
@@ -81,8 +83,6 @@ const ScheduleTable = () => {
   const [registersLoaded, setRegistersLoaded] = useState<RegistersLoaded[]>([]);
 
   const [observation, setObservation] = useState<string>("");
-
-  let [registersIndex, setRegistersIndex] = useState<number>(0);
 
   const router = useRouter();
 
@@ -335,23 +335,26 @@ const ScheduleTable = () => {
           ) : null}
 
           {Array.from(registers).map((data, index) => (
-            <Register
-              id={data[1].id}
-              day={data[1].day}
-              index={index}
-              action={data[1].action}
-              defaultValues={
-                data[1].action === "edit" && {
-                  idLoaded: "",
-                  dayLoaded: data[1].day,
-                  employeesLoaded: [],
-                  scheduleHourLoaded: data[1].scheduleHour,
+            <>
+              {console.log("data", data[1])}
+              <Register
+                id={data[1].id}
+                day={data[1].day}
+                index={index}
+                action={data[1].action}
+                defaultValues={
+                  data[1].action === "edit" && {
+                    idLoaded: "",
+                    dayLoaded: data[1].day,
+                    employeesLoaded: [],
+                    scheduleHourLoaded: data[1].scheduleHour,
+                  }
                 }
-              }
-              removeRegisterOfRemoveList={removeRegisterOfRemoveList}
-              removeRegisterSaved={removeRegisterSaved}
-              removeRegister={removeRegister}
-            />
+                removeRegisterOfRemoveList={removeRegisterOfRemoveList}
+                removeRegisterSaved={removeRegisterSaved}
+                removeRegister={removeRegister}
+              />
+            </>
           ))}
         </Tbody>
       </Container>

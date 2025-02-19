@@ -1,7 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Select, { SingleValue, MultiValue } from "react-select";
 import { Container, Row, Button } from "./styles";
 import FormContext from "../../context/formContext";
+import AvailableSchedulesContext from "../../context/availableSchedulesContext";
 
 const customStyles = {
   control: (provided: any) => ({
@@ -50,30 +51,86 @@ const customStyles = {
 type OptionType = { value: string; label: string };
 
 const BatchCreateSchedule = () => {
+  const { monthNumber, year, availableEmployees } = useContext(AvailableSchedulesContext);
+
   const [selectedDays, setSelectedDays] = useState<MultiValue<OptionType>>([]);
   const [selectedParticipants, setSelectedParticipants] = useState<MultiValue<OptionType>>([]);
   const [selectedStartTime, setSelectedStartTime] = useState<SingleValue<OptionType>>(null);
   const [selectedEndTime, setSelectedEndTime] = useState<SingleValue<OptionType>>(null);
   const [selectedFromTime, setSelectedFromTime] = useState<SingleValue<OptionType>>(null);
   const [selectedToTime, setSelectedToTime] = useState<SingleValue<OptionType>>(null);
-  const { registers, setRegisters } = useContext(FormContext);
 
-  const daysOptions: OptionType[] = [
-    { value: "1 - SAB", label: "1 - SAB" },
-    { value: "2 - DOM", label: "2 - DOM" },
-    { value: "3 - TER", label: "3 - TER" },
-    { value: "4 - QUA", label: "4 - QUA" },
-    { value: "5 - QUI", label: "5 - QUI" },
-    { value: "6 - SEX", label: "6 - SEX" },
-    { value: "7 - SAB", label: "7 - SAB" },
-  ];
+  const [allDays, setAllDays] = useState<any[]>([]);
 
-  const participantsOptions: OptionType[] = [
-    { value: "ALEXANDRE RIBEIRO", label: "ALEXANDRE RIBEIRO" },
-    { value: "JOÃO SILVA", label: "JOÃO SILVA" },
-    { value: "CARLOS PEREIRA", label: "CARLOS PEREIRA" },
-    { value: "ANA COSTA", label: "ANA COSTA" },
-  ];
+  let totalOfDays = new Date(year, monthNumber, 0).getDate();
+
+  useEffect(() => {
+    setAllDays(Array.from({ length: totalOfDays }, (v, k) => k + 1));
+  }, [monthNumber, year]);
+
+  const {
+    haveEmptyField,
+    registers,
+    isEmpty,
+    setIsEmpty,
+    sendForm,
+    isSendingForm,
+    setRegisters,
+    formularioDelete,
+    setFormularioDelete,
+    setLoadedForms,
+    isLoadingRegisters,
+    setIsLoadingRegisters,
+    haveSchedulesHourChanged,
+    setHaveSchedulesHourChanged,
+    verifyEmptyFields,
+    setIsSendingForm,
+    setHaveEmptyField,
+    registersIndex,
+    setRegistersIndex,
+  } = useContext(FormContext);
+
+  const daysOptions: OptionType[] = allDays.map((day) => {
+    return { value: day, label: `${day} - ${getDayOfTheWeek(day)}` };
+  });
+
+  function getDayOfTheWeek(day: number) {
+    let newDate = new Date(year, monthNumber - 1, day);
+    if (newDate.getDay() == 0) {
+      return "DOM";
+    }
+    if (newDate.getDay() == 1) {
+      return "SEG";
+    }
+    if (newDate.getDay() == 2) {
+      return "TER";
+    }
+    if (newDate.getDay() == 3) {
+      return "QUA";
+    }
+    if (newDate.getDay() == 4) {
+      return "QUI";
+    }
+    if (newDate.getDay() == 5) {
+      return "SEX";
+    }
+    if (newDate.getDay() == 6) {
+      return "SAB";
+    }
+  }
+
+  const participantsOptions: any[] = availableEmployees.map((employ: any) => {
+    return {
+      label: `${employ.nome} | n_pes: ${employ.n_pes}`,
+      value: {
+        nome: employ.nome,
+        n_pes: employ.n_pes,
+        endereco: employ.endereco,
+        telefone_1: employ.telefone_1,
+        telefone_2: employ.telefone_2,
+      },
+    }
+  });
 
   const timeOptions: OptionType[] = Array.from({ length: 48 }, (_, i) => {
     const hour = String(Math.floor(i / 2)).padStart(2, "0");
@@ -85,7 +142,7 @@ const BatchCreateSchedule = () => {
     const newEntries = selectedDays.map((day, index) => ({
       day: day.value,
       id: crypto.randomUUID(),
-      employees: selectedParticipants.map(participant => ({
+      employees: selectedParticipants.map((participant) => ({
         label: participant.label,
         value: {
           nome: participant.label,
@@ -101,12 +158,18 @@ const BatchCreateSchedule = () => {
       action: "create",
     }));
 
+    console.log("newEntries", newEntries);
+    console.log("selectedStartTime", selectedStartTime);
+
     // Atualizando o estado registers com os novos registros
     setRegisters((prevRegisters: Map<string, any>) => {
       const updatedRegisters = new Map(prevRegisters);
       newEntries.forEach((entry, idx) => {
         updatedRegisters.set((prevRegisters.size + idx).toString(), entry);
       });
+
+      setRegistersIndex(registersIndex + 1);
+
       return updatedRegisters;
     });
 
@@ -127,7 +190,7 @@ const BatchCreateSchedule = () => {
         options={daysOptions}
         value={selectedDays}
         onChange={setSelectedDays}
-        placeholder="Selecione os dias"
+        placeholder='Selecione os dias'
         styles={customStyles}
       />
       <Row>
@@ -137,7 +200,7 @@ const BatchCreateSchedule = () => {
             options={timeOptions}
             value={selectedStartTime}
             onChange={setSelectedStartTime}
-            placeholder="horário de início"
+            placeholder='horário de início'
             styles={customStyles}
           />
         </div>
@@ -147,7 +210,7 @@ const BatchCreateSchedule = () => {
             options={timeOptions}
             value={selectedEndTime}
             onChange={setSelectedEndTime}
-            placeholder="Selecione o horário de término"
+            placeholder='Selecione o horário de término'
             styles={customStyles}
           />
         </div>
@@ -159,7 +222,7 @@ const BatchCreateSchedule = () => {
             options={timeOptions}
             value={selectedFromTime}
             onChange={setSelectedFromTime}
-            placeholder="Selecione o intervalo das"
+            placeholder='Selecione o intervalo das'
             styles={customStyles}
           />
         </div>
@@ -169,7 +232,7 @@ const BatchCreateSchedule = () => {
             options={timeOptions}
             value={selectedToTime}
             onChange={setSelectedToTime}
-            placeholder="Selecione o intervalo às"
+            placeholder='Selecione o intervalo às'
             styles={customStyles}
           />
         </div>
@@ -180,7 +243,7 @@ const BatchCreateSchedule = () => {
         options={participantsOptions}
         value={selectedParticipants}
         onChange={setSelectedParticipants}
-        placeholder="Selecione os participantes"
+        placeholder='Selecione os participantes'
         styles={customStyles}
       />
       <Button style={{ marginTop: 20 }} onClick={handleCreate}>

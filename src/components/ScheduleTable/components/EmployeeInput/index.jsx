@@ -54,22 +54,20 @@ const EmployeeInput = ({ index }) => {
   const { registers, setRegisters } = useContext(FormContext);
 
   const filterEmployees = (inputValue) => {
-    let registersArray = [];
-
-    availableEmployees.forEach((employ) => {
-      registersArray.push({
-        label: `${employ.nome} | n_pes: ${employ.n_pes} `,
+    const lowerInput = inputValue.toLowerCase();
+  
+    return availableEmployees
+      .map((employ) => ({
+        label: `${employ.nome} | n_pes: ${employ.n_pes}`,
         value: {
           nome: employ.nome,
           n_pes: employ.n_pes,
           endereco: employ.endereco,
           telefone_1: employ.telefone_1,
           telefone_2: employ.telefone_2,
-        }, // talvez para poder inserir no formulário da para usar o código no funcionario
-      });
-    });
-
-    return registersArray.filter((i) => i.label.toLowerCase().includes(inputValue.toLowerCase()));
+        },
+      }))
+      .filter((item) => item.label.toLowerCase().includes(lowerInput));
   };
 
   const promiseOptions = async (inputValue) => {

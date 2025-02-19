@@ -76,7 +76,7 @@ const Register = ({
 
   const [allDays, setAllDays] = useState<any[]>([]);
 
-  const [daySelected, setDaySelected] = useState<number>(action === "edit" ? day : 1);
+  const [daySelected, setDaySelected] = useState<number>(day);
 
   const [rangeOfScheduleSelected, setRangeOfScheduleSelected] = useState(defaultValues.scheduleHourLoaded);
 
@@ -606,22 +606,16 @@ const Register = ({
       <Container className={`${formularioDelete.get(index.toString()) ? "delete" : action === "edit" ? "edit" : "create"}`}>
         <td>
           <SelectDays
-            defaultValue=''
+            value={daySelected}
             name=''
             id=''
             onChange={(e: any) => {
-              setDaySelected(JSON.parse(e.target.value));
+              setDaySelected(e.target.value);
             }}
           >
-            {action === "edit" ? (
-              <option key={defaultValues?.dayLoaded} value={defaultValues?.dayLoaded}>
-                {defaultValues?.dayLoaded} - {getDayOfTheWeek(defaultValues?.dayLoaded)}
-              </option>
-            ) : (
-              <option value='' disabled selected>
-                Dia &nbsp;
-              </option>
-            )}
+            <option value='' disabled>
+              Dia &nbsp;
+            </option>
             {allDays.map((day) => (
               <option key={day} value={day}>
                 {day} - {getDayOfTheWeek(day)}
