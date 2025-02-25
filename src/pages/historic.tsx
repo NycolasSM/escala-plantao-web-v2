@@ -374,14 +374,16 @@ const Historic = () => {
     return (
       <>
         <Container>
-          <h3 style={{ fontWeight: 500 }}>Você precisa estar logado para Acessar essa página</h3>
-          <Link
-            href={{
-              pathname: "/",
-            }}
-          >
-            <button className='button__back__login'>Voltar Para Login</button>
-          </Link>
+          <h3 style={{ fontWeight: 500, fontSize: 16 }}>Você precisa estar logado para Acessar essa página</h3>
+          <div style={{ maxWidth: 200, margin: "0 auto" }}>
+            <Link
+              href={{
+                pathname: "/",
+              }}
+            >
+              <button className='button__back__login'>Voltar Para Login</button>
+            </Link>
+          </div>
         </Container>
       </>
     );

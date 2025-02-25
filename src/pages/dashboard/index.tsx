@@ -114,6 +114,10 @@ const Dashboard = () => {
         <Buttons>
           <button
             onClick={() => {
+              if (!localChosen || !plantaoChosen) {
+                notify("Selecione o local e o plantão");
+                return;
+              }
               generatePdfSchedule(
                 loadedForms,
                 userInfo.nome,

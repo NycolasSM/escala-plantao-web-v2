@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { api } from "../services/api";
 
 type AuthContextType = {
@@ -79,23 +79,42 @@ export function AuthProvider({ children }: AuthProviderProps) {
   //   // clearTimeout(timeoutId)
   // });
 
-  async function signIn(usuario: string, senha: string) {
-    setUserInfo({
-      id: 0,
-      usuario: "admin",
-      n_pes: "admin",
-      nome: "admin",
-      senha: "admin",
-      plantao: "admin",
-      local_operacional: "admin",
-      local_eta: "admin",
-      setor: "admin",
-    });
+  async function signIn(usuario: string, senha: string, toast: any) {
+    setIsLoading(true);
+    try {
+      const response = await api.post("https://apiescalas.localsig.com/login", { usuario, senha });
 
-    setErrorMessage(null);
-    setIsLogged(true);
-    setIsLoading(false);
+      if (response.data) {
+        const userData = response.data;
+
+        // Armazena no estado
+        setUserInfo(userData);
+        setIsLogged(true);
+        // setErrorMessage(null);
+
+        // Armazena no localStorage
+        localStorage.setItem("userSession", JSON.stringify(userData));
+
+        // Redireciona o usuário após login
+        Router.push("/dashboard");
+      }
+    } catch (error) {
+      toast.error("Credenciais inválidas")
+      // setErrorMessage("Credenciais inválidas");
+    } finally {
+      setIsLoading(false);
+    }
   }
+
+  useEffect(() => {
+    const storedSession = localStorage.getItem("userSession");
+    
+    if (storedSession) {
+      const userData = JSON.parse(storedSession);
+      setUserInfo(userData);
+      setIsLogged(true);
+    }
+  }, []);
 
   async function requestSession() {
     // let win = window.open(

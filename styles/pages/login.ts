@@ -187,7 +187,7 @@ export const LocalsigLogoContainer = styled.div`
   margin-bottom: 0.6rem; */
   width: 180px;
   margin: 0 auto;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 
   /* @media (max-width: 1400px) {
     margin-top: 2.5rem;

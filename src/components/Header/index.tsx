@@ -47,15 +47,8 @@ const Header = () => {
   // const { userInfo, logout } = useContext(AuthContext);
   const { userInfo } = useContext(AuthContext);
 
-  const {
-    plantaoAvailable,
-    plantaoChosen,
-    localChosen,
-    setPlantaoChosen,
-    setLocalChosen,
-    setAvailableDaysData,
-    setMonthNumber,
-  } = React.useContext(AvailableSchedulesContext);
+  const { plantaoAvailable, plantaoChosen, localChosen, setPlantaoChosen, setLocalChosen, setAvailableDaysData, setMonthNumber } =
+    React.useContext(AvailableSchedulesContext);
 
   const [dropdownActive, setDropdownActive] = useState(false);
   const dropdownRef = useRef<any>(null);
@@ -93,6 +86,8 @@ const Header = () => {
     };
   }, []);
 
+  console.log("userInfo", userInfo);  
+
   return (
     <Container>
       <div style={{ display: "flex", gap: 14, paddingTop: 12 }}>
@@ -100,9 +95,14 @@ const Header = () => {
         <span>{">"}</span>
         <h3>{HeaderTitle}</h3>
       </div>
-      <UserButton onClick={() => setDropdownActive(!dropdownActive)}>
-        <FaRegUser size={17} color='#505050' />
-      </UserButton>
+      <div style={{ display: "flex", alignItems: "center", gap: 14, paddingTop: 12 }}>
+        <span style={{ fontSize: 14, paddingTop: 1, color: "#505050" }}>
+          {userInfo?.nome}
+        </span>
+        <UserButton onClick={() => setDropdownActive(!dropdownActive)}>
+          <FaRegUser size={17} color='#505050' />
+        </UserButton>
+      </div>
       <DropdownMenu ref={dropdownRef} className={dropdownActive ? "active" : ""}>
         <button onClick={handleLogout}>
           <MdLogout size={18} />

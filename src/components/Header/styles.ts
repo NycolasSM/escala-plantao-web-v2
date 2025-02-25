@@ -7,10 +7,10 @@ export const Container = styled.header`
   width: 100%;
   margin-bottom: 0px;
   right: 0px;
-  padding-top: 12px;
+  padding-top: 8px;
   padding-right: 21px;
   padding-left: 20px;
-  padding-bottom: 8px;
+  padding-bottom: 10px;
   position: sticky;
   left: 0px;
 

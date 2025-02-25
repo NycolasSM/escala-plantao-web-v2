@@ -5,6 +5,7 @@ import { LocalsigLogoContainer, LoginContainer, MessageErrorContainer, Warnings 
 import Input from "../components/Input";
 import React, { useEffect, useState } from "react";
 import { useAuthContext } from "../context/AuthContext";
+import { Slide, ToastContainer, toast } from "react-toastify";
 
 import { GrConfigure } from "react-icons/gr";
 import { BsInfoSquare } from "react-icons/bs";
@@ -82,12 +83,13 @@ const Login = () => {
 
   return (
     <>
+      <ToastContainer autoClose={2500} transition={Slide} />
       <LoginContainer>
-        {errorMessage && (
+        {/* {errorMessage && (
           <MessageErrorContainer>
             <h1>{errorMessage}</h1>
           </MessageErrorContainer>
-        )}
+        )} */}
         <form>
           <LocalsigLogo />
 
@@ -111,7 +113,7 @@ const Login = () => {
                   event?.preventDefault();
                   setErrorMessage(null);
                   setIsLoading(true);
-                  signIn(userCode, password);
+                  signIn(userCode, password, toast);
                   if (rememberPassword) {
                     localStorage.setItem("userCode", userCode);
                     localStorage.setItem("password", password);

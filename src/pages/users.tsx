@@ -41,9 +41,11 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import Link from "next/link";
+import { Container } from "../../styles/pages/historic";
 
 const Users = () => {
-  const { userInfo } = useAuthContext();
+  const { userInfo, isLogged } = useAuthContext();
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [dialogType, setDialogType] = useState(null);
@@ -210,6 +212,25 @@ const Users = () => {
     );
   };
 
+  if (!isLogged) {
+    return (
+      <>
+        <Container>
+          <h3 style={{ fontWeight: 500, fontSize: 16 }}>Você precisa estar logado para Acessar essa página</h3>
+          <div style={{ maxWidth: 200, margin: "0 auto" }}>
+            <Link
+              href={{
+                pathname: "/",
+              }}
+            >
+              <button className='button__back__login'>Voltar Para Login</button>
+            </Link>
+          </div>
+        </Container>
+      </>
+    );
+  }
+
   return (
     <div>
       <ToastContainer autoClose={2500} transition={Slide} />
@@ -224,7 +245,7 @@ const Users = () => {
             size='small'
           />
         </SearchUser>
-        <Button onClick={() => handleOpenDialog({}, "create")} variant='contained' color='primary'> 
+        <Button onClick={() => handleOpenDialog({}, "create")} variant='contained' color='primary'>
           Adicionar Usuário
         </Button>
       </div>
@@ -232,19 +253,33 @@ const Users = () => {
         <Table>
           <StyledTableHead>
             <TableRow>
-              <NarrowCell onClick={() => handleRequestSort("id")}><span>ID</span></NarrowCell>
-              <NarrowCell onClick={() => handleRequestSort("n_pes")}><span>Nº Pessoal</span></NarrowCell>
-              <MediumCell onClick={() => handleRequestSort("nome")}><span>Nome</span></MediumCell>
-              <WideCell onClick={() => handleRequestSort("endereco")}><span>Endereço</span></WideCell>
-              <MediumCell onClick={() => handleRequestSort("telefone_1")}><span>Telefone</span></MediumCell>
+              <NarrowCell onClick={() => handleRequestSort("id")}>
+                <span>ID</span>
+              </NarrowCell>
+              <NarrowCell onClick={() => handleRequestSort("n_pes")}>
+                <span>Nº Pessoal</span>
+              </NarrowCell>
+              <MediumCell onClick={() => handleRequestSort("nome")}>
+                <span>Nome</span>
+              </MediumCell>
+              <WideCell onClick={() => handleRequestSort("endereco")}>
+                <span>Endereço</span>
+              </WideCell>
+              <MediumCell onClick={() => handleRequestSort("telefone_1")}>
+                <span>Telefone</span>
+              </MediumCell>
               {/* <NarrowCell onClick={() => handleRequestSort("telefone_2")}>Telefone 2</NarrowCell> */}
-              <MediumCell onClick={() => handleRequestSort("email")}><span>E-mail</span></MediumCell>
-              <ActionsCell style={{ paddingTop: 7 }}><span>Ações</span></ActionsCell>
+              <MediumCell onClick={() => handleRequestSort("email")}>
+                <span>E-mail</span>
+              </MediumCell>
+              <ActionsCell style={{ paddingTop: 7 }}>
+                <span>Ações</span>
+              </ActionsCell>
             </TableRow>
           </StyledTableHead>
           <TableBody>
             {users
-              .filter((user) => user.nome.toLowerCase().includes(searchTerm.toLowerCase()))
+              .filter((user) => user?.nome?.toLowerCase().includes(searchTerm.toLowerCase()))
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((user) => (
                 <StyledTableRow key={user.id}>
@@ -308,7 +343,7 @@ const Users = () => {
                     value={formData.n_pes}
                     onChange={handleInputChange}
                     disabled={dialogType === "view"}
-                    size="small"
+                    size='small'
                   />
                   <StyledTextField
                     label='Nome'
@@ -318,7 +353,7 @@ const Users = () => {
                     value={formData.nome}
                     onChange={handleInputChange}
                     disabled={dialogType === "view"}
-                    size="small"
+                    size='small'
                   />
                   <StyledTextField
                     label='Unidade'
@@ -328,7 +363,7 @@ const Users = () => {
                     value={formData.unidade}
                     onChange={handleInputChange}
                     disabled={dialogType === "view"}
-                    size="small"
+                    size='small'
                   />
                   <StyledTextField
                     label='Endereço'
@@ -338,7 +373,7 @@ const Users = () => {
                     value={formData.endereco}
                     onChange={handleInputChange}
                     disabled={dialogType === "view"}
-                    size="small"
+                    size='small'
                   />
                   <StyledTextField
                     label='Telefone 1'
@@ -348,7 +383,7 @@ const Users = () => {
                     value={formData.telefone_1}
                     onChange={handleInputChange}
                     disabled={dialogType === "view"}
-                    size="small"
+                    size='small'
                   />
                   <StyledTextField
                     label='Telefone 2'
@@ -358,7 +393,7 @@ const Users = () => {
                     value={formData.telefone_2}
                     onChange={handleInputChange}
                     disabled={dialogType === "view"}
-                    size="small"
+                    size='small'
                   />
                   <StyledTextField
                     label='E-mail'
@@ -368,7 +403,7 @@ const Users = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     disabled={dialogType === "view"}
-                    size="small"
+                    size='small'
                   />
                 </Form>
               </>

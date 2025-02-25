@@ -67,13 +67,13 @@ const Navbar = () => {
             name={"Usuários"}
             hasHightlight={hasHightlight("/users")}
           />
-          <NavButton
+          {/* <NavButton
             initials='Cadastro'
-            navLink='/register'
-            icon={<IoOptions size={26} color={hasHightlight("/register") ? "#e9e9e9" : "#e9e9e9"} />}
+            navLink='/parameters'
+            icon={<IoOptions size={26} color={hasHightlight("/parameters") ? "#e9e9e9" : "#e9e9e9"} />}
             name={"Cadastro"}
-            hasHightlight={hasHightlight("/register")}
-          />
+            hasHightlight={hasHightlight("/parameters")}
+          /> */}
         </ul>
       </nav>
       <div style={{ position: "absolute", bottom: 8, width: "100%", textAlign: "center" }}>
