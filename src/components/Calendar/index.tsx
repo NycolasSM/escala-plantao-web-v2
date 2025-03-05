@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import AvailableSchedulesContext from "@/context/availableSchedulesContext";
+import AvailableSchedulesContext from "../../context/availableSchedulesContext2";
 import { Container, Header, Month, Buttons, Line, Weeks, Days, HolidaysNameList, CalendarContainer, Content, SectionTitle } from "./styles";
 
 // estou passando valores por padrão mas essas informações deveram ser enviadas para o calendario quando o usuário escolher o setor
