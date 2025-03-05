@@ -15,6 +15,8 @@ import {
   Container,
   SectionTitle,
   Header,
+  EmptyFieldError,
+  LoadingContainer,
 } from "../../../styles/pages/dashboard";
 import TableOptions from "../../components/TableOptions";
 import AvailableSchedulesContext from "../../context/availableSchedulesContext.tsx";
@@ -27,13 +29,11 @@ import { useAuthContext } from "../../context/AuthContext";
 import { useRouter } from "next/router";
 import React from "react";
 import { toast } from "react-toastify";
-import { EmptyFieldError, LoadingContainer } from "./styles";
-
 import { Filters } from "../../components/Header/styles";
 import Select from "react-select";
 import BatchCreateSchedule from "../../components/BatchCreateSchedule";
 import { BiError } from "react-icons/bi";
-import { localOptions, permissoes } from "./mocked.ts";
+import { localOptions, permissoes } from "../../data/mocked";
 import { Slide, ToastContainer } from "react-toastify";
 import { TailSpin } from "react-loader-spinner";
 

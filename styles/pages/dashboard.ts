@@ -120,7 +120,7 @@ export const BoxContainer = styled.div`
 export const SectionTitle = styled.h2`
   font-size: 16px;
   font-weight: 600;
-  margin: 0; 
+  margin: 0;
 `;
 
 export const Filters = styled.div`
@@ -135,7 +135,7 @@ export const Filters = styled.div`
 export const Header = styled.div`
   display: flex;
   justify-content: space-between;
-`
+`;
 
 export const Buttons = styled.div`
   display: flex;
@@ -153,7 +153,7 @@ export const Buttons = styled.div`
       cursor: pointer;
     }
   }
-`
+`;
 
 export const CreateSchedule = styled.div`
   display: flex;
@@ -170,4 +170,45 @@ export const CreateSchedule = styled.div`
   button {
     margin-top: 15px;
   }
-`
+`;
+
+export const EmptyFieldError = styled.div`
+  background-color: #ffb366;
+  height: 35px;
+  margin-bottom: -30px;
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: all ease;
+  visibility: hidden;
+  opacity: 1;
+  animation: show 1s forwards;
+
+  @keyframes show {
+    0% {
+      height: 10px;
+      visibility: hidden;
+      opacity: 0;
+    }
+    100% {
+      visibility: visible;
+      opacity: 1;
+      height: 35px;
+    }
+  }
+
+  span {
+    margin-left: 20px;
+  }
+`;
+
+export const LoadingContainer = styled.div`
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
