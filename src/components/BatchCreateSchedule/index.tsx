@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from "react";
 import Select, { SingleValue, MultiValue } from "react-select";
 import { Container, Row, Button } from "./styles";
 import FormContext from "../../context/formContext";
-import AvailableSchedulesContext from "../../context/availableSchedulesContext";
+import AvailableSchedulesContext from "../../context/availableSchedulesContext2";
 
 const customStyles = {
   control: (provided: any) => ({

@@ -9,7 +9,7 @@ import Link from "next/link"; // Importando componente Link do Next.js para nave
 import { AuthContext } from "../../context/AuthContext"; // Importando contexto de usuário
 import { MdLogout } from "react-icons/md"; // Importando ícone de logout
 import Select, { components, PlaceholderProps } from "react-select"; // Importando componente Select do react-select
-import AvailableSchedulesContext from "../../context/availableSchedulesContext"; // Importando contexto de filtros
+import AvailableSchedulesContext from "../../context/availableSchedulesContext2"; // Importando contexto de filtros
 import "react-datepicker/dist/react-datepicker.css"; // Importando estilos do react-datepicker
 import { addLocale } from "primereact/api"; // Adicionando localização para o primereact
 import { FaRegUser } from "react-icons/fa6";

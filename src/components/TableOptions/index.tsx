@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useCallback, lazy } from "react";
-import AvailableSchedulesContext from "../../context/availableSchedulesContext";
+import AvailableSchedulesContext from "../../context/availableSchedulesContext2";
 import FormContext from "../../context/formContext";
 import { OptionsContainer, Container, OptionTitle, Inputs, InputCheckBox, InputCheckBoxChecked } from "./styles";
 import { useRouter } from "next/router";
