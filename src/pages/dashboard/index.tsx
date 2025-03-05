@@ -19,7 +19,7 @@ import {
   LoadingContainer,
 } from "../../../styles/pages/dashboard";
 import TableOptions from "../../components/TableOptions";
-import AvailableSchedulesContext from "../../context/availableSchedulesContext.tsx";
+import AvailableSchedulesContext from "../../context/availableSchedulesContext2";
 import FormContext from "../../context/formContext";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { generatePdfSchedule } from "../../services/generatePdfSchedule";
