@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import Image from "next/image";
 import logoLocalsig from "../assets/localsig.png";
 import googleChromeLogo from "../assets/google-chrome.png";

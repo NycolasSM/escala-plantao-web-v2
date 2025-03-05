@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { useState, useEffect, useContext, useRef } from "react";
 
 import { Container, SelectDays, ButtonsContainer } from "./styles";

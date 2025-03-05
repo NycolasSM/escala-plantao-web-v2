@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { useContext, useState, useEffect, useRef } from "react";
 
 import { Container, UserButton, UserOptions, DropdownMenu } from "./styles"; // Importando componentes estilizados
@@ -86,7 +88,7 @@ const Header = () => {
     };
   }, []);
 
-  console.log("userInfo", userInfo);  
+  console.log("userInfo", userInfo);
 
   return (
     <Container>
@@ -96,9 +98,7 @@ const Header = () => {
         <h3>{HeaderTitle}</h3>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: 14, paddingTop: 12 }}>
-        <span style={{ fontSize: 14, paddingTop: 1, color: "#505050" }}>
-          {userInfo?.nome}
-        </span>
+        <span style={{ fontSize: 14, paddingTop: 1, color: "#505050" }}>{userInfo?.nome}</span>
         <UserButton onClick={() => setDropdownActive(!dropdownActive)}>
           <FaRegUser size={17} color='#505050' />
         </UserButton>

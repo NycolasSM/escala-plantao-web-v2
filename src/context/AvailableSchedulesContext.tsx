@@ -1,5 +1,5 @@
-import React, { ReactNode, useContext, useEffect, useState } from 'react';
-import { createContext } from 'react';
+import React, { ReactNode, useContext, useEffect, useState } from "react";
+import { createContext } from "react";
 
 type SchedulesContextProps = {
   children: ReactNode;
@@ -38,17 +38,17 @@ interface ISchedulesAvailableContext {
 //TODO refatorar para que o available days venha da mesma variavel array e não diferentes, aí o calendário faz o SET
 
 const initilValue = {
-  plantaoAvailable: ['Operacional', 'ETA', 'Transporte', 'Manutenção', 'Controle De Perdas'],
-  plantaoChosen: '',
-  localAvailable: ['São Lourenço'],
-  localChosen: '',
+  plantaoAvailable: ["Operacional", "ETA", "Transporte", "Manutenção", "Controle De Perdas"],
+  plantaoChosen: "",
+  localAvailable: ["São Lourenço"],
+  localChosen: "",
   monthNumber: new Date().getMonth() + 1,
   year: new Date().getFullYear(),
   availableDays: new Set<any>(),
   availableDaysData: [],
   availableEmployees: [],
   employeesInVacation: [],
-  observationForm: '',
+  observationForm: "",
   setPlantaoAvailable: () => {},
   setPlantaoChosen: () => {},
   setLocalAvailable: () => {},
@@ -72,9 +72,7 @@ export function AvailableSchedulesProvider({ children }: SchedulesContextProps) 
   const [year, setYear] = useState(initilValue.year);
 
   const [availableDays, setAvailableDays] = useState(initilValue.availableDays);
-  const [availableDaysData, setAvailableDaysData] = useState<dayDataType[]>(
-    initilValue.availableDaysData
-  );
+  const [availableDaysData, setAvailableDaysData] = useState<dayDataType[]>(initilValue.availableDaysData);
 
   const [availableEmployees, setAvailableEmployees] = useState(initilValue.availableEmployees);
 
@@ -99,12 +97,7 @@ export function AvailableSchedulesProvider({ children }: SchedulesContextProps) 
     return daysAvailable;
   };
 
-  const getAvailableSchedules = (
-    plantao: string,
-    local: string,
-    monthNumber: number,
-    year: number
-  ) => {
+  const getAvailableSchedules = (plantao: string, local: string, monthNumber: number, year: number) => {
     // verificação da lista dos municipios disponíveis, caso não ele faz um fetch que ira voltar todos os funcionários
 
     // TODO REMOVENDO O FILTRO TEMPORARIAMENTE
@@ -193,9 +186,7 @@ export function AvailableSchedulesProvider({ children }: SchedulesContextProps) 
     let holidays: any[];
 
     const getCitiesHolidays = (city1: string, city2: string) => {
-      fetch(
-        `https://apiescalas.localsig.com/schedulesAvailable/?year=${year}&month=${monthNumber}&plantao=ETA&local=${city1}`
-      )
+      fetch(`https://apiescalas.localsig.com/schedulesAvailable/?year=${year}&month=${monthNumber}&plantao=ETA&local=${city1}`)
         .then((response) => response.json())
         .then((data) => {
           setAvailableDays(getAvailableDays(data.availableDays));
@@ -205,9 +196,7 @@ export function AvailableSchedulesProvider({ children }: SchedulesContextProps) 
           setEmployeesInVacation(data.employeesInVacation);
         })
         .then(() => {
-          fetch(
-            `https://apiescalas.localsig.com/schedulesAvailable/?year=${year}&month=${monthNumber}&plantao=ETA&local=${city2}`
-          )
+          fetch(`https://apiescalas.localsig.com/schedulesAvailable/?year=${year}&month=${monthNumber}&plantao=ETA&local=${city2}`)
             .then((response) => response.json())
             .then((data) => {
               let holidaysJoin = holidays.concat(data.availableDays);
@@ -232,34 +221,34 @@ export function AvailableSchedulesProvider({ children }: SchedulesContextProps) 
         });
     };
 
-    if (local === 'Cajati / Jacupiranga') {
-      getCitiesHolidays('Cajati', 'Jacupiranga');
+    if (local === "Cajati / Jacupiranga") {
+      getCitiesHolidays("Cajati", "Jacupiranga");
     }
 
-    if (local === 'Registro / Sete Barras') {
-      getCitiesHolidays('Registro', 'Sete Barras');
+    if (local === "Registro / Sete Barras") {
+      getCitiesHolidays("Registro", "Sete Barras");
     }
 
-    if (local === 'Iguape / Ilha Comprida') {
-      getCitiesHolidays('Iguape', 'Ilha Comprida');
+    if (local === "Iguape / Ilha Comprida") {
+      getCitiesHolidays("Iguape", "Ilha Comprida");
     }
 
-    if (local === 'Ilha Comprida / Pedrinhas') {
-      getCitiesHolidays('Ilha Comprida', 'Pedrinhas');
+    if (local === "Ilha Comprida / Pedrinhas") {
+      getCitiesHolidays("Ilha Comprida", "Pedrinhas");
     }
 
-    if (local === 'Ribeira / Itapirapuã Paulista') {
-      getCitiesHolidays('Ribeira', 'Itapirapuã Paulista');
+    if (local === "Ribeira / Itapirapuã Paulista") {
+      getCitiesHolidays("Ribeira", "Itapirapuã Paulista");
     }
 
-    if (local === 'Ribeira / Itaoca') {
-      getCitiesHolidays('Ribeira', 'Itaoca');
+    if (local === "Ribeira / Itaoca") {
+      getCitiesHolidays("Ribeira", "Itaoca");
     }
 
-    if (localChosen || plantaoChosen === 'Transporte' || plantaoChosen === 'Controle De Perdas' ) {
+    if (localChosen || plantaoChosen === "Transporte" || plantaoChosen === "Controle De Perdas") {
       fetch(
         `https://apiescalas.localsig.com/schedulesAvailable/?year=${year}&month=${monthNumber}&plantao=sem plantao&local=${
-          local ? local : ''
+          local ? local : ""
         }`
       )
         .then((response) => response.json())
@@ -273,11 +262,11 @@ export function AvailableSchedulesProvider({ children }: SchedulesContextProps) 
   };
 
   const getAllFeriados = () => {
-    let feriados = '';
+    let feriados = "";
 
     if (availableDaysData) {
       Array.from(availableDaysData).map((holidayData, i) => {
-        if ((i === 0)) {
+        if (i === 0) {
           feriados += `\n Feriados: \n ${holidayData.day} - ${holidayData.holidayTitle}`;
         } else {
           feriados += `\n ${holidayData.day} - ${holidayData.holidayTitle}`;
@@ -289,55 +278,48 @@ export function AvailableSchedulesProvider({ children }: SchedulesContextProps) 
   };
 
   const containsFeriadoWord = (observacao: string) => {
-    if (observacao.includes('Feriado')) {
+    if (observacao.includes("Feriado")) {
       return true;
     }
 
-    if (observacao.includes('Feriados')) {
+    if (observacao.includes("Feriados")) {
       return true;
     }
 
-    if (observacao.includes('Feriados:')) {
+    if (observacao.includes("Feriados:")) {
       return true;
     }
 
-    if (observacao.includes('Feriado')) {
+    if (observacao.includes("Feriado")) {
       return true;
     }
 
-    if (observacao.includes('Feriado:')) {
+    if (observacao.includes("Feriado:")) {
       return true;
     }
 
-    if (observacao.includes('feriado')) {
+    if (observacao.includes("feriado")) {
       return true;
     }
 
-    if (observacao.includes('feriado:')) {
+    if (observacao.includes("feriado:")) {
       return true;
     }
 
-    if (observacao.includes('feriados')) {
+    if (observacao.includes("feriados")) {
       return true;
     }
 
-    if (observacao.includes('feriados:')) {
+    if (observacao.includes("feriados:")) {
       return true;
     }
 
     return false;
   };
 
-  const getObservetions = (
-    plantaoChosen: string,
-    localChosen: string,
-    monthNumber: number,
-    year: number
-  ) => {
+  const getObservetions = (plantaoChosen: string, localChosen: string, monthNumber: number, year: number) => {
     if (localChosen) {
-      fetch(
-        `https://apiescalas.localsig.com/observation?setor=${plantaoChosen} - ${localChosen}&year=${year}&month=${monthNumber}`
-      )
+      fetch(`https://apiescalas.localsig.com/observation?setor=${plantaoChosen} - ${localChosen}&year=${year}&month=${monthNumber}`)
         .then((response) => response.json())
         .then((data) => {
           // verificar se existe obercação de feriado, se não adicionar na observação
@@ -350,7 +332,7 @@ export function AvailableSchedulesProvider({ children }: SchedulesContextProps) 
           }
         })
         .catch((e) => {
-          setObervationForm('');
+          setObervationForm("");
           console.log(e);
         });
     }

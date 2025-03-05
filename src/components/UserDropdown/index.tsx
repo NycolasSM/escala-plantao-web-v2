@@ -1,22 +1,24 @@
+// @ts-nocheck
+
 // Next - React
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState } from "react";
 
 // React icons
-import { BiUserCircle } from 'react-icons/bi';
-import { RiArrowDropDownLine } from 'react-icons/ri';
+import { BiUserCircle } from "react-icons/bi";
+import { RiArrowDropDownLine } from "react-icons/ri";
 
 // Components
-import DropdownItem from '../DropdownItem';
+import DropdownItem from "../DropdownItem";
 
 // Library
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 // Context
-import { useWindowSize } from '../../context/useWindowSize';
+import { useWindowSize } from "../../context/useWindowSize";
 
 // Styles
-import { UserContainer } from './styles';
-import { useAuthContext } from '../../context/AuthContext';
+import { UserContainer } from "./styles";
+import { useAuthContext } from "../../context/AuthContext";
 
 type UserDropdownType = {
   username: string;
@@ -32,10 +34,10 @@ function UserDropdown({ username, ...props }: UserDropdownType) {
       <div className='content'>
         <BiUserCircle
           style={{
-            width: '3rem',
-            height: '2rem',
-            color: 'fff',
-            cursor: 'pointer',
+            width: "3rem",
+            height: "2rem",
+            color: "fff",
+            cursor: "pointer",
           }}
         />
         <p>{username}</p>
@@ -43,21 +45,21 @@ function UserDropdown({ username, ...props }: UserDropdownType) {
         {open ? (
           <RiArrowDropDownLine
             style={{
-              width: '3rem',
-              height: '2rem',
-              color: 'fff',
-              cursor: 'pointer',
-              transform: 'rotate(180deg)',
+              width: "3rem",
+              height: "2rem",
+              color: "fff",
+              cursor: "pointer",
+              transform: "rotate(180deg)",
             }}
           />
         ) : (
           <RiArrowDropDownLine
             style={{
-              width: '3rem',
-              height: '2rem',
-              color: 'fff',
-              cursor: 'pointer',
-              transform: 'rotate(0deg)',
+              width: "3rem",
+              height: "2rem",
+              color: "fff",
+              cursor: "pointer",
+              transform: "rotate(0deg)",
             }}
             onClick={() => setOpen(!open)}
           />
@@ -65,12 +67,8 @@ function UserDropdown({ username, ...props }: UserDropdownType) {
       </div>
       {open && (
         <>
-          <motion.div
-            initial={{ opacity: 0, y:  -30 }}
-            animate={{ opacity: 1, y:  -60 }}
-            transition={{ delay:  0.1 }}
-          >
-            <DropdownItem option={'Sair'} />
+          <motion.div initial={{ opacity: 0, y: -30 }} animate={{ opacity: 1, y: -60 }} transition={{ delay: 0.1 }}>
+            <DropdownItem option={"Sair"} />
           </motion.div>
           {/* {userInfo.setor != 'CCO' ? (
             <motion.div

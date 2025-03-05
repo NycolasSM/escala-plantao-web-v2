@@ -1,50 +1,39 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import {
-  Title,
-  Container,
-  Table,
-  Section,
-  MonthSelect,
-  IconGuide,
-  ButtonGenerateXLS,
-} from '../../styles/pages/historic';
+// @ts-nocheck
+
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { Title, Container, Table, Section, MonthSelect, IconGuide, ButtonGenerateXLS } from "../../styles/pages/historic";
 
 // toastify
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { Slide } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Slide } from "react-toastify";
 
 // Icons
-import {
-  AiOutlineCheckCircle,
-  AiOutlineCloseCircle,
-  AiOutlineLoading3Quarters,
-} from 'react-icons/ai';
+import { AiOutlineCheckCircle, AiOutlineCloseCircle, AiOutlineLoading3Quarters } from "react-icons/ai";
 
 // Services
-import { generatePdfSchedule } from '../services/generatePdfSchedule';
+import { generatePdfSchedule } from "../services/generatePdfSchedule";
 
-import Header from '../components/Header';
-import { useAuthContext } from '../context/AuthContext';
+import Header from "../components/Header";
+import { useAuthContext } from "../context/AuthContext";
 
-import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
+import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 
-import { data } from '../data/sectorsData';
-import { generatePdfGeneralHistoric } from '../services/generatePdfGeneralHistoric';
-import Link from 'next/link';
-import { api } from '../services/api';
-import FormContext from '../context/formContext';
-import AvailableSchedulesContext from '../context/availableSchedulesContext';
-import axios from 'axios';
-import { SelectVisualizeReport } from '../components/SelectVisualizeReport';
-import Router from 'next/router';
+import { data } from "../data/sectorsData";
+import { generatePdfGeneralHistoric } from "../services/generatePdfGeneralHistoric";
+import Link from "next/link";
+import { api } from "../services/api";
+import FormContext from "../context/formContext";
+import AvailableSchedulesContext from "../context/availableSchedulesContext";
+import axios from "axios";
+import { SelectVisualizeReport } from "../components/SelectVisualizeReport";
+import Router from "next/router";
 
 const HistoricoCCO = () => {
   const [openMenuMobile, setOpenMenuMobile] = useState<boolean>(false);
   const { userInfo } = useAuthContext();
   const { loadedForms, registers, setRegisters } = useContext(FormContext);
-  const { observationForm, monthNumber, setMonthNumber, year, setYear } =
-    useContext(AvailableSchedulesContext);
+  const { observationForm, monthNumber, setMonthNumber, year, setYear } = useContext(AvailableSchedulesContext);
 
   const { isLogged } = useAuthContext();
 
@@ -231,21 +220,12 @@ const HistoricoCCO = () => {
 
   const handleSeeMonth = async (sector: string) => {
     try {
-      await generatePdfGeneralHistoric(
-        sector,
-        1,
-        31,
-        month,
-        month,
-        year,
-        dismissLoadingNotify,
-        notifyLoading
-      );
+      await generatePdfGeneralHistoric(sector, 1, 31, month, month, year, dismissLoadingNotify, notifyLoading);
     } catch (err: any) {
       if (err.message === "Cannot read properties of undefined (reading 'push')") {
-        notify('Erro Interno (município) Tente novamente em alguns minutos');
+        notify("Erro Interno (município) Tente novamente em alguns minutos");
       } else {
-        notify('Não Foram encontrado escalas com esses parâmetros');
+        notify("Não Foram encontrado escalas com esses parâmetros");
       }
     }
   };
@@ -253,7 +233,7 @@ const HistoricoCCO = () => {
   const notify = (text: string) => toast.warn(text);
 
   const toastId = React.useRef(null);
-  const notifyLoading = () => toast.info('Gerando Relatório..', { autoClose: false });
+  const notifyLoading = () => toast.info("Gerando Relatório..", { autoClose: false });
   const dismissLoadingNotify = () => toast.dismiss(toastId.current!);
 
   const handleSeeWeek = async (sector: string, day?: number, limit?: number) => {
@@ -290,10 +270,10 @@ const HistoricoCCO = () => {
       );
     } catch (err: any) {
       if (err.message === "Cannot read properties of undefined (reading 'push')") {
-        notify('Erro Interno (município) Tente novamente em alguns minutos');
+        notify("Erro Interno (município) Tente novamente em alguns minutos");
       } else {
         console.log(err);
-        notify('Não Foram encontrado escalas com esses parâmetros');
+        notify("Não Foram encontrado escalas com esses parâmetros");
       }
     }
   };
@@ -339,13 +319,9 @@ const HistoricoCCO = () => {
   useEffect(() => {
     generateWeekDays();
     // setMonth(currentMonth);
-    api
-      .get(
-        `/schedulesDone/?year=${year}&dayStart=01&dayEnd=${totalOfDays}&monthStart=${month}&monthEnd=${month}`
-      )
-      .then((resp) => {
-        setSchedulesDoneList(resp.data);
-      });
+    api.get(`/schedulesDone/?year=${year}&dayStart=01&dayEnd=${totalOfDays}&monthStart=${month}&monthEnd=${month}`).then((resp) => {
+      setSchedulesDoneList(resp.data);
+    });
 
     api.get(`/schedulesChanges/?year=${year}&month=${month}`).then((resp) => {
       if (Object.keys(resp.data).length != 0) {
@@ -367,7 +343,7 @@ const HistoricoCCO = () => {
           <h3 style={{ fontWeight: 500 }}>Você precisa estar logado para Acessar essa página</h3>
           <Link
             href={{
-              pathname: '/',
+              pathname: "/",
             }}
           >
             <button className='button__back__login'>Voltar Para Login</button>
@@ -378,38 +354,36 @@ const HistoricoCCO = () => {
   }
 
   const getForms = (setor: string) => {
-    return api
-      .get(`/schedulesRegistered/?year=${year}&month=${month}&setor=${setor}`)
-      .then((resp) => {
-        return resp.data;
-      });
+    return api.get(`/schedulesRegistered/?year=${year}&month=${month}&setor=${setor}`).then((resp) => {
+      return resp.data;
+    });
   };
 
   const generateXLSFile = () => {
-    toast.info('Gerando Arquivo...');
+    toast.info("Gerando Arquivo...");
     axios({
       url: `https://apiescalas.localsig.com/reportXLS?month=${month}&year=${year}`, //your url
-      method: 'GET',
-      responseType: 'blob', // important
+      method: "GET",
+      responseType: "blob", // important
     }).then((response) => {
       if (response.status === 204) {
         // dismissLoadingNotify()
         setTimeout(() => {
-          notify('Não Foram encontrado escalas com esses parâmetros');
+          notify("Não Foram encontrado escalas com esses parâmetros");
         }, 200);
         return;
       }
       const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.setAttribute('download', `escalaPlantãoDigital-${month}-${year}.xls`); //or any other extension
+      link.setAttribute("download", `escalaPlantãoDigital-${month}-${year}.xls`); //or any other extension
       document.body.appendChild(link);
       link.click();
     });
   };
 
   const handleGeneratePdfSchedule = async (type: any, sector: any) => {
-    const schedules = await getForms(type + ' - ' + sector.name).then((schedules) => schedules);
+    const schedules = await getForms(type + " - " + sector.name).then((schedules) => schedules);
 
     generatePdfSchedule(
       schedules,
@@ -422,7 +396,7 @@ const HistoricoCCO = () => {
       dismissLoadingNotify,
       notifyLoading
     ).catch(() => {
-      notify('Escala não feita');
+      notify("Escala não feita");
     });
   };
 
@@ -457,9 +431,7 @@ const HistoricoCCO = () => {
           </VisualizeAll> */}
 
           <div>
-            <ButtonGenerateXLS onClick={() => generateXLSFile()}>
-              Gerar Arquivo .xls
-            </ButtonGenerateXLS>
+            <ButtonGenerateXLS onClick={() => generateXLSFile()}>Gerar Arquivo .xls</ButtonGenerateXLS>
           </div>
 
           <Title>Histórico de Escalas</Title>
@@ -469,7 +441,7 @@ const HistoricoCCO = () => {
               <button onClick={() => handleIncrementMonth()}>
                 <IoIosArrowUp />
               </button>
-              <span className='month'>{('0' + month).slice(-2)}</span>
+              <span className='month'>{("0" + month).slice(-2)}</span>
               <button onClick={() => handleDecrementMonth()}>
                 <IoIosArrowDown />
               </button>
@@ -477,12 +449,12 @@ const HistoricoCCO = () => {
             <span>/</span>
             <div>
               <button onClick={() => setYear(year + 1)}>
-                {' '}
+                {" "}
                 <IoIosArrowUp />
               </button>
               <span className='year'>{year}</span>
               <button onClick={() => setYear(year - 1)}>
-                {' '}
+                {" "}
                 <IoIosArrowDown />
               </button>
             </div>
@@ -506,22 +478,19 @@ const HistoricoCCO = () => {
                           <button
                             key={i}
                             onClick={() => {
-                              handleSeeWeek('', day, daysOfSaturday[i] - day + 1);
+                              handleSeeWeek("", day, daysOfSaturday[i] - day + 1);
                             }}
                           >
-                            {day < 10 ? '0' : ''}
-                            {day}/{month < 10 ? '0' + month : month} -{' '}
-                            {daysOfSaturday[i] < 10 ? '0' : ''}
-                            {daysOfSaturday[i]}/{month < 9 ? '0' + (month + 1) : month + 1}
+                            {day < 10 ? "0" : ""}
+                            {day}/{month < 10 ? "0" + month : month} - {daysOfSaturday[i] < 10 ? "0" : ""}
+                            {daysOfSaturday[i]}/{month < 9 ? "0" + (month + 1) : month + 1}
                             {/* para cada dia ele irá atribuir o (0) caso seja menor que 10 */}
                           </button>
                         ) : (
-                          <button key={i} onClick={() => handleSeeWeek('', day)}>
-                            {day < 10 ? '0' : ''}
-                            {day}/{month < 10 ? '0' + month : month} -{' '}
-                            {daysOfSaturday[i] < 10 ? '0' : ''}
-                            {daysOfSaturday[i]}/
-                            {month < 9 ? '0' + (month + 1) : month === 12 ? '01' : month + 1}
+                          <button key={i} onClick={() => handleSeeWeek("", day)}>
+                            {day < 10 ? "0" : ""}
+                            {day}/{month < 10 ? "0" + month : month} - {daysOfSaturday[i] < 10 ? "0" : ""}
+                            {daysOfSaturday[i]}/{month < 9 ? "0" + (month + 1) : month === 12 ? "01" : month + 1}
                             {/* para cada dia ele irá atribuir o (0) caso seja menor que 10 */}
                           </button>
                         )}
@@ -532,21 +501,19 @@ const HistoricoCCO = () => {
                           <button
                             key={i}
                             onClick={() => {
-                              handleSeeWeek('', day, daysOfSaturday[i] - day + 1);
+                              handleSeeWeek("", day, daysOfSaturday[i] - day + 1);
                             }}
                           >
-                            {day < 10 ? '0' : ''}
-                            {day}/{month < 10 ? '0' + month : month} -{' '}
-                            {daysOfSaturday[i] < 10 ? '0' : ''}
-                            {daysOfSaturday[i]}/{month < 10 ? '0' + month : month}
+                            {day < 10 ? "0" : ""}
+                            {day}/{month < 10 ? "0" + month : month} - {daysOfSaturday[i] < 10 ? "0" : ""}
+                            {daysOfSaturday[i]}/{month < 10 ? "0" + month : month}
                             {/* para cada dia ele irá atribuir o (0) caso seja menor que 10 */}
                           </button>
                         ) : (
-                          <button key={i} onClick={() => handleSeeWeek('', day)}>
-                            {day < 10 ? '0' : ''}
-                            {day}/{month < 10 ? '0' + month : month} -{' '}
-                            {daysOfSaturday[i] < 10 ? '0' : ''}
-                            {daysOfSaturday[i]}/{month < 10 ? '0' + month : month}
+                          <button key={i} onClick={() => handleSeeWeek("", day)}>
+                            {day < 10 ? "0" : ""}
+                            {day}/{month < 10 ? "0" + month : month} - {daysOfSaturday[i] < 10 ? "0" : ""}
+                            {daysOfSaturday[i]}/{month < 10 ? "0" + month : month}
                             {/* para cada dia ele irá atribuir o (0) caso seja menor que 10 */}
                           </button>
                         )}

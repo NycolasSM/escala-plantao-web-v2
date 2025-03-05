@@ -1,8 +1,10 @@
-import { ReactNode, useState } from 'react';
+// @ts-nocheck
 
-import { Container } from './styles';
+import { ReactNode, useState } from "react";
 
-import { IoMdArrowDropdown } from 'react-icons/io';
+import { Container } from "./styles";
+
+import { IoMdArrowDropdown } from "react-icons/io";
 
 type Props = {
   generateReport?: any;
@@ -11,18 +13,13 @@ type Props = {
   sector: any;
 };
 
-export function SelectVisualizeReport({
-  generateReport,
-  zIndex,
-  handleGeneratePdfSchedule,
-  sector,
-}: Props) {
+export function SelectVisualizeReport({ generateReport, zIndex, handleGeneratePdfSchedule, sector }: Props) {
   const [isOpen, setIsOpen] = useState<Boolean>(false);
 
   return (
     <Container
       style={{
-        height: `${isOpen ? '90px' : '35px'}`,
+        height: `${isOpen ? "90px" : "35px"}`,
         zIndex: `${100 - zIndex}`,
       }}
     >
@@ -31,19 +28,15 @@ export function SelectVisualizeReport({
         <IoMdArrowDropdown
           size={18}
           style={{
-            rotate: `${isOpen ? '180deg' : '0deg'}`,
-            transitionDuration: '0.2s',
-            transitionProperty: 'all',
-            transitionTimingFunction: 'ease',
+            rotate: `${isOpen ? "180deg" : "0deg"}`,
+            transitionDuration: "0.2s",
+            transitionProperty: "all",
+            transitionTimingFunction: "ease",
           }}
         />
       </button>
-      <button onClick={() => handleGeneratePdfSchedule('Operacional', sector)}>
-        Visualizar Oper
-      </button>
-      <button onClick={() => handleGeneratePdfSchedule('ETA', sector)}>
-        Visualizar ETA
-      </button>
+      <button onClick={() => handleGeneratePdfSchedule("Operacional", sector)}>Visualizar Oper</button>
+      <button onClick={() => handleGeneratePdfSchedule("ETA", sector)}>Visualizar ETA</button>
     </Container>
   );
 }

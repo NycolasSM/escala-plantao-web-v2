@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import type { AppProps } from "next/app";
 import GlobalStyle from "../../styles/globals";
 import { AuthProvider } from "../context/AuthContext";

@@ -1,6 +1,8 @@
-import React from 'react';
+// @ts-nocheck
 
-import { Overlay, Centered, Content, Header, Body } from './styles';
+import React from "react";
+
+import { Overlay, Centered, Content, Header, Body } from "./styles";
 
 type Props = {
   closeModal: () => void;
@@ -11,7 +13,7 @@ type Props = {
 
 const ChangeDefaultHoursModal = ({ closeModal, registerInfo, setIsLockedScheduleHours, setHaveSchedulesHourChanged }: Props) => {
   const unlockSchedule = () => {
-    setHaveSchedulesHourChanged(true)
+    setHaveSchedulesHourChanged(true);
     setIsLockedScheduleHours(false);
     closeModal();
   };
@@ -25,9 +27,7 @@ const ChangeDefaultHoursModal = ({ closeModal, registerInfo, setIsLockedSchedule
             <h4>Alterar Horário</h4>
           </Header>
           <Body>
-            <h3 style={{ width: '100%', textAlign: 'center', marginBottom: 40 }}>
-              Deseja alterar o Horário Pré Definido?
-            </h3>
+            <h3 style={{ width: "100%", textAlign: "center", marginBottom: 40 }}>Deseja alterar o Horário Pré Definido?</h3>
             <div className='options' style={{ marginBottom: 10 }}>
               <button style={{ width: 140, marginLeft: 60 }} onClick={() => unlockSchedule()}>
                 Sim

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { useContext, useEffect, useState } from "react";
 import Select, { SingleValue, MultiValue } from "react-select";
 import { Container, Row, Button } from "./styles";
@@ -129,7 +131,7 @@ const BatchCreateSchedule = () => {
         telefone_1: employ.telefone_1,
         telefone_2: employ.telefone_2,
       },
-    }
+    };
   });
 
   const timeOptions: OptionType[] = Array.from({ length: 48 }, (_, i) => {

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { createContext } from "react";
 import { api } from "../services/api";

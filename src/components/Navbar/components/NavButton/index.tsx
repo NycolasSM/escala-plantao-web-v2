@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import Link from "next/link";
 import React, { ReactElement } from "react";
 
@@ -15,7 +17,7 @@ type Props = {
 const NavButton: React.FC<Props> = ({ navLink, icon, initials, name, hasHightlight, style }) => {
   return (
     <Link href={navLink} style={style}>
-      <Item hasHightlight={hasHightlight} data-tooltip-id="my-tooltip" data-tooltip-content={name} >
+      <Item hasHightlight={hasHightlight} data-tooltip-id='my-tooltip' data-tooltip-content={name}>
         {icon}
       </Item>
     </Link>

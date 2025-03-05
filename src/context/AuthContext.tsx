@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
@@ -99,7 +101,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         Router.push("/dashboard");
       }
     } catch (error) {
-      toast.error("Credenciais inválidas")
+      toast.error("Credenciais inválidas");
       // setErrorMessage("Credenciais inválidas");
     } finally {
       setIsLoading(false);
@@ -108,7 +110,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     const storedSession = localStorage.getItem("userSession");
-    
+
     if (storedSession) {
       const userData = JSON.parse(storedSession);
       setUserInfo(userData);

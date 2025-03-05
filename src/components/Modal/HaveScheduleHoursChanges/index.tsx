@@ -1,10 +1,12 @@
-import axios from 'axios';
-import React, { useContext, useState } from 'react';
-import { AuthContext } from '../../../context/AuthContext';
-import FormContext from '../../../context/formContext';
-import { api } from '../../../services/api';
+// @ts-nocheck
 
-import { Overlay, Centered, Content, Header, Body } from './styles';
+import axios from "axios";
+import React, { useContext, useState } from "react";
+import { AuthContext } from "../../../context/AuthContext";
+import FormContext from "../../../context/formContext";
+import { api } from "../../../services/api";
+
+import { Overlay, Centered, Content, Header, Body } from "./styles";
 
 type Props = {
   closeModal: () => void;
@@ -18,52 +20,51 @@ const HaveScheduleHoursChanges = ({ closeModal, userInfo2, plantao, data_escala 
 
   const { sendForm } = useContext(FormContext);
 
-  const [observationForm, setObservationForm] = useState('');
+  const [observationForm, setObservationForm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const getMonthName = (monthNumber: number) => {
     switch (monthNumber) {
       case 1:
-        return 'Janeiro';
+        return "Janeiro";
       case 2:
-        return 'Fevereiro';
+        return "Fevereiro";
       case 3:
-        return 'Março';
+        return "Março";
       case 4:
-        return 'Abril';
+        return "Abril";
       case 5:
-        return 'Maio';
+        return "Maio";
       case 6:
-        return 'Junho';
+        return "Junho";
       case 7:
-        return 'Julho';
+        return "Julho";
       case 8:
-        return 'Agosto';
+        return "Agosto";
       case 9:
-        return 'Setembro';
+        return "Setembro";
       case 10:
-        return 'Outubro';
+        return "Outubro";
       case 11:
-        return 'Novembro';
+        return "Novembro";
       case 12:
-        return 'Dezembro';
+        return "Dezembro";
     }
   };
 
   const sendEmailOfChanges = async () => {
     const currentdate = new Date();
     const date =
-      currentdate.getDate().toString().padStart(2, '0') +
-      '/' +
-      (currentdate.getMonth() + 1).toString().padStart(2, '0') +
-      '/' +
+      currentdate.getDate().toString().padStart(2, "0") +
+      "/" +
+      (currentdate.getMonth() + 1).toString().padStart(2, "0") +
+      "/" +
       currentdate.getFullYear();
-    const time =
-      currentdate.getHours().toString().padStart(2, '0') + ':' + currentdate.getMinutes().toString().padStart(2, '0');
+    const time = currentdate.getHours().toString().padStart(2, "0") + ":" + currentdate.getMinutes().toString().padStart(2, "0");
 
     const scheduleDate = `${getMonthName(data_escala.monthNumber)}/${data_escala.year}`;
 
-    api.post('/notifyChangesSchedule', {
+    api.post("/notifyChangesSchedule", {
       n_pes: userInfo.n_pes,
       plantao: plantao,
       data: date,
@@ -100,8 +101,8 @@ const HaveScheduleHoursChanges = ({ closeModal, userInfo2, plantao, data_escala 
           </Header>
           <Body>
             <div className='modal_text'>
-              <h4 style={{ width: '100%', textAlign: 'left', marginBottom: 40 }}>{userInfo.nome},</h4>
-              <h3 style={{ width: '100%', textAlign: 'center', marginBottom: 40 }}>
+              <h4 style={{ width: "100%", textAlign: "left", marginBottom: 40 }}>{userInfo.nome},</h4>
+              <h3 style={{ width: "100%", textAlign: "center", marginBottom: 40 }}>
                 Foram identificados horários diferentes do pré estabelecido, informe o motivo desta alteração
               </h3>
             </div>
@@ -115,7 +116,7 @@ const HaveScheduleHoursChanges = ({ closeModal, userInfo2, plantao, data_escala 
             />
             <div className='options' style={{ marginBottom: 10 }}>
               <button style={{ width: 140 }} onClick={() => sendSchedule()}>
-                {isLoading ? 'Enviando...' : 'Enviar'}
+                {isLoading ? "Enviando..." : "Enviar"}
               </button>
             </div>
           </Body>

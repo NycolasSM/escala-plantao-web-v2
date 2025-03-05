@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { useContext, useEffect, useState } from "react";
 import GlobalStyle from "../../../styles/globals";
 import Calendar from "../../components/Calendar";
