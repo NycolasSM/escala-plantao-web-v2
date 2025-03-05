@@ -4,7 +4,7 @@ import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { createContext } from "react";
 import { api } from "../services/api";
 import { useAuthContext } from "./AuthContext";
-import AvailableSchedulesContext from "./availableSchedulesContext";
+import AvailableSchedulesContext from "./availableSchedulesContext2";
 
 // Toastfify
 import { ToastContainer, toast } from "react-toastify";

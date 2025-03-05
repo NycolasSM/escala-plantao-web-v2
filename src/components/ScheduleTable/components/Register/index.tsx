@@ -11,7 +11,7 @@ import EmployeeInput from "../EmployeeInput/index.jsx";
 import { BiLockOpenAlt } from "react-icons/bi";
 
 import FormContext from "../../../../context/formContext";
-import AvailableSchedulesContext from "../../../../context/availableSchedulesContext";
+import AvailableSchedulesContext from "../../../../context/availableSchedulesContext2";
 
 import Select from "react-select/async";
 

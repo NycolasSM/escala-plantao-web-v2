@@ -24,7 +24,7 @@ import { generatePdfGeneralHistoric } from "../services/generatePdfGeneralHistor
 import Link from "next/link";
 import { api } from "../services/api";
 import FormContext from "../context/formContext";
-import AvailableSchedulesContext from "../context/availableSchedulesContext";
+import AvailableSchedulesContext from "../context/availableSchedulesContext2";
 import axios from "axios";
 import { SelectVisualizeReport } from "../components/SelectVisualizeReport";
 import Router from "next/router";

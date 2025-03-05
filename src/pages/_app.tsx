@@ -3,7 +3,7 @@
 import type { AppProps } from "next/app";
 import GlobalStyle from "../../styles/globals";
 import { AuthProvider } from "../context/AuthContext";
-import { AvailableSchedulesProvider } from "../context/availableSchedulesContext";
+import { AvailableSchedulesProvider } from "../context/availableSchedulesContext2";
 import { FormProvider } from "../context/formContext";
 import { Main } from "../../styles";
 

@@ -35,7 +35,7 @@ import { data } from "../data/sectorsData";
 import { generatePdfGeneralHistoric } from "../services/generatePdfGeneralHistoric";
 import Link from "next/link";
 import { api } from "../services/api";
-import AvailableSchedulesContext from "../context/availableSchedulesContext";
+import AvailableSchedulesContext from "../context/availableSchedulesContext2";
 import axios from "axios";
 import { SelectVisualizeReport } from "../components/SelectVisualizeReport";
 

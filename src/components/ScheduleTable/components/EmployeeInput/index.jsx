@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react';
-import { customStyles, EmployeeInputContainer } from './styles';
-import Select from 'react-select/async';
-import FormContext from '../../../../context/formContext';
-import AvailableSchedulesContext from '../../../../context/availableSchedulesContext';
+import React, { useContext, useState } from "react";
+import { customStyles, EmployeeInputContainer } from "./styles";
+import Select from "react-select/async";
+import FormContext from "../../../../context/formContext";
+import AvailableSchedulesContext from "../../../../context/availableSchedulesContext2";
 
 const customStyles2 = {
   control: (provided) => ({
@@ -10,7 +10,7 @@ const customStyles2 = {
     minHeight: "29px",
     height: "29px",
     fontSize: "12px",
-    margin: 0
+    margin: 0,
   }),
   valueContainer: (provided) => ({
     ...provided,
@@ -55,7 +55,7 @@ const EmployeeInput = ({ index }) => {
 
   const filterEmployees = (inputValue) => {
     const lowerInput = inputValue.toLowerCase();
-  
+
     return availableEmployees
       .map((employ) => ({
         label: `${employ.nome} | n_pes: ${employ.n_pes}`,
@@ -74,7 +74,7 @@ const EmployeeInput = ({ index }) => {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(filterEmployees(inputValue));
-        setIsLoading(false)
+        setIsLoading(false);
       }, 10);
     });
   };
@@ -126,17 +126,13 @@ const EmployeeInput = ({ index }) => {
   };
 
   return (
-    <EmployeeInputContainer
-      style={{ zIndex: `${index + 900}`, overflow: isLoading ? 'hidden' : '' }}
-    >
+    <EmployeeInputContainer style={{ zIndex: `${index + 900}`, overflow: isLoading ? "hidden" : "" }}>
       <Select
         placeholder='Colaboradores'
         defaultOptions={true}
         loadOptions={promiseOptions}
         onChange={(e) => updateRegister(e)}
-        isOptionSelected={(option, selectValue) =>
-          selectValue.some((i) => i.value.nome === option.value.nome)
-        }
+        isOptionSelected={(option, selectValue) => selectValue.some((i) => i.value.nome === option.value.nome)}
         value={registers.get(index.toString())?.employees?.map((employee) => {
           return {
             label: employee.label,
@@ -150,7 +146,7 @@ const EmployeeInput = ({ index }) => {
           };
         })}
         isMulti
-        styles={{...customStyles2, ...customStyles}}
+        styles={{ ...customStyles2, ...customStyles }}
         // styles={{ ...customStyles }}
       />
     </EmployeeInputContainer>
