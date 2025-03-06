@@ -88,8 +88,6 @@ const Header = () => {
     };
   }, []);
 
-  console.log("userInfo", userInfo);
-
   return (
     <Container>
       <div style={{ display: "flex", gap: 14, paddingTop: 12 }}>

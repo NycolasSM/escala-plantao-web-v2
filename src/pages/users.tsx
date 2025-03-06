@@ -73,8 +73,6 @@ const Users = () => {
 
       const data = await response.data;
 
-      console.log(data);
-
       setUsers(data);
     };
 

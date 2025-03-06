@@ -45,8 +45,6 @@ const TableOptions = (context: any) => {
   const { plantaoAvailable, plantaoChosen, localChosen, setPlantaoChosen, setLocalChosen, setAvailableDaysData, setMonthNumber } =
     React.useContext(AvailableSchedulesContext);
 
-  console.log(plantaoChosen);
-
   const { setHaveEmptyField, setRegisters, setIsLoadingRegisters, loadedForms } = useContext(FormContext);
 
   const [showLocationOptions, setShowLocationOptions] = useState<boolean>(false);
@@ -210,8 +208,6 @@ const TableOptions = (context: any) => {
         .sort()
         .map((local: string) => {
           const isSpecial = local === "Técnico" || local === "Almoxarifado" || local === "Informatica";
-
-          console.log(isSpecial);
 
           return {
             label: local + (isSpecial ? " (Especial)" : ""),

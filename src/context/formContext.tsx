@@ -146,8 +146,6 @@ const FormProvider = ({ children }: EscalasContextProps) => {
 
   let [registersIndex, setRegistersIndex] = useState<number>(0);
 
-  console.log("registers", registers);
-
   // AuthContext
   const { userInfo } = useAuthContext();
 

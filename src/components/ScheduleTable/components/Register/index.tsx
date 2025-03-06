@@ -66,8 +66,6 @@ const Register = ({
     haveSchedulesHourChanged,
   } = useContext(FormContext);
 
-  console.log("index", index);
-
   const { monthNumber, year, plantaoChosen, localChosen } = useContext(AvailableSchedulesContext);
 
   const [diferenca, setDiferenca] = useState<string>();

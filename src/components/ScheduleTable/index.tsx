@@ -338,7 +338,6 @@ const ScheduleTable = () => {
 
           {Array.from(registers).map((data, index) => (
             <>
-              {console.log("data", data[1])}
               <Register
                 id={data[1].id}
                 day={data[1].day}

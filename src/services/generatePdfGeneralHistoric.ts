@@ -42,8 +42,6 @@ export async function generatePdfGeneralHistoric(
   dismissLoadingNotify: () => void,
   notifyLoading: () => void
 ) {
-  console.log(dayStart);
-  console.log(dayEnd);
   
   // pdfMake.vfs = pdfFonts.pdfMake.vfs;
   pdfMake.vfs = pdfFonts['Roboto-Regular.ttf'];
@@ -93,8 +91,6 @@ export async function generatePdfGeneralHistoric(
       { timeout: 100000 }
     )
     .then((resp) => {
-      console.log('resp.data')
-      console.log(resp.data)
       return resp.data;
     })
     .catch((err) => {
@@ -1120,9 +1116,6 @@ export async function generatePdfGeneralHistoric(
   const generateControlePerdasRows = () => {
     console.log("generating row generateControlePerdasRows...");
     const rows = new Array();
-
-    console.log('schedulesGroup')
-    console.log(schedulesGroup)
 
     if (schedulesGroup.has("Controle De Perdas")) {
       schedulesGroup.get("Controle De Perdas").forEach((funcionario: Map<string, Map<string, string[]>>, municipio: "string") => {

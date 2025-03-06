@@ -160,9 +160,6 @@ const BatchCreateSchedule = () => {
       action: "create",
     }));
 
-    console.log("newEntries", newEntries);
-    console.log("selectedStartTime", selectedStartTime);
-
     // Atualizando o estado registers com os novos registros
     setRegisters((prevRegisters: Map<string, any>) => {
       const updatedRegisters = new Map(prevRegisters);
