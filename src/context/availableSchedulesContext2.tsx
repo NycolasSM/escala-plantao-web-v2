@@ -1,3 +1,4 @@
+import { api } from "../services/api";
 import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { createContext } from "react";
 
@@ -31,6 +32,8 @@ interface ISchedulesAvailableContext {
   setAvailableDaysData: (newState: []) => void;
   setYear: (newState: number) => void;
   setObervationForm: (newState: string) => void;
+  optionsEscalas: any;
+  setOptionsEscalas: any;
 }
 
 //TODO os plantões disponiveis virão de outro context
@@ -38,7 +41,7 @@ interface ISchedulesAvailableContext {
 //TODO refatorar para que o available days venha da mesma variavel array e não diferentes, aí o calendário faz o SET
 
 const initilValue = {
-  plantaoAvailable: ["Operacional", "ETA", "Transporte", "Manutenção", "Controle De Perdas"],
+  plantaoAvailable: ["Operacional", "ETA", "Transporte", "Manutenção", "Controle de Perdas"],
   plantaoChosen: "",
   localAvailable: ["São Lourenço"],
   localChosen: "",
@@ -79,6 +82,8 @@ export function AvailableSchedulesProvider({ children }: SchedulesContextProps) 
   const [employeesInVacation, setEmployeesInVacation] = useState(initilValue.employeesInVacation);
 
   const [observationForm, setObervationForm] = useState<string>(initilValue.observationForm);
+
+  const [optionsEscalas, setOptionsEscalas] = useState(new Map());
 
   const getAvailableDays = (daysObjects: object[]) => {
     let daysAvailable = new Set<number>();
@@ -245,7 +250,7 @@ export function AvailableSchedulesProvider({ children }: SchedulesContextProps) 
       getCitiesHolidays("Ribeira", "Itaoca");
     }
 
-    if (localChosen || plantaoChosen === "Transporte" || plantaoChosen === "Controle De Perdas") {
+    if (localChosen || plantaoChosen === "Transporte" || plantaoChosen === "") {
       fetch(
         `https://apiescalas.localsig.com/schedulesAvailable/?year=${year}&month=${monthNumber}&plantao=sem plantao&local=${
           local ? local : ""
@@ -347,6 +352,42 @@ export function AvailableSchedulesProvider({ children }: SchedulesContextProps) 
     getObservetions(plantaoChosen, localChosen, monthNumber, year);
   }, [getAvailableSchedules]);
 
+  const fetchAssociacoesTipoEscalaLocais = async () => {
+    try {
+      const response = await api.get(`/tipo-escala-locais`);
+      const associacoes = Array.isArray(response.data) ? response.data : [];
+
+      const novoMapa = new Map();
+
+      associacoes.forEach((associacao) => {
+        const tipoEscala = associacao.nome;
+        const locais = associacao.locais;
+
+        if (tipoEscala && locais) {
+          if (!novoMapa.has(tipoEscala)) {
+            novoMapa.set(tipoEscala, []);
+          }
+
+          locais.forEach((local) => {
+            if (local.local) {
+              novoMapa.get(tipoEscala).push(local.local.nome);
+            } else if (local.nome === "Especial") {
+              novoMapa.get(tipoEscala).push();
+            }
+          });
+        }
+      });
+
+      setOptionsEscalas(novoMapa);
+    } catch (error) {
+      console.error("Erro ao buscar associações entre tipo_escala e locais:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAssociacoesTipoEscalaLocais();
+  }, []);
+
   return (
     <AvailableSchedulesContext.Provider
       value={{
@@ -369,6 +410,8 @@ export function AvailableSchedulesProvider({ children }: SchedulesContextProps) 
         setMonthNumber,
         setAvailableDaysData,
         setYear,
+        optionsEscalas,
+        setOptionsEscalas,
       }}
     >
       {children}

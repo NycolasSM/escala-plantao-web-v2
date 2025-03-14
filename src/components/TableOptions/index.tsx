@@ -42,7 +42,7 @@ type selectedOption = {
 };
 
 const TableOptions = (context: any) => {
-  const { plantaoAvailable, plantaoChosen, localChosen, setPlantaoChosen, setLocalChosen, setAvailableDaysData, setMonthNumber } =
+  const { plantaoAvailable, plantaoChosen, localChosen, setPlantaoChosen, setLocalChosen, setAvailableDaysData, setMonthNumber, optionsEscalas } =
     React.useContext(AvailableSchedulesContext);
 
   const { setHaveEmptyField, setRegisters, setIsLoadingRegisters, loadedForms } = useContext(FormContext);
@@ -60,81 +60,9 @@ const TableOptions = (context: any) => {
 
   // na primeira versão o usuário poderá fazer de todos os setores porém os que não tivermos a relação de funcionário, deverá trazer todos
 
-  let permissoes: Map<string, string[]> = new Map([
-    [
-      "Operacional",
-      [
-        "São Lourenço",
-        "Juquitiba",
-        "Registro / Sete Barras",
-        "Registro",
-        "Sete Barras",
-        "Barra do Turvo",
-        "Cajati",
-        "Cajati / Jacupiranga",
-        "Eldorado",
-        "Iporanga",
-        "Jacupiranga",
-        "Cananéia",
-        "Iguape",
-        "Iguape / Ilha Comprida",
-        "Ilha Comprida",
-        "Ilha Comprida / Pedrinhas",
-        "Pariquera-Açu",
-        "Itariri",
-        "Juquiá",
-        "Miracatu",
-        "Pedro de Toledo",
-        "Tapiraí",
-        "Apiaí",
-        "Barra do Chapéu",
-        "Itaoca",
-        "Itapirapuã Paulista",
-        "Ribeira",
-        "Ribeira / Itapirapuã Paulista",
-      ],
-    ],
-    [
-      "ETA",
-      [
-        "São Lourenço",
-        "Juquitiba",
-        "Registro",
-        "Sete Barras",
-        "Registro / Sete Barras",
-        "Barra do Turvo",
-        "Cajati",
-        "Cajati / Jacupiranga",
-        "Eldorado",
-        "Iporanga",
-        "Jacupiranga",
-        "Cananéia",
-        "Iguape",
-        "Iguape / Ilha Comprida",
-        "Ilha Comprida",
-        "Ilha Comprida / Pedrinhas",
-        "Pariquera-Açu",
-        "Itariri",
-        "Juquiá",
-        "Miracatu",
-        "Pedro de Toledo",
-        "Tapiraí",
-        "Apiaí",
-        "Barra do Chapéu",
-        "Itaoca",
-        "Itapirapuã Paulista",
-        "Ribeira",
-        "Ribeira / Itapirapuã Paulista",
-        "Ribeira / Itaoca",
-      ],
-    ],
-    ["Transporte", []],
-    ["Controle De Perdas", []],
-    [
-      "Manutenção",
-      ["Eletromecânica", "Automação", "Apiaí", "Juquitiba / São Lourenço", "Técnico", "Almoxarifado", "Cananéia", "Iguape", "Informatica"],
-    ],
-  ]);
+  let permissoes: Map<string, string[]> = optionsEscalas;
+
+  console.log("permissoes", permissoes)
 
   function handleChangeSetor(plantao: string) {
     setPlantaoChosen(plantao);
