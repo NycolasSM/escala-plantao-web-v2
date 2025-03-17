@@ -28,6 +28,7 @@ export const TwoColumnLayout = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+  margin-top: -5px;
 `;
 
 export const ScalesTable = styled.table`
@@ -55,4 +56,24 @@ export const FormColumn = styled.div`
 export const FormButtons = styled.div`
   display: flex;
   gap: 10px;
+`
+
+export const LinkButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: solid 1px #377081;
+  border-radius: 4px;
+  background-color: #377081;
+  
+  :hover {
+    background-color:#306575;
+    cursor: pointer;
+  }
+
+  * {
+    color: white;
+    font-size: 12px;
+  }
 `

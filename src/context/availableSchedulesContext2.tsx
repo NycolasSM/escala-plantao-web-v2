@@ -369,14 +369,16 @@ export function AvailableSchedulesProvider({ children }: SchedulesContextProps) 
           }
 
           locais.forEach((local) => {
-            if (local.local) {
+            if (local.local && local.local.nome !== "") {
               novoMapa.get(tipoEscala).push(local.local.nome);
-            } else if (local.nome === "Especial") {
+            } else if (local.nome === "Especial" || local.local.nome === "") {
               novoMapa.get(tipoEscala).push();
             }
           });
         }
       });
+
+      console.log("novoMapa", novoMapa)
 
       setOptionsEscalas(novoMapa);
     } catch (error) {

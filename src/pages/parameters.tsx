@@ -11,7 +11,7 @@ const Parameters = () => {
         <p>Adicione novos tipos de escalas e novos locais.</p>
       </SectionTitle>
 
-      <div>
+      <div style={{ marginTop: -20 }}>
         <Link href={"/editSchedulesLocations"}>
           {/* @ts-ignore */}
           <LinkButton onClick={() => console.log("teste")}>

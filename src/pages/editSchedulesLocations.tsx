@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import styled from "styled-components";
 import { Button, TextField, Autocomplete, List, ListItem, ListItemText, IconButton } from "@mui/material";
 import { Delete as DeleteIcon } from "@mui/icons-material";
 import AvailableSchedulesContext from "../context/availableSchedulesContext2";
@@ -18,7 +17,7 @@ const Parameters = () => {
     const tipoEscalaValido = novoTipoEscala?.trim();
     const localValido = novoLocal?.trim();
 
-    if (tipoEscalaValido && localValido && !salvo) {
+    if (tipoEscalaValido && !salvo) {
       const novaAssociacao = { tipoEscala: tipoEscalaValido, local: localValido };
 
       if (!novasAssociacoes.some((a) => a.tipoEscala === tipoEscalaValido && a.local === localValido)) {
@@ -145,17 +144,29 @@ const Parameters = () => {
         </ScalesTable>
 
         <FormColumn>
-          <Autocomplete
-            options={[...optionsEscalas.keys()]}
-            value={novoTipoEscala || ""}
-            onChange={(_, newValue) => setNovoTipoEscala(newValue || "")}
-            onInputChange={(_, newValue) => setNovoTipoEscala(newValue)}
-            freeSolo
-            size='small'
-            renderInput={(params) => <TextField {...params} label='Novo Tipo de Escala' disabled={salvo} />}
-          />
+          <div style={{ backgroundColor: "white" }}>
+            <Autocomplete
+              style={{ display: "flex" }}
+              options={[...optionsEscalas.keys()]}
+              value={novoTipoEscala || ""}
+              onChange={(_, newValue) => setNovoTipoEscala(newValue || "")}
+              onInputChange={(_, newValue) => setNovoTipoEscala(newValue)}
+              freeSolo
+              size='small'
+              renderInput={(params) => <TextField {...params} label='Novo Tipo de Escala' disabled={salvo} />}
+            />
+          </div>
 
-          <TextField size='small' label='Novo Local' value={novoLocal} onChange={(e) => setNovoLocal(e.target.value)} disabled={salvo} />
+          <div style={{ backgroundColor: "white" }}>
+            <TextField
+              style={{ display: "flex" }}
+              size='small'
+              label='Novo Local'
+              value={novoLocal}
+              onChange={(e) => setNovoLocal(e.target.value)}
+              disabled={salvo}
+            />
+          </div>
 
           <FormButtons>
             <Button onClick={handleAdicionar} disabled={salvo} variant='contained'>

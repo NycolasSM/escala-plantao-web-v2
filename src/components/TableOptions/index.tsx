@@ -42,8 +42,16 @@ type selectedOption = {
 };
 
 const TableOptions = (context: any) => {
-  const { plantaoAvailable, plantaoChosen, localChosen, setPlantaoChosen, setLocalChosen, setAvailableDaysData, setMonthNumber, optionsEscalas } =
-    React.useContext(AvailableSchedulesContext);
+  const {
+    plantaoAvailable,
+    plantaoChosen,
+    localChosen,
+    setPlantaoChosen,
+    setLocalChosen,
+    setAvailableDaysData,
+    setMonthNumber,
+    optionsEscalas,
+  } = React.useContext(AvailableSchedulesContext);
 
   const { setHaveEmptyField, setRegisters, setIsLoadingRegisters, loadedForms } = useContext(FormContext);
 
@@ -62,7 +70,7 @@ const TableOptions = (context: any) => {
 
   let permissoes: Map<string, string[]> = optionsEscalas;
 
-  console.log("permissoes", permissoes)
+  console.log("permissoes", permissoes);
 
   function handleChangeSetor(plantao: string) {
     setPlantaoChosen(plantao);
@@ -123,12 +131,10 @@ const TableOptions = (context: any) => {
     }
   }, [plantaoChosen]);
 
-  const plantaoOptions = plantaoAvailable?.map((plantao: string, index) => {
-    return {
-      label: plantao,
-      value: plantao,
-    };
-  });
+  const plantaoOptions = Array.from(permissoes.keys()).map((key) => ({
+    label: key,
+    value: key,
+  }));
 
   const localOptions = permissoes.has(selectedOptions.plantaoSelected)
     ? permissoes
@@ -154,7 +160,7 @@ const TableOptions = (context: any) => {
         onChange={(e) => handleChangeSetor(e?.value || "")}
         value={plantaoOptions?.find((option) => option.value === selectedOptions.plantaoSelected)}
       />
-      {showLocationOptions === true && plantaoChosen != "Transporte" && plantaoChosen != "Controle De Perdas" && (
+      {showLocationOptions && permissoes.get(plantaoChosen)?.length > 0 && (
         <Select
           className='react-select-container'
           styles={customStyles}
@@ -164,98 +170,6 @@ const TableOptions = (context: any) => {
           value={localOptions?.find((option) => option.value === selectedOptions.localSelected)}
         />
       )}
-
-      {/* <OptionsContainer>
-        <OptionTitle>Plantão</OptionTitle>
-        <Inputs>
-          {plantaoAvailable!.map((plantao: string, index) => (
-            <div key={index}>
-              {plantao === selectedOptions.plantaoSelected ? (
-                <>
-                  <InputCheckBoxChecked
-                    onClick={() => {
-                      handleChangeSetor(plantao);
-                    }}
-                  >
-                    <div></div>
-                  </InputCheckBoxChecked>
-                  <span>{plantao}</span>
-                </>
-              ) : (
-                <>
-                  <InputCheckBox
-                    onClick={() => {
-                      handleChangeSetor(plantao);
-                    }}
-                  ></InputCheckBox>
-                  <span>{plantao}</span>
-                </>
-                // <div>
-                //   <input
-                //     checked
-                //     onChange={() => {
-                //       handleChangeSetor(plantao);
-                //     }}
-                //     type="radio"
-                //     name="setor"
-                //   />
-                //   <span>{plantao}</span>
-                // </div>
-
-                // <div key={plantao}>
-                //   <input
-                //     onChange={() => {
-                //       handleChangeSetor(plantao);
-                //     }}
-                //     type="radio"
-                //     name="setor"
-                //   />
-                //   <span>{plantao}</span>
-                // </div>
-              )}
-            </div>
-          ))}
-        </Inputs>
-        {showLocationOptions === true && plantaoChosen != "Transporte" && plantaoChosen != "Controle De Perdas" ? (
-          // caso exista um Local nos parametros da query ele ira marcar a caixa equivalente ao que estiver nos parâmetros
-          <>
-            <OptionTitle>Local:</OptionTitle>
-            <Inputs>
-              <select
-                defaultValue={selectedOptions.localSelected != undefined ? selectedOptions.localSelected : ""}
-                name='local'
-                id='local'
-                onChange={(e) => {
-                  handleChangeLocal(e.target.value);
-                  setIsLoadingRegisters(true);
-                }}
-              >
-                <option selected={true} disabled value=''>
-                  Selecione o Local
-                </option>
-                {permissoes.has(selectedOptions.plantaoSelected)
-                  ? permissoes
-                      .get(selectedOptions.plantaoSelected)!
-                      .sort()
-                      .map((local: string) => (
-                        <>
-                          {local === "Técnico" || local === "Almoxarifado" || local === "Informatica" ? (
-                            <option key={local} value={local}>
-                              {local} (Especial)
-                            </option>
-                          ) : (
-                            <option key={local} value={local}>
-                              {local}
-                            </option>
-                          )}
-                        </>
-                      ))
-                  : null}
-              </select>
-            </Inputs>
-          </>
-        ) : null}
-      </OptionsContainer> */}
     </Container>
   );
 };
