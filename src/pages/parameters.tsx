@@ -20,6 +20,21 @@ const Parameters = () => {
           </LinkButton>
         </Link>
       </div>
+
+      <SectionTitle>
+        <h1>Gerenciamento de Gerentes da divisão</h1>
+        <p>Alterar os gerentes responsáveis por região</p>
+      </SectionTitle>
+
+      <div style={{ marginTop: -20 }}>
+        <Link href={"/editManager"}>
+          {/* @ts-ignore */}
+          <LinkButton onClick={() => console.log("teste")}>
+            <span>Acessar</span>
+            <MdOpenInNew size={18} />
+          </LinkButton>
+        </Link>
+      </div>
     </Container>
   );
 };

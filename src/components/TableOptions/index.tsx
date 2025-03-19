@@ -70,8 +70,6 @@ const TableOptions = (context: any) => {
 
   let permissoes: Map<string, string[]> = optionsEscalas;
 
-  console.log("permissoes", permissoes);
-
   function handleChangeSetor(plantao: string) {
     setPlantaoChosen(plantao);
     setSelectedOptions({ ...selectedOptions, ["plantaoSelected"]: plantao });
