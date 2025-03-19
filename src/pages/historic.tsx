@@ -87,6 +87,7 @@ const Historic = () => {
   const [month, setMonth] = useState<number>(monthNumber);
   const [daysOfSaturday, setDaysOfSaturday] = useState<number[]>([]);
   const [daysOfThursday, setDaysOfThursday] = useState<number[]>([]);
+  const [daysOfMaintenance, setDaysOfMaintenance] = useState<number[]>([]);
   const [schedulesDoneList, setSchedulesDoneList] = useState<any>({
     Apiaí: {
       Operacional: null,
@@ -436,6 +437,29 @@ const Historic = () => {
     });
   };
 
+  const generateMaintenanceWeekDays = () => {
+    let maintenanceDays: number[] = [];
+    let totalDaysOfMonth = new Date(year, month, 0).getDate();
+
+    // Adiciona o primeiro dia do mês
+    maintenanceDays.push(1);
+
+    for (let day = 1; day <= totalDaysOfMonth; day++) {
+      let date = new Date(year, month - 1, day, 0, 0, 0);
+      if (date.getDay() === 1) {
+        // Segunda-feira
+        if (maintenanceDays[maintenanceDays.length - 1] !== day) {
+          maintenanceDays.push(day);
+        }
+      }
+    }
+    setDaysOfMaintenance(maintenanceDays);
+  };
+
+  useEffect(() => {
+    generateMaintenanceWeekDays();
+  }, [month, year]);
+
   const showModal = (logs) => {
     setLogs(logs);
     setIsModalVisible(true);
@@ -607,59 +631,58 @@ const Historic = () => {
                 <td className={sector.sector ? "actions sector" : "actions"}>
                   {sector.sector ? (
                     <>
-                      {daysOfThursday.map((day, i) => (
+                      {(sector.name === "Manutenção" ? daysOfMaintenance : daysOfThursday).map((day, i, arr) => (
                         <div key={i}>
-                          {daysOfSaturday[i] < 6 && day != 1 ? (
-                            <>
-                              {day === 1 ? (
-                                <button
-                                  key={i}
-                                  onClick={() => {
-                                    handleSeeWeek("", day, daysOfSaturday[i] - day + 1);
-                                  }}
-                                >
-                                  {day < 10 ? "0" : ""}
-                                  {day}/{month < 10 ? "0" + month : month} - {daysOfSaturday[i] < 10 ? "0" : ""}
-                                  {daysOfSaturday[i]}/{month < 9 ? "0" + (month + 1) : month + 1}
-                                  {/* para cada dia ele irá atribuir o (0) caso seja menor que 10 */}
-                                </button>
-                              ) : (
-                                <button key={i} onClick={() => handleSeeWeek(sector.name, day)}>
-                                  {day < 10 ? "0" : ""}
-                                  {day}/{month < 10 ? "0" + month : month} - {daysOfSaturday[i] < 10 ? "0" : ""}
-                                  {daysOfSaturday[i]}/{month < 9 ? "0" + (month + 1) : month === 12 ? "01" : month + 1}
-                                  {/* para cada dia ele irá atribuir o (0) caso seja menor que 10 */}
-                                </button>
-                              )}
-                            </>
+                          {sector.name === "Manutenção" ? (
+                            <button key={i} onClick={() => handleSeeWeek(sector.name, day, 7)}>
+                              {day < 10 ? "0" : ""}
+                              {day}/{month < 10 ? "0" + month : month} -{(arr[i + 1] ? arr[i + 1] : arr[i]) < 10 ? "0" : ""}
+                              {arr[i + 1] ? arr[i + 1] : arr[i]}/{month < 9 ? "0" + (month + 1) : month === 12 ? "01" : month + 1}
+                            </button>
+                          ) : daysOfSaturday[i] < 6 && day !== 1 ? (
+                            <button key={i} onClick={() => handleSeeWeek(sector.name, day)}>
+                              {day < 10 ? "0" : ""}
+                              {day}/{month < 10 ? "0" + month : month} -{daysOfSaturday[i] < 10 ? "0" : ""}
+                              {daysOfSaturday[i]}/{month < 9 ? "0" + (month + 1) : month === 12 ? "01" : month + 1}
+                            </button>
                           ) : (
-                            <>
-                              {day === 1 ? (
-                                <button
-                                  key={i}
-                                  onClick={() => {
-                                    handleSeeWeek(sector.name, day, daysOfSaturday[i] - day + 1);
-                                  }}
-                                >
-                                  {day < 10 ? "0" : ""}
-                                  {day}/{month < 10 ? "0" + month : month} - {daysOfSaturday[i] < 10 ? "0" : ""}
-                                  {daysOfSaturday[i]}/{month < 10 ? "0" + month : month}
-                                  {/* para cada dia ele irá atribuir o (0) caso seja menor que 10 */}
-                                </button>
-                              ) : (
-                                <button key={i} onClick={() => handleSeeWeek(sector.name, day)}>
-                                  {day < 10 ? "0" : ""}
-                                  {day}/{month < 10 ? "0" + month : month} - {daysOfSaturday[i] < 10 ? "0" : ""}
-                                  {daysOfSaturday[i]}/{month < 10 ? "0" + month : month}
-                                  {/* para cada dia ele irá atribuir o (0) caso seja menor que 10 */}
-                                </button>
-                              )}
-                            </>
+                            <button key={i} onClick={() => handleSeeWeek(sector.name, day)}>
+                              {day < 10 ? "0" : ""}
+                              {day}/{month < 10 ? "0" + month : month} -{daysOfSaturday[i] < 10 ? "0" : ""}
+                              {daysOfSaturday[i]}/{month < 10 ? "0" + month : month}
+                            </button>
                           )}
                         </div>
                       ))}
                     </>
                   ) : (
+                    //       ) : (
+                    //         <>
+                    //           {day === 1 ? (
+                    //             <button
+                    //               key={i}
+                    //               onClick={() => {
+                    //                 handleSeeWeek(sector.name, day, daysOfSaturday[i] - day + 1);
+                    //               }}
+                    //             >
+                    //               {day < 10 ? "0" : ""}
+                    //               {day}/{month < 10 ? "0" + month : month} - {daysOfSaturday[i] < 10 ? "0" : ""}
+                    //               {daysOfSaturday[i]}/{month < 10 ? "0" + month : month}
+                    //               {/* para cada dia ele irá atribuir o (0) caso seja menor que 10 */}
+                    //             </button>
+                    //           ) : (
+                    //             <button key={i} onClick={() => handleSeeWeek(sector.name, day)}>
+                    //               {day < 10 ? "0" : ""}
+                    //               {day}/{month < 10 ? "0" + month : month} - {daysOfSaturday[i] < 10 ? "0" : ""}
+                    //               {daysOfSaturday[i]}/{month < 10 ? "0" + month : month}
+                    //               {/* para cada dia ele irá atribuir o (0) caso seja menor que 10 */}
+                    //             </button>
+                    //           )}
+                    //         </>
+                    //       )}
+                    //     </div>
+                    //   ))}
+                    // </>
                     <>
                       {sector.name === "Transporte" ? (
                         <>
