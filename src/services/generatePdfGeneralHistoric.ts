@@ -40,7 +40,8 @@ export async function generatePdfGeneralHistoric(
   monthEnd: number,
   year: number,
   dismissLoadingNotify: () => void,
-  notifyLoading: () => void
+  notifyLoading: () => void,
+  excludedItems: string[] // New parameter for excluded items
 ) {
   
   // pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -576,7 +577,15 @@ export async function generatePdfGeneralHistoric(
       isEmptySchedule = {};
   }
 
+  // Filter out excluded items from the sectors array
+  sectors = sectors.filter((item) => !excludedItems.includes(item));
+
   for (let schedule of forms) {
+    // Skip processing if the schedule is in the excluded items
+    if (excludedItems.includes(schedule.escala_participante.split(' - ')[1])) {
+      continue;
+    }
+
     // verificar se existem escalas feitas em municipios juntos para não mostra-los como escala não feita
     let scheduleName = schedule.escala_participante
       .replaceAll(" - ", "_")
@@ -656,7 +665,7 @@ export async function generatePdfGeneralHistoric(
   let rowGradient = true;
 
   // o body só sera utilizado após todas as linhas serem finalizadas
-  const body: any[] = [];
+  let body: any[] = [];
 
   // [ Plantao ] > [ Municipio ] > [ Funcionario ] > [ Data ] > [ Horarios ]
   let schedulesGroup = new Map();
@@ -1373,6 +1382,13 @@ export async function generatePdfGeneralHistoric(
     body.unshift(rows);
     rowGradient = !rowGradient;
   }
+
+  // Filter out rows for excluded items in the final report
+  body = body.filter((row) => {
+    console.log("row", row);
+    console.log("row[0].text", row[0].text.split("\n")[0].split(" - ")[1]);
+    return !excludedItems.includes(row[0].text.split("\n")[0].split(" - ")[1]);
+  });
 
   body.sort(function (a, b) {
     let x = a[0].text.toLowerCase();

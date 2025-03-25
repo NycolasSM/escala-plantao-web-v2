@@ -222,7 +222,7 @@ export const Table = styled.table`
     button {
       border: 1px solid transparent;
       border-radius: 10px;
-      min-width: 140px;
+      /* min-width: 140px; */
       padding: 7px 6px;
       margin: 0 20px;
       cursor: pointer;

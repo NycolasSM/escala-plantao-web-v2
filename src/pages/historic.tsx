@@ -26,18 +26,19 @@ import { AiOutlineCheckCircle, AiOutlineCloseCircle, AiOutlineLoading3Quarters }
 
 // Services
 import { generatePdfSchedule } from "../services/generatePdfSchedule";
+import { generatePdfGeneralHistoric } from "../services/generatePdfGeneralHistoric";
 
 import { useAuthContext } from "../context/AuthContext";
 
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 
 import { data } from "../data/sectorsData";
-import { generatePdfGeneralHistoric } from "../services/generatePdfGeneralHistoric";
 import Link from "next/link";
 import { api } from "../services/api";
 import AvailableSchedulesContext from "../context/availableSchedulesContext2";
 import axios from "axios";
 import { SelectVisualizeReport } from "../components/SelectVisualizeReport";
+import { PiFilePdfDuotone } from "react-icons/pi";
 
 import { GrDocumentPdf } from "react-icons/gr";
 
@@ -244,6 +245,25 @@ const Historic = () => {
   const [logs, setLogs] = useState([]);
 
   const [schedulesChanges, setSchedulesChanges] = useState<any>({});
+  const [checkboxStates, setCheckboxStates] = useState<Record<string, boolean>>({});
+
+  const handleCheckboxChange = (sectorName: string) => {
+    setCheckboxStates((prevState) => ({
+      ...prevState,
+      [sectorName]: !prevState[sectorName],
+    }));
+  };
+
+  console.log("checkboxStates", checkboxStates);
+
+  useEffect(() => {
+    // Initialize checkbox states with all sectors checked by default
+    const initialStates = data.reduce((acc, sector) => {
+      acc[sector.name] = true;
+      return acc;
+    }, {});
+    setCheckboxStates(initialStates);
+  }, [data]);
 
   const handleIncrementMonth = () => {
     if (month === 12) {
@@ -296,6 +316,9 @@ const Historic = () => {
       dayOfWednesday = day;
     }
 
+    // Get excluded items from checkboxStates
+    const excludedItems = Object.keys(checkboxStates).filter((key) => !checkboxStates[key]);
+
     try {
       await generatePdfGeneralHistoric(
         sector,
@@ -305,7 +328,8 @@ const Historic = () => {
         month,
         year,
         dismissLoadingNotify,
-        notifyLoading
+        notifyLoading,
+        excludedItems // Pass excluded items
       );
     } catch (err: any) {
       if (err.message === "Cannot read properties of undefined (reading 'push')") {
@@ -591,7 +615,6 @@ const Historic = () => {
 
         <SectionTitle>
           <h1>Relatórios Plantão</h1>
-          {/* <p>Selecione a semana que deseja gerar</p> */}
           <IconGuide>
             <ul>
               <li>
@@ -613,7 +636,10 @@ const Historic = () => {
               <th colSpan={1}>Ações</th>
               <th colSpan={1}>Escala Feita</th>
               <th colSpan={1} style={{ maxWidth: 100 }}>
-                Alterações
+                Log
+              </th>
+              <th colSpan={1}>
+                <PiFilePdfDuotone size={28} style={{ minWidth: 45, transform: "translateY(4px)" }} />
               </th>
             </tr>
           </thead>
@@ -656,33 +682,6 @@ const Historic = () => {
                       ))}
                     </>
                   ) : (
-                    //       ) : (
-                    //         <>
-                    //           {day === 1 ? (
-                    //             <button
-                    //               key={i}
-                    //               onClick={() => {
-                    //                 handleSeeWeek(sector.name, day, daysOfSaturday[i] - day + 1);
-                    //               }}
-                    //             >
-                    //               {day < 10 ? "0" : ""}
-                    //               {day}/{month < 10 ? "0" + month : month} - {daysOfSaturday[i] < 10 ? "0" : ""}
-                    //               {daysOfSaturday[i]}/{month < 10 ? "0" + month : month}
-                    //               {/* para cada dia ele irá atribuir o (0) caso seja menor que 10 */}
-                    //             </button>
-                    //           ) : (
-                    //             <button key={i} onClick={() => handleSeeWeek(sector.name, day)}>
-                    //               {day < 10 ? "0" : ""}
-                    //               {day}/{month < 10 ? "0" + month : month} - {daysOfSaturday[i] < 10 ? "0" : ""}
-                    //               {daysOfSaturday[i]}/{month < 10 ? "0" + month : month}
-                    //               {/* para cada dia ele irá atribuir o (0) caso seja menor que 10 */}
-                    //             </button>
-                    //           )}
-                    //         </>
-                    //       )}
-                    //     </div>
-                    //   ))}
-                    // </>
                     <>
                       {sector.name === "Transporte" ? (
                         <>
@@ -697,10 +696,13 @@ const Historic = () => {
                                 },
                               }}
                             >
-                              <button className='button__edit'>Editar</button>
+                              <button style={{ minWidth: 140 }} className='button__edit'>
+                                Editar
+                              </button>
                             </Link>
                             <button
                               className='visualize__schedule'
+                              style={{ minWidth: 140 }}
                               onClick={async () => {
                                 await generatePdfSchedule(
                                   await getForms("Transporte").then((schedules) => schedules),
@@ -733,10 +735,13 @@ const Historic = () => {
                               },
                             }}
                           >
-                            <button className='button__edit'>Editar</button>
+                            <button style={{ minWidth: 140 }} className='button__edit'>
+                              Editar
+                            </button>
                           </Link>
                           <button
                             className='visualize__schedule'
+                            style={{ minWidth: 140 }}
                             onClick={async () => {
                               await generatePdfSchedule(
                                 await getForms("Controle De Perdas").then((schedules) => schedules),
@@ -769,10 +774,13 @@ const Historic = () => {
                                 },
                               }}
                             >
-                              <button className='button__edit'>Editar</button>
+                              <button style={{ minWidth: 140 }} className='button__edit'>
+                                Editar
+                              </button>
                             </Link>
                             <button
                               className='visualize__schedule'
+                              style={{ minWidth: 140 }}
                               onClick={async () => {
                                 await generatePdfSchedule(
                                   await getForms("Manutenção - " + sector.name).then((schedules) => schedules),
@@ -806,7 +814,9 @@ const Historic = () => {
                                 },
                               }}
                             >
-                              <button className='button__edit'>Editar ETA</button>
+                              <button style={{ minWidth: 140 }} className='button__edit'>
+                                Editar ETA
+                              </button>
                             </Link>
                             <Link
                               href={{
@@ -826,24 +836,6 @@ const Historic = () => {
                       )}
                     </>
                   )}
-                  {/* <button
-                    onClick={() => handleSeeMonth(sector.name)}
-                    className="button__view__Month"
-                  >
-                    Visualizar Mensal
-                  </button> */}
-                  {/* {month === currentMonth ? (
-                    <button
-                      className="button__view__Week"
-                      onClick={() => handleSeeWeek(sector.name)}
-                    >
-                      Visualizar Semana Atual
-                    </button>
-                  ) : (
-                    <button disabled className="button__view__Week disable">
-                      Visualizar Semana Atual
-                    </button>
-                  )} */}
                 </td>
                 {sector.sector === true ? (
                   <>
@@ -905,38 +897,6 @@ const Historic = () => {
                             <AiOutlineFileSearch color='#aeaeae' size={30} />
                           </Button>
                         </td>
-                        {/* <td className='col__schedule__alterations'>
-                          <>
-                            <div className='reportChange'>
-                              {schedulesChanges["Operacional - " + sector.name]?.reports?.map((report: any, i: any) => (
-                                <p key={i}>
-                                  nº {report.n_responsavel}
-                                  {` - `}
-                                  {new Date(report.data).getUTCDate()}/
-                                  {new Date(report.data).getMonth() + 1 < 10
-                                    ? "0" + (new Date(report.data).getMonth() + 1)
-                                    : new Date(report.data).getMonth() + 1}
-                                  {` : `}
-                                  {new Date(report.hora).getHours() + 3}:{new Date(report.hora).getMinutes()}hr (
-                                  {report.setor.split(" - ")[0] === "Operacional" ? "Oper" : "ETA"})
-                                </p>
-                              ))}
-                              {schedulesChanges["ETA - " + sector.name]?.reports?.map((report: any, i: any) => (
-                                <p key={i}>
-                                  nº {report.n_responsavel}
-                                  {` - `}
-                                  {new Date(report.data).getUTCDate()}/
-                                  {new Date(report.data).getMonth() + 1 < 10
-                                    ? "0" + (new Date(report.data).getMonth() + 1)
-                                    : new Date(report.data).getMonth() + 1}
-                                  {` : `}
-                                  {new Date(report.hora).getHours() + 3}:{new Date(report.hora).getMinutes()}hr (
-                                  {report.setor.split(" - ")[0] === "Operacional" ? "Oper" : "ETA"})
-                                </p>
-                              ))}
-                            </div>
-                          </>
-                        </td> */}
                       </>
                     ) : (
                       <>
@@ -990,24 +950,6 @@ const Historic = () => {
                                 <AiOutlineFileSearch color='#aeaeae' size={30} />
                               </Button>
                             </td>
-                            {/* <td className='col__schedule__alterations'>
-                              <>
-                                <div className='reportChange'>
-                                  {schedulesChanges["Manutenção - " + sector.name]?.reports?.map((report: any, i: any) => (
-                                    <p key={i}>
-                                      nº {report.n_responsavel}
-                                      {` - `}
-                                      {new Date(report.data).getUTCDate()}/
-                                      {new Date(report.data).getMonth() + 1 < 10
-                                        ? "0" + (new Date(report.data).getMonth() + 1)
-                                        : new Date(report.data).getMonth() + 1}
-                                      {` : `}
-                                      {new Date(report.hora).getHours() + 3}:{new Date(report.hora).getMinutes()}hr
-                                    </p>
-                                  ))}
-                                </div>
-                              </>
-                            </td> */}
                           </>
                         ) : (
                           <>
@@ -1062,25 +1004,6 @@ const Historic = () => {
                                         <AiOutlineFileSearch color='#aeaeae' size={30} />
                                       </Button>
                                     </td>
-                                    {/* <td className='col__schedule__alterations'>
-                                      <>
-                                        <div className='reportChange'>
-                                          {schedulesChanges["Transporte"]?.reports?.map((report: any, i: any) => (
-                                            <p key={i}>
-                                              nº {report.n_responsavel}
-                                              {` - `}
-                                              {new Date(report.data).getUTCDate()}/
-                                              {new Date(report.data).getMonth() + 1 < 10
-                                                ? "0" + (new Date(report.data).getMonth() + 1)
-                                                : new Date(report.data).getMonth() + 1}
-                                              {` : `}
-                                              {new Date(report.hora).getHours() + 3}:{new Date(report.hora).getMinutes()}
-                                              hr
-                                            </p>
-                                          ))}
-                                        </div>
-                                      </>
-                                    </td> */}
                                   </>
                                 ) : sector.name === "Controle_De_Perdas" ? (
                                   <>
@@ -1131,25 +1054,6 @@ const Historic = () => {
                                         <AiOutlineFileSearch color='#aeaeae' size={30} />
                                       </Button>
                                     </td>
-                                    {/* <td className='col__schedule__alterations'>
-                                      <>
-                                        <div className='reportChange'>
-                                          {schedulesChanges["Controle De Perdas"]?.reports?.map((report: any, i: any) => (
-                                            <p key={i}>
-                                              nº {report.n_responsavel}
-                                              {` - `}
-                                              {new Date(report.data).getUTCDate()}/
-                                              {new Date(report.data).getMonth() + 1 < 10
-                                                ? "0" + (new Date(report.data).getMonth() + 1)
-                                                : new Date(report.data).getMonth() + 1}
-                                              {` : `}
-                                              {new Date(report.hora).getHours() + 3}:{new Date(report.hora).getMinutes()}
-                                              hr
-                                            </p>
-                                          ))}
-                                        </div>
-                                      </>
-                                    </td> */}
                                   </>
                                 ) : (
                                   <>
@@ -1212,38 +1116,6 @@ const Historic = () => {
                                         <AiOutlineFileSearch color='#aeaeae' size={30} />
                                       </Button>
                                     </td>
-                                    {/* <td className='col__schedule__alterations'>
-                                      <>
-                                        <div className='reportChange'>
-                                          {schedulesChanges["Operacional - " + sector.name]?.reports?.map((report: any, i: any) => (
-                                            <p key={i}>
-                                              nº {report.n_responsavel}
-                                              {` - `}
-                                              {new Date(report.data).getUTCDate()}/
-                                              {new Date(report.data).getMonth() + 1 < 10
-                                                ? "0" + (new Date(report.data).getMonth() + 1)
-                                                : new Date(report.data).getMonth() + 1}
-                                              {` : `}
-                                              {new Date(report.hora).getHours() + 3}:{new Date(report.hora).getMinutes()}
-                                              hr ({report.setor.split(" - ")[0] === "Operacional" ? "Oper" : "ETA"})
-                                            </p>
-                                          ))}
-                                          {schedulesChanges["ETA - " + sector.name]?.reports?.map((report: any, i: any) => (
-                                            <p key={i}>
-                                              nº {report.n_responsavel}
-                                              {` - `}
-                                              {new Date(report.data).getUTCDate()}/
-                                              {new Date(report.data).getMonth() + 1 < 10
-                                                ? "0" + (new Date(report.data).getMonth() + 1)
-                                                : new Date(report.data).getMonth() + 1}
-                                              {` : `}
-                                              {new Date(report.hora).getHours() + 3}:{new Date(report.hora).getMinutes()}
-                                              hr ({report.setor.split(" - ")[0] === "Operacional" ? "Oper" : "ETA"})
-                                            </p>
-                                          ))}
-                                        </div>
-                                      </>
-                                    </td> */}
                                   </>
                                 )}
                               </>
@@ -1262,6 +1134,17 @@ const Historic = () => {
                       </>
                     )}
                   </>
+                )}
+                {!["Operacional", "ETA", "Manutenção", "Setor 2", "Setor 3", "Setor 4", "Setor 5", "Setor 6"].includes(sector.name) ? (
+                  <td>
+                    <input
+                      type='checkbox'
+                      checked={checkboxStates[sector.name] || false}
+                      onChange={() => handleCheckboxChange(sector.name)}
+                    />
+                  </td>
+                ) : (
+                  <td className='type sector'></td>
                 )}
               </tr>
             ))}
