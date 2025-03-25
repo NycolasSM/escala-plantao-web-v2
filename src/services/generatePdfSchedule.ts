@@ -36,7 +36,7 @@ export async function generatePdfSchedule(
     throw new Error("vazio");
   }
 
-  pdfMake.vfs = pdfFonts['Roboto-Regular.ttf'];
+  pdfMake.vfs = pdfFonts["Roboto-Regular.ttf"];
 
   let Issuers = new Set();
 
@@ -67,6 +67,34 @@ export async function generatePdfSchedule(
     return total;
   };
 
+  async function getResponsibles(): Promise<{ [key: string]: string }> {
+    try {
+      const response = await api.get("/divisao_responsavel");
+      const data = await response.data;
+
+      return {
+        RRDO2: data.RRDO2 || "",
+        RRDO3: data.RRDO3 || "",
+        RRDO4: data.RRDO4 || "",
+        RRDO5: data.RRDO5 || "",
+        RRDO6: data.RRDO6 || "",
+      };
+    } catch (error) {
+      console.error("Erro ao buscar responsáveis:", error);
+      return {
+        RRDO2: "",
+        RRDO3: "",
+        RRDO4: "",
+        RRDO5: "",
+        RRDO6: "",
+      };
+    }
+  }
+
+  let fetchedResponsibles = await getResponsibles();
+
+  console.log("fetchedResponsibles", fetchedResponsibles);
+
   scheduleMap.forEach((value: any, key: string) => {
     let sizeOfSpan = value.length;
     let dataRowGradient = false;
@@ -77,9 +105,7 @@ export async function generatePdfSchedule(
         .replace(/ /g, "")
         .split(/[\-\/]/);
 
-      const totalScheduleHour = getTotalScheduleHour(key)
-        .toString()
-        .replace(".5", ":30");
+      const totalScheduleHour = getTotalScheduleHour(key).toString().replace(".5", ":30");
       // console.log(parseInt(totalScheduleHour));
 
       const rows = new Array();
@@ -159,7 +185,7 @@ export async function generatePdfSchedule(
 
   let sectorSelected: string = "";
 
-  if (sector === 'ETA') {
+  if (sector === "ETA") {
     sectorSelected = "ETA";
   } else {
     switch (local) {
@@ -186,8 +212,8 @@ export async function generatePdfSchedule(
         sectorSelected = "Iporanga";
         break;
       case "Sete Barras":
-          sectorSelected = "Sete_Barras";
-          break;
+        sectorSelected = "Sete_Barras";
+        break;
       case "Cananéia":
       case "Iguape":
       case "Ilha Comprida":
@@ -229,11 +255,11 @@ export async function generatePdfSchedule(
   }
 
   let responsible: any = {
-    RRDO2: "PABLO ROGERIO ALVES",
-    RRDO3: "ADRIANO DE ALMEIDA DANTAS", 
-    RRDO4: "ADRIANO DE ALMEIDA DANTAS",
-    RRDO5: "PABLO ROGERIO ALVES", 
-    RRDO6: "MILLER DIAS SANTOS",
+    RRDO2: fetchedResponsibles.RRDO2,
+    RRDO3: fetchedResponsibles.RRDO3,
+    RRDO4: fetchedResponsibles.RRDO4,
+    RRDO5: fetchedResponsibles.RRDO5,
+    RRDO6: fetchedResponsibles.RRDO6,
     Iporanga: "MILLER DIAS SANTOS",
     Sete_Barras: "PABLO ROGERIO ALVES",
     // ETARegistro: "NELSON COLOMBO JUNIOR",
@@ -241,7 +267,7 @@ export async function generatePdfSchedule(
     Manutenção: "DANIEL DE MELLO SILVA",
     Transporte: "CARLOS GOMES PINTO",
     Controle_De_Perdas: "",
-    ETA: "EDUARDO DE CAMPOS LEITE"
+    ETA: "EDUARDO DE CAMPOS LEITE",
   };
 
   dismissLoadingNotify();
@@ -267,11 +293,7 @@ export async function generatePdfSchedule(
             fontSize: 9,
             text: [
               {
-                text:
-                  "Página: " +
-                  `${currentPage} de ${pageCount} : ${sector} ${
-                    local === "" ? "" : "-"
-                  } ${local} : ${month}/${year}`,
+                text: "Página: " + `${currentPage} de ${pageCount} : ${sector} ${local === "" ? "" : "-"} ${local} : ${month}/${year}`,
                 margin: [0, 20],
               },
             ],
@@ -292,9 +314,7 @@ export async function generatePdfSchedule(
           body: [
             [
               {
-                image: await getBase64ImageFromURL(
-                  "https://upload.wikimedia.org/wikipedia/commons/7/77/Sabesp.svg"
-                ),
+                image: await getBase64ImageFromURL("https://upload.wikimedia.org/wikipedia/commons/7/77/Sabesp.svg"),
                 width: 30,
                 style: "headerLogo",
                 rowSpan: 2,

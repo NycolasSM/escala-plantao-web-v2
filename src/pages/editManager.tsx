@@ -1,113 +1,89 @@
 import React, { useContext, useEffect, useState } from "react";
 import { default as SelectAsync } from "react-select/async";
 import Select from "react-select";
-import { Container, SectionTitle, FormColumn, FormButtons, LinkButton } from "../../styles/pages/editManager";
+import { 
+  Container, 
+  SectionTitle, 
+  FormColumn, 
+  FormButtons, 
+  LinkButton 
+} from "../../styles/pages/editManager";
 import AvailableSchedulesContext from "../context/availableSchedulesContext2";
 import { api } from "../services/api";
 
 const customStyles = {
   control: (provided: any) => ({
     ...provided,
-    minHeight: "30px",
-    height: "35px",
-    fontSize: "13px",
-    minWidth: "200px",
-  }),
-  valueContainer: (provided: any) => ({
-    ...provided,
-    height: "30px",
-    padding: "0 6px",
-  }),
-  input: (provided: any) => ({
-    ...provided,
-    margin: "0px",
-  }),
-  indicatorSeparator: (provided: any) => ({
-    display: "none",
-  }),
-  indicatorsContainer: (provided: any) => ({
-    ...provided,
-    height: "30px",
-  }),
-  option: (provided: any) => ({
-    ...provided,
-    fontSize: "13px",
-    padding: "8px 10px",
+    minHeight: "35px",
+    fontSize: "14px",
+    minWidth: "250px",
   }),
 };
 
 const customStyles2 = {
   control: (provided: any) => ({
     ...provided,
-    minHeight: "30px",
-    height: "35px",
-    fontSize: "13px",
+    minHeight: "35px",
+    fontSize: "14px",
     minWidth: "300px",
-  }),
-  valueContainer: (provided: any) => ({
-    ...provided,
-    height: "30px",
-    padding: "0 6px",
-  }),
-  input: (provided: any) => ({
-    ...provided,
-    margin: "0px",
-  }),
-  indicatorSeparator: (provided: any) => ({
-    display: "none",
-  }),
-  indicatorsContainer: (provided: any) => ({
-    ...provided,
-    height: "30px",
-  }),
-  option: (provided: any) => ({
-    ...provided,
-    fontSize: "13px",
-    padding: "8px 10px",
   }),
 };
 
 const Parameters = () => {
-  const divisoes = [
-    {
-      label: "RRDO2",
-      value: "RRDO2",
-    },
-    {
-      label: "RRDO3",
-      value: "RRDO3",
-    },
-    {
-      label: "RRDO4",
-      value: "RRDO4",
-    },
-    {
-      label: "RRDO5",
-      value: "RRDO5",
-    },
-    {
-      label: "RRDO6",
-      value: "RRDO6",
-    },
-  ];
-
+  const [divisoes, setDivisoes] = useState([]);
+  const [responsaveisData, setResponsaveisData] = useState({});
   const [selectedDivisao, setSelectedDivisao] = useState(null);
   const [selectedResponsavel, setSelectedResponsavel] = useState(null);
-
   const { availableEmployees } = useContext(AvailableSchedulesContext);
 
-  const filterEmployees = (inputValue) => {
-    const lowerInput = inputValue.toLowerCase();
+  // 🔹 Buscar divisões e responsáveis ao carregar a página
+  useEffect(() => {
+    fetchResponsaveis();
+  }, []);
 
+  const fetchResponsaveis = async () => {
+    try {
+      const response = await api.get("/divisao_responsavel");
+      setResponsaveisData(response.data);
+
+      // Converter as chaves (divisões) para options do Select
+      const divisaoOptions = Object.keys(response.data).map((divisao) => ({
+        value: divisao,
+        label: divisao,
+      }));
+      setDivisoes(divisaoOptions);
+    } catch (error) {
+      console.error("Erro ao buscar responsáveis:", error);
+    }
+  };
+
+  // 🔹 Atualiza o responsável ao selecionar a divisão
+  const handleDivisaoChange = (selected: any) => {
+    setSelectedDivisao(selected);
+
+    // Buscar responsável correspondente no JSON
+    const responsavelNome = responsaveisData[selected.value];
+    if (responsavelNome) {
+      setSelectedResponsavel({
+        value: responsavelNome,
+        label: responsavelNome,
+      });
+    } else {
+      setSelectedResponsavel(null);
+    }
+  };
+
+  // 🔹 Buscar funcionários disponíveis para serem responsáveis
+  const filterEmployees = (inputValue: string) => {
     return availableEmployees
       .map((employ: any) => ({
         label: `${employ.nome} | n_pes: ${employ.n_pes}`,
         value: employ.nome,
       }))
-      .filter((item) => item.label.toLowerCase().includes(lowerInput));
+      .filter((item) => item.label.toLowerCase().includes(inputValue.toLowerCase()));
   };
 
-  const promiseOptions = async (inputValue: any): Promise<any> => {
+  const promiseOptions = async (inputValue: string): Promise<any> => {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(filterEmployees(inputValue));
@@ -115,6 +91,7 @@ const Parameters = () => {
     });
   };
 
+  // 🔹 Atualizar responsável
   const handleSave = async () => {
     if (!selectedDivisao || !selectedResponsavel) {
       alert("Selecione uma divisão e um responsável!");
@@ -142,17 +119,26 @@ const Parameters = () => {
       </SectionTitle>
 
       <FormColumn>
-        <Select styles={customStyles} options={divisoes} placeholder='Divisão' onChange={setSelectedDivisao} />
+        {/* 🔹 Quando selecionar a divisão, buscar responsável atual */}
+        <Select 
+          styles={customStyles} 
+          options={divisoes} 
+          placeholder='Divisão' 
+          value={selectedDivisao}
+          onChange={handleDivisaoChange} 
+        />
+
+        {/* 🔹 Select assíncrono para funcionários */}
         <SelectAsync
           styles={customStyles2}
-          defaultOptions={true}
+          defaultOptions
           loadOptions={promiseOptions}
-          // options={responsaveis}
+          value={selectedResponsavel}
           placeholder='Responsável'
           onChange={setSelectedResponsavel}
         />
+
         <FormButtons>
-          {/* @ts-ignore */}
           <LinkButton onClick={handleSave}>Salvar</LinkButton>
         </FormButtons>
       </FormColumn>
