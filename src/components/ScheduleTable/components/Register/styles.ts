@@ -8,15 +8,16 @@ export const Container = styled.tr`
     align-items: center;
     justify-content: center;
     height: 30px;
-    width: 35px;
+    width: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
     border: none;
     border-radius: 4px;
     opacity: 0.8;
-    margin-right: -35px;
-    margin-left: -22px;
+    padding: 2px;
+    /* margin-right: -35px; */
+    /* margin-left: -22px; */
 
     &:hover {
       cursor: pointer;

@@ -8,9 +8,6 @@ import Header from "./components/Header";
 import Register from "./components/Register";
 import { useAvailableSchedulesContext } from "../../context/availableSchedulesContext2";
 
-import { FaTrashAlt, FaTrashRestoreAlt } from "react-icons/fa";
-import { AiOutlineInfoCircle } from "react-icons/ai";
-
 import { TailSpin } from "react-loader-spinner";
 
 import {

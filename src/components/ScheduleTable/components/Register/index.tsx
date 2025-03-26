@@ -769,18 +769,16 @@ const Register = ({
                   <td>
                     <button
                       className='register__button--unlock'
-                      onClick={() =>
-                        setScheduleRegisterInfo({
-                          registerInfo: {
-                            teste: "teste",
-                          },
-                        })
-                      }
+                      onClick={() => {
+                        setIsLockedScheduleHours(false);
+                      }}
                     >
-                      <BiLockOpenAlt size={24} />
+                      <BiLockOpenAlt size={18} />
                     </button>
                   </td>
-                ) : null}
+                ) : (
+                  <td></td>
+                )}
               </>
             )}
           </>

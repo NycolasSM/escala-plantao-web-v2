@@ -7,6 +7,7 @@ const Header = () => {
       <tr style={{ height: 35 }}>
         <th colSpan={3}>Escala</th>
         <th colSpan={4}>Intervalo</th>
+        <th style={{ minWidth: 15 }}></th>
         <th rowSpan={2} style={{ minWidth: 75 }}>
           Total Plantão
         </th>
@@ -22,6 +23,7 @@ const Header = () => {
         <th style={{ minWidth: 85 }}>dás</th>
         <th style={{ minWidth: 85 }}>às</th>
         <th style={{ minWidth: 85 }}>Término</th>
+        <th style={{ minWidth: 15 }}></th>
       </tr>
     </Thead>
   );
