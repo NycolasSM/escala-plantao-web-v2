@@ -5,6 +5,7 @@ import AvailableSchedulesContext from "../context/availableSchedulesContext2";
 import { api } from "../services/api";
 import Select from "react-select";
 import { Container, FormButtons, FormColumn, ScalesTable, SectionTitle, TwoColumnLayout } from "../../styles/pages/parameters";
+import { ToastContainer, toast, Slide } from "react-toastify";
 
 const Parameters = () => {
   const { optionsEscalas, setOptionsEscalas } = useContext(AvailableSchedulesContext);
@@ -60,9 +61,11 @@ const Parameters = () => {
   const handleSalvar = async () => {
     try {
       await api.post("/tipo-escala-locais", novasAssociacoes);
-      setSalvo(true);
+      setNovasAssociacoes([]);
+      toast.success("Alterações salvas com sucesso!");
     } catch (error) {
       console.error("Erro ao salvar novas associações:", error);
+      toast.error("Erro ao salvar associações.");
     }
   };
 
@@ -99,6 +102,7 @@ const Parameters = () => {
 
   return (
     <Container>
+      <ToastContainer autoClose={2500} transition={Slide} />
       <SectionTitle>
         <h1>Gerenciamento de Escalas e Locais</h1>
         <p style={{ color: "#c50b0b" }}>
@@ -169,10 +173,10 @@ const Parameters = () => {
           </div>
 
           <FormButtons>
-            <Button onClick={handleAdicionar} disabled={salvo} variant='contained'>
+            <Button onClick={handleAdicionar} variant='contained'>
               Adicionar
             </Button>
-            <Button onClick={handleSalvar} disabled={salvo} variant='contained'>
+            <Button onClick={handleSalvar} variant='contained'>
               Salvar
             </Button>
           </FormButtons>

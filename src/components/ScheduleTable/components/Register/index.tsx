@@ -78,7 +78,7 @@ const Register = ({
 
   const [daySelected, setDaySelected] = useState<number>(day);
 
-  const [rangeOfScheduleSelected, setRangeOfScheduleSelected] = useState(defaultValues.scheduleHourLoaded);
+  const [rangeOfScheduleSelected, setRangeOfScheduleSelected] = useState(defaultValues.scheduleHourLoaded || ["00:00", "00:00", "00:00", "24:00"]);
 
   function parse(horario: string) {
     if (!horario) return 0;

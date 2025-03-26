@@ -77,6 +77,8 @@ const ScheduleTable = () => {
     setRegistersIndex,
   } = useContext(FormContext);
 
+  // console.log("registers", registers);
+
   const { isLogged } = useAuthContext();
 
   const [registersLoaded, setRegistersLoaded] = useState<RegistersLoaded[]>([]);
@@ -363,7 +365,7 @@ const ScheduleTable = () => {
         ) : null}
         {/* @ts-ignore */}
         {isSendingForm ? (
-          <Button style={{ margin: "0 auto" }}>Carregando..</Button>
+          <Button>Carregando..</Button>
         ) : registers.size != 0 || formularioDelete.size != 0 ? (
           haveSchedulesHourChanged ? (
             <Button onClick={() => sendFormWithChanges()}>Salvar</Button>

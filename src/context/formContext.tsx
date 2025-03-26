@@ -175,7 +175,7 @@ const FormProvider = ({ children }: EscalasContextProps) => {
       const registerSchedule = value.scheduleHour;
       const registerType = value.action;
 
-      if (registerType === "create") {
+      if (registerType === "create" || registerType === "edit") {
         registerEmployees!.map((employee: any) => {
           escalas.push({
             funcionario: employee.value.nome,
@@ -191,6 +191,8 @@ const FormProvider = ({ children }: EscalasContextProps) => {
             endereco: employee.value.endereco,
             telefone_1: employee.value.telefone_1,
             telefone_2: employee.value.telefone_2,
+            registerType,
+            id: value.id,
           });
         });
       }

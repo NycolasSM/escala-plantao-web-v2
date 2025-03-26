@@ -15,7 +15,8 @@ export const Container = styled.tr`
     border: none;
     border-radius: 4px;
     opacity: 0.8;
-    padding: 2px;
+    padding: 0px !important;
+    margin: 0 !important;
     /* margin-right: -35px; */
     /* margin-left: -22px; */
 

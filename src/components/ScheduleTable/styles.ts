@@ -61,7 +61,7 @@ export const Container = styled.table`
   .edit {
     /* outline: solid 6px #d1d1d1bb; */
     background-color:rgb(218, 218, 218);
-    pointer-events: none;
+    /* pointer-events: none; */
   }
 
   .delete {
