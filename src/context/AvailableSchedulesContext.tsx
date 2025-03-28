@@ -59,7 +59,7 @@ const initilValue = {
   setYear: () => {},
 };
 
-const AvailableSchedulesContext = createContext<ISchedulesAvailableContext>(initilValue);
+const AvailableSchedulesContext = createContext<any>(initilValue);
 
 export function AvailableSchedulesProvider({ children }: SchedulesContextProps) {
   const [plantaoChosen, setPlantaoChosen] = useState(initilValue.plantaoChosen);

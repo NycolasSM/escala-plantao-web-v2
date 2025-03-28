@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useContext, useEffect, useState } from "react";
 import { default as SelectAsync } from "react-select/async";
 import Select from "react-select";

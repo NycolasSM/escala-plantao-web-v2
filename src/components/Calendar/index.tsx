@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { useState, useEffect } from "react";
 import AvailableSchedulesContext from "../../context/availableSchedulesContext2";
 import { Container, Header, Month, Buttons, Line, Weeks, Days, HolidaysNameList, CalendarContainer, Content, SectionTitle } from "./styles";

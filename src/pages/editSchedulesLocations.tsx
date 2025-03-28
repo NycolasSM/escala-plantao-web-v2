@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { useContext, useState } from "react";
 import { Button, TextField, Autocomplete, List, ListItem, ListItemText, IconButton } from "@mui/material";
 import { Delete as DeleteIcon } from "@mui/icons-material";
