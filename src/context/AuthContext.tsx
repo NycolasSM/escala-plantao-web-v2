@@ -7,6 +7,7 @@ import { api } from "../services/api";
 
 type AuthContextType = {
   signIn: (code: string, password: string) => Promise<void>;
+  signOut: () => void;
   setErrorMessage: (value: string | null) => void;
   setIsLoading: (value: boolean) => void;
   setIsLogged: (value: boolean) => void;
@@ -49,7 +50,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isLogged, setIsLogged] = useState(false);
   const [loggedUser, setLoggedUser] = useState<User>({} as User);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  // const [userInfo, setUserInfo] = useState<UserInfoProps>({} as UserInfoProps);
   const [userInfo, setUserInfo] = useState<UserInfoProps>({
     id: 0,
     usuario: "admin",
@@ -69,18 +69,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   // 5 second timeout:
   const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-  // fetch(url, {
-  //   signal: controller.signal ,
-  //   method: "POST",
-  //   body: {
-  //     usuario: userInfo.
-  //   }
-  // }).then((response) => {
-  //   // completed request before timeout fired
-  //   // If you only wanted to timeout the request, not the response, add:
-  //   // clearTimeout(timeoutId)
-  // });
-
   async function signIn(usuario: string, senha: string, toast: any) {
     setIsLoading(true);
     try {
@@ -92,7 +80,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         // Armazena no estado
         setUserInfo(userData);
         setIsLogged(true);
-        // setErrorMessage(null);
 
         // Armazena no localStorage
         localStorage.setItem("userSession", JSON.stringify(userData));
@@ -102,10 +89,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
     } catch (error) {
       toast.error("Credenciais inválidas");
-      // setErrorMessage("Credenciais inválidas");
     } finally {
       setIsLoading(false);
     }
+  }
+
+  function signOut() {
+    // Remove a sessão armazenada
+    localStorage.removeItem("userSession");
+    
+    // Reseta os estados do usuário
+    setUserInfo({} as UserInfoProps);
+    setIsLogged(false);
+    setLoggedUser({} as User);
+    setErrorMessage(null);
+    setError(null);
+    
+    // Redireciona para a página de login
+    Router.push("/login");
   }
 
   useEffect(() => {
@@ -118,21 +119,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, []);
 
-  async function requestSession() {
-    // let win = window.open(
-    //   'https://localsig.com/escalas/session.php',
-    //   'session',
-    //   'width=1,height=1,left=1,top=1,toolbar=no,status=no'
-    // );
-    // setTimeout(function () {
-    //   win!.close();
-    // }, 70);
-  }
-
   return (
     <AuthContext.Provider
       value={{
         signIn,
+        signOut,
         isLogged,
         loggedUser,
         setIsLogged,

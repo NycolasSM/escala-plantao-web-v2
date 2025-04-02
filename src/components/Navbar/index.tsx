@@ -45,38 +45,40 @@ const Navbar = () => {
         </Logo>
       </Link>
       <nav>
-        <ul>
-          <NavButton
-            initials='Escalas'
-            navLink='/'
-            icon={<RiFileCopy2Line size={24} color={hasHightlight("/") ? "#e9e9e9" : "#e9e9e9"} />}
-            name={"Escalas"}
-            hasHightlight={hasHightlight("/")}
-          />
-          <NavButton
-            initials='Histórico'
-            navLink='/historic'
-            icon={<RiFileHistoryLine size={23} color={hasHightlight("/historic") ? "#e9e9e9" : "#e9e9e9"} />}
-            name={"Histórico"}
-            hasHightlight={hasHightlight("/historic")}
-          />
-          <NavButton
-            initials='Usuários'
-            navLink='/users'
-            icon={<FiUsers size={22} color={hasHightlight("/users") ? "#e9e9e9" : "#e9e9e9"} />}
-            name={"Usuários"}
-            hasHightlight={hasHightlight("/users")}
-          />
-          {["teste", "fabio", "alex"].includes(userInfo?.usuario) && (
+        {userInfo?.usuario && (
+          <ul>
             <NavButton
-              initials='Parametrização '
-              navLink='/parameters'
-              icon={<IoOptions size={26} color={hasHightlight("/parameters") ? "#e9e9e9" : "#e9e9e9"} />}
-              name={"Parametrização "}
-              hasHightlight={hasHightlight("/parameters")}
+              initials='Escalas'
+              navLink='/'
+              icon={<RiFileCopy2Line size={24} color={hasHightlight("/") ? "#e9e9e9" : "#e9e9e9"} />}
+              name={"Escalas"}
+              hasHightlight={hasHightlight("/")}
             />
-          )}
-        </ul>
+            <NavButton
+              initials='Histórico'
+              navLink='/historic'
+              icon={<RiFileHistoryLine size={23} color={hasHightlight("/historic") ? "#e9e9e9" : "#e9e9e9"} />}
+              name={"Histórico"}
+              hasHightlight={hasHightlight("/historic")}
+            />
+            <NavButton
+              initials='Usuários'
+              navLink='/users'
+              icon={<FiUsers size={22} color={hasHightlight("/users") ? "#e9e9e9" : "#e9e9e9"} />}
+              name={"Usuários"}
+              hasHightlight={hasHightlight("/users")}
+            />
+            {userInfo?.usuario && ["teste", "fabio", "alex"].includes(userInfo?.usuario) && (
+              <NavButton
+                initials='Parametrização '
+                navLink='/parameters'
+                icon={<IoOptions size={26} color={hasHightlight("/parameters") ? "#e9e9e9" : "#e9e9e9"} />}
+                name={"Parametrização "}
+                hasHightlight={hasHightlight("/parameters")}
+              />
+            )}
+          </ul>
+        )}
       </nav>
       <div style={{ position: "absolute", bottom: 8, width: "100%", textAlign: "center" }}>
         <Image

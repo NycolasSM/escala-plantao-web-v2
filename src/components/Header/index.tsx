@@ -46,8 +46,7 @@ addLocale("pt", {
 
 const Header = () => {
   const router = useRouter();
-  // const { userInfo, logout } = useContext(AuthContext);
-  const { userInfo } = useContext(AuthContext);
+  const { userInfo, signOut } = useContext(AuthContext);
 
   const { plantaoAvailable, plantaoChosen, localChosen, setPlantaoChosen, setLocalChosen, setAvailableDaysData, setMonthNumber } =
     React.useContext(AvailableSchedulesContext);
@@ -71,7 +70,7 @@ const Header = () => {
   let HeaderTitle = getHeaderTitle();
 
   const handleLogout = () => {
-    // logout();
+    signOut();
     router.push("/login");
   };
 
