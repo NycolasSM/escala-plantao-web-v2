@@ -343,11 +343,11 @@ const ScheduleTable = () => {
                 index={index}
                 action={data[1].action}
                 defaultValues={
-                  data[1].action === "edit" && {
+                  {
                     idLoaded: "",
-                    dayLoaded: data[1].day,
+                    dayLoaded: data[1].day || 1,
                     employeesLoaded: [],
-                    scheduleHourLoaded: data[1].scheduleHour,
+                    scheduleHourLoaded: data[1].scheduleHour || ["00:00", "00:00", "00:00", "24:00"],
                   }
                 }
                 removeRegisterOfRemoveList={removeRegisterOfRemoveList}

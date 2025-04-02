@@ -78,7 +78,9 @@ const Register = ({
 
   const [daySelected, setDaySelected] = useState<number>(day);
 
-  const [rangeOfScheduleSelected, setRangeOfScheduleSelected] = useState(defaultValues.scheduleHourLoaded || ["00:00", "00:00", "00:00", "24:00"]);
+  const [rangeOfScheduleSelected, setRangeOfScheduleSelected] = useState(
+    defaultValues.scheduleHourLoaded || ["00:00", "00:00", "00:00", "24:00"]
+  );
 
   function parse(horario: string) {
     if (!horario) return 0;
@@ -267,10 +269,12 @@ const Register = ({
   const endHourRef = useRef<HTMLSelectElement>(null);
 
   const setDefaultScheduleOptions = () => {
-    endHourRef!.current!.value = "24:00";
-    handleUpdateScheduleHour(0, "0", ["00:00", "00:00", "00:00", "24:00"]);
-    setTotalHoras(24);
-    setIsLockedScheduleHours(false);
+    if (defaultValues.scheduleHourLoaded !== ["00:00", "00:00", "00:00", "24:00"]) {
+      endHourRef!.current!.value = "24:00";
+      handleUpdateScheduleHour(0, "0", ["00:00", "00:00", "00:00", "24:00"]);
+      setTotalHoras(24);
+      setIsLockedScheduleHours(false);
+    }
   };
 
   useEffect(() => {

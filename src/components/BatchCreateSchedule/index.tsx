@@ -153,9 +153,9 @@ const BatchCreateSchedule = () => {
       })),
       scheduleHour: [
         selectedStartTime?.value || "00:00",
-        selectedEndTime?.value || "00:00",
         selectedFromTime?.value || "00:00",
-        selectedToTime?.value || "24:00",
+        selectedToTime?.value || "00:00",
+        selectedEndTime?.value || "24:00",
       ],
       action: "create",
     }));
