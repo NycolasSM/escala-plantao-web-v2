@@ -14,6 +14,14 @@ export const Row = styled.div`
   display: flex;
   gap: 10px;
   align-items: center;
+
+  div {
+    width: 100%;
+  }
+
+  span {
+    font-size: 14px;
+  }
 `;
 
 export const Button = styled.button`

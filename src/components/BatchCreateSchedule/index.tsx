@@ -61,6 +61,7 @@ const BatchCreateSchedule = () => {
   const [selectedEndTime, setSelectedEndTime] = useState<SingleValue<OptionType>>(null);
   const [selectedFromTime, setSelectedFromTime] = useState<SingleValue<OptionType>>(null);
   const [selectedToTime, setSelectedToTime] = useState<SingleValue<OptionType>>(null);
+  const [is24Hours, setIs24Hours] = useState(false);
 
   const [allDays, setAllDays] = useState<any[]>([]);
 
@@ -69,6 +70,16 @@ const BatchCreateSchedule = () => {
   useEffect(() => {
     setAllDays(Array.from({ length: totalOfDays }, (v, k) => k + 1));
   }, [monthNumber, year]);
+
+  useEffect(() => {
+    if (is24Hours) {
+      setSelectedStartTime({ value: "00:00", label: "00:00" });
+      setSelectedEndTime({ value: "24:00", label: "24:00" });
+    } else {
+      setSelectedStartTime(null);
+      setSelectedEndTime(null);
+    }
+  }, [is24Hours]);
 
   const {
     haveEmptyField,
@@ -175,10 +186,10 @@ const BatchCreateSchedule = () => {
     // Limpa os estados selecionados
     setSelectedDays([]);
     setSelectedParticipants([]);
-    setSelectedStartTime(null);
-    setSelectedEndTime(null);
-    setSelectedFromTime(null);
-    setSelectedToTime(null);
+    // setSelectedStartTime(null);
+    // setSelectedEndTime(null);
+    // setSelectedFromTime(null);
+    // setSelectedToTime(null);
   };
 
   return (
@@ -192,25 +203,33 @@ const BatchCreateSchedule = () => {
         placeholder='Selecione os dias'
         styles={customStyles}
       />
+      <Row style={{ marginBottom: 0 }}>
+        <div style={{ display: "flex", gap: 6, alignItems: "center", paddingTop: 8, paddingBottom: 5, paddingLeft: 2 }}>
+          <input type='checkbox' checked={is24Hours} onChange={() => setIs24Hours(!is24Hours)} />
+          <span>24 Horas</span>
+        </div>
+      </Row>
       <Row>
         <div>
-          <p>Início</p>
+          <p style={{ marginTop: 0 }}>Início</p>
           <Select
             options={timeOptions}
             value={selectedStartTime}
             onChange={setSelectedStartTime}
-            placeholder='horário de início'
+            placeholder='Selecione'
             styles={customStyles}
+            isDisabled={is24Hours}
           />
         </div>
         <div>
-          <p>Término</p>
+          <p style={{ marginTop: 0 }}>Término</p>
           <Select
             options={timeOptions}
             value={selectedEndTime}
             onChange={setSelectedEndTime}
-            placeholder='Selecione o horário de término'
+            placeholder='Selecione'
             styles={customStyles}
+            isDisabled={is24Hours}
           />
         </div>
       </Row>
@@ -221,7 +240,7 @@ const BatchCreateSchedule = () => {
             options={timeOptions}
             value={selectedFromTime}
             onChange={setSelectedFromTime}
-            placeholder='Selecione o intervalo das'
+            placeholder='Selecione'
             styles={customStyles}
           />
         </div>
@@ -231,7 +250,7 @@ const BatchCreateSchedule = () => {
             options={timeOptions}
             value={selectedToTime}
             onChange={setSelectedToTime}
-            placeholder='Selecione o intervalo às'
+            placeholder='Selecione'
             styles={customStyles}
           />
         </div>
