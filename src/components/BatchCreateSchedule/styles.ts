@@ -15,7 +15,7 @@ export const Row = styled.div`
   gap: 10px;
   align-items: center;
 
-  div {
+  > div {
     width: 100%;
   }
 

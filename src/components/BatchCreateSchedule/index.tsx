@@ -10,12 +10,13 @@ const customStyles = {
   control: (provided: any) => ({
     ...provided,
     minHeight: "29px",
-    height: "29px",
+    height: "auto", // Permite que o input cresça conforme necessário
     fontSize: "12px",
+    flexWrap: "wrap", // Permite que os itens se ajustem corretamente
   }),
   valueContainer: (provided: any) => ({
     ...provided,
-    height: "30px",
+    height: "auto", // Permite que o input cresça conforme necessário
     padding: "0 6px",
   }),
   input: (provided: any) => ({
@@ -39,7 +40,7 @@ const customStyles = {
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
-    maxWidth: "100px",
+    maxWidth: "150px",
   }),
   placeholder: (provided: any) => ({
     ...provided,
@@ -191,6 +192,9 @@ const BatchCreateSchedule = () => {
     // setSelectedFromTime(null);
     // setSelectedToTime(null);
   };
+
+
+
 
   return (
     <Container>

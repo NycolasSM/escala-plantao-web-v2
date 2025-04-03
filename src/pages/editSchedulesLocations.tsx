@@ -62,6 +62,7 @@ const Parameters = () => {
 
   const handleSalvar = async () => {
     try {
+      console.log("Novas associações salvas com sucesso:", novasAssociacoes);
       await api.post("/tipo-escala-locais", novasAssociacoes);
       setNovasAssociacoes([]);
       toast.success("Alterações salvas com sucesso!");
